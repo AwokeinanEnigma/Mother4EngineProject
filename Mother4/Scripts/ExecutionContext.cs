@@ -34,9 +34,9 @@ namespace Mother4.Scripts
 
 		public ICollection<Map.Path> Paths { get; set; }
 
-		public ICollection<Map.Area> Areas { get; set; }
+        public ICollection<Map.Area> Areas { get; set; }
 
-		public ExecutionContext()
+        public ExecutionContext()
 		{
 		}
 
