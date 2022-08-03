@@ -6,6 +6,7 @@ namespace Carbine.Graphics
 	{
 		Replace,
 		Multiply,
-		Screen
+		Screen,
+		Add
 	}
 }

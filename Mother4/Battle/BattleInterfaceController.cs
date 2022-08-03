@@ -12,6 +12,7 @@ using Mother4.Battle.UI.Modifiers;
 using Mother4.Data;
 using Mother4.Data.Psi;
 using Mother4.GUI.Modifiers;
+
 using Mother4.Utility;
 using SFML.Graphics;
 using SFML.System;
