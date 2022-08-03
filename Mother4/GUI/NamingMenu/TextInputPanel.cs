@@ -11,8 +11,12 @@ using SFML.System;
 
 namespace Mother4.GUI.NamingMenu
 {
+	// Token: 0x02000044 RID: 68
 	internal class TextInputPanel : MenuPanel
 	{
+		// Token: 0x1700005C RID: 92
+		// (get) Token: 0x06000175 RID: 373 RVA: 0x000099FD File Offset: 0x00007BFD
+		// (set) Token: 0x06000176 RID: 374 RVA: 0x00009A0A File Offset: 0x00007C0A
 		public bool CursorVisibility
 		{
 			get
@@ -25,6 +29,7 @@ namespace Mother4.GUI.NamingMenu
 			}
 		}
 
+		// Token: 0x06000177 RID: 375 RVA: 0x00009A18 File Offset: 0x00007C18
 		public TextInputPanel(Vector2f position, Vector2f size) : base(position, size, 0, WindowBox.Style.Normal, 0U)
 		{
 			this.selectingLetters = true;
@@ -69,18 +74,20 @@ namespace Mother4.GUI.NamingMenu
 				}
 				num++;
 			}
-			this.cursor = new IndexedColorGraphic(Paths.GRAPHICS + "realcursor.dat", "right", VectorMath.ZERO_VECTOR, 1);
+			this.cursor = new IndexedColorGraphic(Paths.GRAPHICS + "cursor.dat", "right", VectorMath.ZERO_VECTOR, 1);
 			base.Add(this.cursor);
 			this.UpdateCursorPosition();
 			this.CreateButtons();
 		}
 
+		// Token: 0x06000178 RID: 376 RVA: 0x00009C50 File Offset: 0x00007E50
 		private void SetupSounds()
 		{
 			this.sfxCursorX = AudioManager.Instance.Use(Paths.AUDIO + "cursorx.wav", AudioType.Sound);
 			this.sfxCursorY = AudioManager.Instance.Use(Paths.AUDIO + "cursory.wav", AudioType.Sound);
 		}
 
+		// Token: 0x06000179 RID: 377 RVA: 0x00009CA0 File Offset: 0x00007EA0
 		private void CreateButtons()
 		{
 			this.buttonTexts = new TextRegion[]
@@ -97,6 +104,7 @@ namespace Mother4.GUI.NamingMenu
 			}
 		}
 
+		// Token: 0x0600017A RID: 378 RVA: 0x00009E84 File Offset: 0x00008084
 		private void SetSelectedPage(int page)
 		{
 			this.selectedPage = Math.Max(0, Math.Min(this.inputChars.Count - 1, page));
@@ -116,12 +124,14 @@ namespace Mother4.GUI.NamingMenu
 			}
 		}
 
+		// Token: 0x0600017B RID: 379 RVA: 0x00009F5B File Offset: 0x0000815B
 		private void AdvancePage()
 		{
 			this.SetSelectedPage((this.selectedPage + 1) % this.inputChars.Count);
 			this.UpdateCursorPosition();
 		}
 
+		// Token: 0x0600017C RID: 380 RVA: 0x00009F80 File Offset: 0x00008180
 		public override object ButtonPressed(Button b)
 		{
 			char c = '\0';
@@ -165,6 +175,7 @@ namespace Mother4.GUI.NamingMenu
 			return c;
 		}
 
+		// Token: 0x0600017D RID: 381 RVA: 0x0000A018 File Offset: 0x00008218
 		private void UpdateCursorPosition()
 		{
 			if (this.selectingLetters)
@@ -177,6 +188,7 @@ namespace Mother4.GUI.NamingMenu
 			this.cursor.Position = textRegion2.Position + new Vector2f(-2f, textRegion2.Size.Y / 3f);
 		}
 
+		// Token: 0x0600017E RID: 382 RVA: 0x0000A0C0 File Offset: 0x000082C0
 		public override void AxisPressed(Vector2f axis)
 		{
 			if (this.selectingLetters)
@@ -238,14 +250,17 @@ namespace Mother4.GUI.NamingMenu
 			this.UpdateCursorPosition();
 		}
 
+		// Token: 0x0600017F RID: 383 RVA: 0x0000A383 File Offset: 0x00008583
 		public override void Focus()
 		{
 		}
 
+		// Token: 0x06000180 RID: 384 RVA: 0x0000A385 File Offset: 0x00008585
 		public override void Unfocus()
 		{
 		}
 
+		// Token: 0x06000181 RID: 385 RVA: 0x0000A388 File Offset: 0x00008588
 		protected override void Dispose(bool disposing)
 		{
 			if (!this.disposed && disposing)
@@ -258,36 +273,52 @@ namespace Mother4.GUI.NamingMenu
 			base.Dispose(disposing);
 		}
 
+		// Token: 0x04000266 RID: 614
 		private const int FLAVOR = 0;
 
+		// Token: 0x04000267 RID: 615
 		private const int DEPTH = 0;
 
+		// Token: 0x04000268 RID: 616
 		private const int MARGIN = 8;
 
+		// Token: 0x04000269 RID: 617
 		private const string INPUT_PAGE_STRING_FORMAT = "input.page{0}";
 
+		// Token: 0x0400026A RID: 618
 		private const string PAGE_TITLE_STRING_FORMAT = "input.title{0}";
 
+		// Token: 0x0400026B RID: 619
 		private List<char[][]> inputChars;
 
+		// Token: 0x0400026C RID: 620
 		private List<TextRegion[][]> inputCharTexts;
 
+		// Token: 0x0400026D RID: 621
 		private List<string> inputTitles;
 
+		// Token: 0x0400026E RID: 622
 		private TextRegion[] buttonTexts;
 
+		// Token: 0x0400026F RID: 623
 		private bool selectingLetters;
 
+		// Token: 0x04000270 RID: 624
 		private int selectedPage;
 
+		// Token: 0x04000271 RID: 625
 		private Renderable cursor;
 
+		// Token: 0x04000272 RID: 626
 		private int cursorX;
 
+		// Token: 0x04000273 RID: 627
 		private int cursorY;
 
+		// Token: 0x04000274 RID: 628
 		private CarbineSound sfxCursorX;
 
+		// Token: 0x04000275 RID: 629
 		private CarbineSound sfxCursorY;
 	}
 }

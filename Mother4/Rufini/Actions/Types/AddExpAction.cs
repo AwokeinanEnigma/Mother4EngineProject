@@ -8,8 +8,10 @@ using Mother4.Scripts.Actions.ParamTypes;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x0200011F RID: 287
 	internal class AddExpAction : RufiniAction
 	{
+		// Token: 0x060006E3 RID: 1763 RVA: 0x0002BCA4 File Offset: 0x00029EA4
 		public AddExpAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -37,15 +39,16 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x060006E4 RID: 1764 RVA: 0x0002BD68 File Offset: 0x00029F68
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
-			CharacterType option = (CharacterType)base.GetValue<RufiniOption>("char").Option;
+			CharacterType byOptionInt = CharacterType.GetByOptionInt(base.GetValue<RufiniOption>("char").Option);
 			int value = base.GetValue<int>("val");
 			base.GetValue<bool>("msg");
 			base.GetValue<bool>("sup");
-			StatSet stats = CharacterStats.GetStats(option);
+			StatSet stats = CharacterStats.GetStats(byOptionInt);
 			stats.Experience += value;
-			CharacterStats.SetStats(option, stats);
+			CharacterStats.SetStats(byOptionInt, stats);
 			Console.WriteLine("SORT OF IMPLEMENTED - BUG DAVE");
 			return default(ActionReturnContext);
 		}

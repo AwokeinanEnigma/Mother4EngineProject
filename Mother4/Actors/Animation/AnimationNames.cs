@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 namespace Mother4.Actors.Animation
 {
+	// Token: 0x02000004 RID: 4
 	internal static class AnimationNames
 	{
+		// Token: 0x06000001 RID: 1 RVA: 0x00002050 File Offset: 0x00000250
 		public static string GetString(AnimationType type)
 		{
 			string result;
@@ -15,6 +17,7 @@ namespace Mother4.Actors.Animation
 			return result;
 		}
 
+		// Token: 0x06000002 RID: 2 RVA: 0x00002074 File Offset: 0x00000274
 		public static AnimationType GetAnimationType(string name)
 		{
 			AnimationType result;
@@ -25,220 +28,352 @@ namespace Mother4.Actors.Animation
 			return result;
 		}
 
+		// Token: 0x04000020 RID: 32
 		public const string EAST = "east";
 
+		// Token: 0x04000021 RID: 33
 		public const string NORTHEAST = "northeast";
 
+		// Token: 0x04000022 RID: 34
 		public const string NORTH = "north";
 
+		// Token: 0x04000023 RID: 35
 		public const string NORTHWEST = "northwest";
 
+		// Token: 0x04000024 RID: 36
 		public const string WEST = "west";
 
+		// Token: 0x04000025 RID: 37
 		public const string SOUTHWEST = "southwest";
 
+		// Token: 0x04000026 RID: 38
 		public const string SOUTH = "south";
 
+		// Token: 0x04000027 RID: 39
 		public const string SOUTHEAST = "southeast";
 
+		// Token: 0x04000028 RID: 40
 		public const string STAND = "stand";
 
+		// Token: 0x04000029 RID: 41
 		public const string WALK = "walk";
 
+		// Token: 0x0400002A RID: 42
 		public const string RUN = "run";
 
+		// Token: 0x0400002B RID: 43
 		public const string CROUCH = "crouch";
 
+		// Token: 0x0400002C RID: 44
 		public const string DEAD = "dead";
 
+		// Token: 0x0400002D RID: 45
 		public const string IDLE = "idle";
 
+		// Token: 0x0400002E RID: 46
 		public const string TALK = "talk";
 
+		// Token: 0x0400002F RID: 47
 		public const string BLINK = "blink";
 
+		// Token: 0x04000030 RID: 48
 		public const string CLIMB = "climb";
 
+		// Token: 0x04000031 RID: 49
 		public const string SWIM = "swim";
 
+		// Token: 0x04000032 RID: 50
 		public const string FLOAT = "float";
 
+		// Token: 0x04000033 RID: 51
 		public const string STAND_EAST = "stand east";
 
+		// Token: 0x04000034 RID: 52
 		public const string STAND_NORTHEAST = "stand northeast";
 
+		// Token: 0x04000035 RID: 53
 		public const string STAND_NORTH = "stand north";
 
+		// Token: 0x04000036 RID: 54
 		public const string STAND_NORTHWEST = "stand northwest";
 
+		// Token: 0x04000037 RID: 55
 		public const string STAND_WEST = "stand west";
 
+		// Token: 0x04000038 RID: 56
 		public const string STAND_SOUTHWEST = "stand southwest";
 
+		// Token: 0x04000039 RID: 57
 		public const string STAND_SOUTH = "stand south";
 
+		// Token: 0x0400003A RID: 58
 		public const string STAND_SOUTHEAST = "stand southeast";
 
+		// Token: 0x0400003B RID: 59
 		public const string WALK_EAST = "walk east";
 
+		// Token: 0x0400003C RID: 60
 		public const string WALK_NORTHEAST = "walk northeast";
 
+		// Token: 0x0400003D RID: 61
 		public const string WALK_NORTH = "walk north";
 
+		// Token: 0x0400003E RID: 62
 		public const string WALK_NORTHWEST = "walk northwest";
 
+		// Token: 0x0400003F RID: 63
 		public const string WALK_WEST = "walk west";
 
+		// Token: 0x04000040 RID: 64
 		public const string WALK_SOUTHWEST = "walk southwest";
 
+		// Token: 0x04000041 RID: 65
 		public const string WALK_SOUTH = "walk south";
 
+		// Token: 0x04000042 RID: 66
 		public const string WALK_SOUTHEAST = "walk southeast";
 
+		// Token: 0x04000043 RID: 67
 		public const string RUN_EAST = "run east";
 
+		// Token: 0x04000044 RID: 68
 		public const string RUN_NORTHEAST = "run northeast";
 
+		// Token: 0x04000045 RID: 69
 		public const string RUN_NORTH = "run north";
 
+		// Token: 0x04000046 RID: 70
 		public const string RUN_NORTHWEST = "run northwest";
 
+		// Token: 0x04000047 RID: 71
 		public const string RUN_WEST = "run west";
 
+		// Token: 0x04000048 RID: 72
 		public const string RUN_SOUTHWEST = "run southwest";
 
+		// Token: 0x04000049 RID: 73
 		public const string RUN_SOUTH = "run south";
 
+		// Token: 0x0400004A RID: 74
 		public const string RUN_SOUTHEAST = "run southeast";
 
+		// Token: 0x0400004B RID: 75
 		public const string CROUCH_EAST = "crouch east";
 
+		// Token: 0x0400004C RID: 76
 		public const string CROUCH_NORTHEAST = "crouch northeast";
 
+		// Token: 0x0400004D RID: 77
 		public const string CROUCH_NORTH = "crouch north";
 
+		// Token: 0x0400004E RID: 78
 		public const string CROUCH_NORTHWEST = "crouch northwest";
 
+		// Token: 0x0400004F RID: 79
 		public const string CROUCH_WEST = "crouch west";
 
+		// Token: 0x04000050 RID: 80
 		public const string CROUCH_SOUTHWEST = "crouch southwest";
 
+		// Token: 0x04000051 RID: 81
 		public const string CROUCH_SOUTH = "crouch south";
 
+		// Token: 0x04000052 RID: 82
 		public const string CROUCH_SOUTHEAST = "crouch southeast";
 
+		// Token: 0x04000053 RID: 83
 		public const string DEAD_EAST = "dead east";
 
+		// Token: 0x04000054 RID: 84
 		public const string DEAD_NORTHEAST = "dead northeast";
 
+		// Token: 0x04000055 RID: 85
 		public const string DEAD_NORTH = "dead north";
 
+		// Token: 0x04000056 RID: 86
 		public const string DEAD_NORTHWEST = "dead northwest";
 
+		// Token: 0x04000057 RID: 87
 		public const string DEAD_WEST = "dead west";
 
+		// Token: 0x04000058 RID: 88
 		public const string DEAD_SOUTHWEST = "dead southwest";
 
+		// Token: 0x04000059 RID: 89
 		public const string DEAD_SOUTH = "dead south";
 
+		// Token: 0x0400005A RID: 90
 		public const string DEAD_SOUTHEAST = "dead southeast";
 
+		// Token: 0x0400005B RID: 91
 		public const string IDLE_EAST = "idle east";
 
+		// Token: 0x0400005C RID: 92
 		public const string IDLE_NORTHEAST = "idle northeast";
 
+		// Token: 0x0400005D RID: 93
 		public const string IDLE_NORTH = "idle north";
 
+		// Token: 0x0400005E RID: 94
 		public const string IDLE_NORTHWEST = "idle northwest";
 
+		// Token: 0x0400005F RID: 95
 		public const string IDLE_WEST = "idle west";
 
+		// Token: 0x04000060 RID: 96
 		public const string IDLE_SOUTHWEST = "idle southwest";
 
+		// Token: 0x04000061 RID: 97
 		public const string IDLE_SOUTH = "idle south";
 
+		// Token: 0x04000062 RID: 98
 		public const string IDLE_SOUTHEAST = "idle southeast";
 
+		// Token: 0x04000063 RID: 99
 		public const string TALK_EAST = "talk east";
 
+		// Token: 0x04000064 RID: 100
 		public const string TALK_NORTHEAST = "talk northeast";
 
+		// Token: 0x04000065 RID: 101
 		public const string TALK_NORTH = "talk north";
 
+		// Token: 0x04000066 RID: 102
 		public const string TALK_NORTHWEST = "talk northwest";
 
+		// Token: 0x04000067 RID: 103
 		public const string TALK_WEST = "talk west";
 
+		// Token: 0x04000068 RID: 104
 		public const string TALK_SOUTHWEST = "talk southwest";
 
+		// Token: 0x04000069 RID: 105
 		public const string TALK_SOUTH = "talk south";
 
+		// Token: 0x0400006A RID: 106
 		public const string TALK_SOUTHEAST = "talk southeast";
 
+		// Token: 0x0400006B RID: 107
 		public const string BLINK_EAST = "blink east";
 
+		// Token: 0x0400006C RID: 108
 		public const string BLINK_NORTHEAST = "blink northeast";
 
+		// Token: 0x0400006D RID: 109
 		public const string BLINK_NORTH = "blink north";
 
+		// Token: 0x0400006E RID: 110
 		public const string BLINK_NORTHWEST = "blink northwest";
 
+		// Token: 0x0400006F RID: 111
 		public const string BLINK_WEST = "blink west";
 
+		// Token: 0x04000070 RID: 112
 		public const string BLINK_SOUTHWEST = "blink southwest";
 
+		// Token: 0x04000071 RID: 113
 		public const string BLINK_SOUTH = "blink south";
 
+		// Token: 0x04000072 RID: 114
 		public const string BLINK_SOUTHEAST = "blink southeast";
 
+		// Token: 0x04000073 RID: 115
 		public const string CLIMB_EAST = "climb east";
 
+		// Token: 0x04000074 RID: 116
 		public const string CLIMB_NORTHEAST = "climb northeast";
 
+		// Token: 0x04000075 RID: 117
 		public const string CLIMB_NORTH = "climb north";
 
+		// Token: 0x04000076 RID: 118
 		public const string CLIMB_NORTHWEST = "climb northwest";
 
+		// Token: 0x04000077 RID: 119
 		public const string CLIMB_WEST = "climb west";
 
+		// Token: 0x04000078 RID: 120
 		public const string CLIMB_SOUTHWEST = "climb southwest";
 
+		// Token: 0x04000079 RID: 121
 		public const string CLIMB_SOUTH = "climb south";
 
+		// Token: 0x0400007A RID: 122
 		public const string CLIMB_SOUTHEAST = "climb southeast";
 
+		// Token: 0x0400007B RID: 123
 		public const string SWIM_EAST = "swim east";
 
+		// Token: 0x0400007C RID: 124
 		public const string SWIM_NORTHEAST = "swim northeast";
 
+		// Token: 0x0400007D RID: 125
 		public const string SWIM_NORTH = "swim north";
 
+		// Token: 0x0400007E RID: 126
 		public const string SWIM_NORTHWEST = "swim northwest";
 
+		// Token: 0x0400007F RID: 127
 		public const string SWIM_WEST = "swim west";
 
+		// Token: 0x04000080 RID: 128
 		public const string SWIM_SOUTHWEST = "swim southwest";
 
+		// Token: 0x04000081 RID: 129
 		public const string SWIM_SOUTH = "swim south";
 
+		// Token: 0x04000082 RID: 130
 		public const string SWIM_SOUTHEAST = "swim southeast";
 
+		// Token: 0x04000083 RID: 131
 		public const string FLOAT_EAST = "float east";
 
+		// Token: 0x04000084 RID: 132
 		public const string FLOAT_NORTHEAST = "float northeast";
 
+		// Token: 0x04000085 RID: 133
 		public const string FLOAT_NORTH = "float north";
 
+		// Token: 0x04000086 RID: 134
 		public const string FLOAT_NORTHWEST = "float northwest";
 
+		// Token: 0x04000087 RID: 135
 		public const string FLOAT_WEST = "float west";
 
+		// Token: 0x04000088 RID: 136
 		public const string FLOAT_SOUTHWEST = "float southwest";
 
+		// Token: 0x04000089 RID: 137
 		public const string FLOAT_SOUTH = "float south";
 
+		// Token: 0x0400008A RID: 138
 		public const string FLOAT_SOUTHEAST = "float southeast";
 
+		// Token: 0x0400008B RID: 139
+		public const string NAUSEA_EAST = "nausea east";
+
+		// Token: 0x0400008C RID: 140
+		public const string NAUSEA_NORTHEAST = "nausea northeast";
+
+		// Token: 0x0400008D RID: 141
+		public const string NAUSEA_NORTH = "nausea north";
+
+		// Token: 0x0400008E RID: 142
+		public const string NAUSEA_NORTHWEST = "nausea northwest";
+
+		// Token: 0x0400008F RID: 143
+		public const string NAUSEA_WEST = "nausea west";
+
+		// Token: 0x04000090 RID: 144
+		public const string NAUSEA_SOUTHWEST = "nausea southwest";
+
+		// Token: 0x04000091 RID: 145
+		public const string NAUSEA_SOUTH = "nausea south";
+
+		// Token: 0x04000092 RID: 146
+		public const string NAUSEA_SOUTHEAST = "nausea southeast";
+
+		// Token: 0x04000093 RID: 147
 		private static readonly Dictionary<AnimationType, string> ANIMTYPE_TO_STRING = new Dictionary<AnimationType, string>
 		{
 			{
@@ -592,9 +727,42 @@ namespace Mother4.Actors.Animation
 			{
 				(AnimationType)2824,
 				"float southeast"
+			},
+			{
+				(AnimationType)3073,
+				"nausea east"
+			},
+			{
+				(AnimationType)3074,
+				"nausea northeast"
+			},
+			{
+				(AnimationType)3075,
+				"nausea north"
+			},
+			{
+				(AnimationType)3076,
+				"nausea northwest"
+			},
+			{
+				(AnimationType)3077,
+				"nausea west"
+			},
+			{
+				(AnimationType)3078,
+				"nausea southwest"
+			},
+			{
+				(AnimationType)3079,
+				"nausea south"
+			},
+			{
+				(AnimationType)3080,
+				"nausea southeast"
 			}
 		};
 
+		// Token: 0x04000094 RID: 148
 		private static readonly Dictionary<string, AnimationType> STRING_TO_ANIMTYPE = new Dictionary<string, AnimationType>
 		{
 			{
@@ -948,6 +1116,38 @@ namespace Mother4.Actors.Animation
 			{
 				"float southeast",
 				(AnimationType)2824
+			},
+			{
+				"nausea east",
+				(AnimationType)3073
+			},
+			{
+				"nausea northeast",
+				(AnimationType)3074
+			},
+			{
+				"nausea north",
+				(AnimationType)3075
+			},
+			{
+				"nausea northwest",
+				(AnimationType)3076
+			},
+			{
+				"nausea west",
+				(AnimationType)3077
+			},
+			{
+				"nausea southwest",
+				(AnimationType)3078
+			},
+			{
+				"nausea south",
+				(AnimationType)3079
+			},
+			{
+				"nausea southeast",
+				(AnimationType)3080
 			}
 		};
 	}

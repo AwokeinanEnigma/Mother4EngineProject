@@ -12,8 +12,10 @@ using SFML.Graphics;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x0200015D RID: 349
 	internal class StartBattleAction : RufiniAction
 	{
+		// Token: 0x0600077A RID: 1914 RVA: 0x00030D60 File Offset: 0x0002EF60
 		public StartBattleAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -41,6 +43,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x0600077B RID: 1915 RVA: 0x00030E24 File Offset: 0x0002F024
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			RufiniOption value = base.GetValue<RufiniOption>("type");
@@ -83,12 +86,16 @@ namespace Rufini.Actions.Types
 			return default(ActionReturnContext);
 		}
 
+		// Token: 0x04000955 RID: 2389
 		private const int NORMAL_MODE = 0;
 
+		// Token: 0x04000956 RID: 2390
 		private const int PLAYER_ADV_MODE = 1;
 
+		// Token: 0x04000957 RID: 2391
 		private const int ENEMY_ADV_MODE = 2;
 
+		// Token: 0x04000958 RID: 2392
 		private const int BOSS_MODE = 3;
 	}
 }

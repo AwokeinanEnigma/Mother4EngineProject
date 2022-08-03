@@ -1,363 +1,445 @@
 ﻿using System;
 using System.Collections.Generic;
-using Carbine.Actors;
-using Carbine.Flags;
 using Carbine.Graphics;
 using Carbine.GUI;
-using Carbine.Input;
+using Carbine.Utility;
 using Mother4.Data;
-using Mother4.Scripts.Text;
-using Mother4.Utility;
+using Mother4.GUI.Text;
+using Mother4.GUI.Text.PrintActions;
 using SFML.Graphics;
 using SFML.System;
 
 namespace Mother4.GUI
 {
-	internal class TextBox : Actor
+	// Token: 0x02000046 RID: 70
+	internal abstract class TextBox : Renderable
 	{
-		public event TextBox.CompletionHandler OnTextboxComplete;
-
-		public event TextBox.TypewriterCompletionHandler OnTypewriterComplete;
-
-		public bool Visible
+		// Token: 0x1700005D RID: 93
+		// (get) Token: 0x06000183 RID: 387 RVA: 0x0000A3CE File Offset: 0x000085CE
+		public bool HasPrinted
 		{
 			get
 			{
-				return this.visible;
+				return this.hasPrinted;
 			}
 		}
 
-		public TextBox(RenderPipeline pipeline, int colorIndex)
+		// Token: 0x14000004 RID: 4
+		// (add) Token: 0x06000184 RID: 388 RVA: 0x0000A3D8 File Offset: 0x000085D8
+		// (remove) Token: 0x06000185 RID: 389 RVA: 0x0000A410 File Offset: 0x00008610
+		public event TextBox.CompletionHandler OnTextboxComplete;
+
+		// Token: 0x14000005 RID: 5
+		// (add) Token: 0x06000186 RID: 390 RVA: 0x0000A448 File Offset: 0x00008648
+		// (remove) Token: 0x06000187 RID: 391 RVA: 0x0000A480 File Offset: 0x00008680
+		public event TextBox.TextTriggerHandler OnTextTrigger;
+
+		// Token: 0x06000188 RID: 392 RVA: 0x0000A4B8 File Offset: 0x000086B8
+		protected TextBox(Vector2f relativePosition, Vector2f size, bool showBullets)
 		{
-			this.pipeline = pipeline;
-			this.state = TextBox.AnimationState.SlideIn;
-			this.topLetterboxY = -14f;
-			this.bottomLetterboxY = 180f;
-			this.dimmer = new ScreenDimmer(this.pipeline, Color.Transparent, 0, 2147450879);
-			Vector2f finalCenter = ViewManager.Instance.FinalCenter;
-			Vector2f vector2f = finalCenter - ViewManager.Instance.View.Size / 2f;
-			Vector2f size = new Vector2f(320f, 14f);
-			this.topLetterbox = new ShapeGraphic(new RectangleShape(size), new Vector2f(0f, this.topLetterboxY), new Vector2f(0f, 0f), size, 2147450880);
-			this.topLetterbox.Shape.FillColor = Color.Black;
-			this.topLetterbox.Visible = false;
-			this.pipeline.Add(this.topLetterbox);
-			this.bottomLetterbox = new ShapeGraphic(new RectangleShape(size), new Vector2f(0f, this.bottomLetterboxY), new Vector2f(0f, 0f), size, 2147450878);
-			this.bottomLetterbox.Shape.FillColor = Color.Black;
-			this.bottomLetterbox.Visible = false;
-			this.pipeline.Add(this.bottomLetterbox);
-			this.typewriterBox = new TypewriterBox(pipeline, new Vector2f(vector2f.X + TextBox.TEXT_POSITION.X, vector2f.Y + TextBox.TEXT_POSITION.Y), TextBox.TEXT_SIZE, 2147450880, Button.A, true, new TextBlock(new List<TextLine>()));
-			this.window = new WindowBox(FlagManager.Instance[4] ? WindowBox.Style.Telepathy : Settings.WindowStyle, Settings.WindowFlavor, new Vector2f(vector2f.X + TextBox.BOX_POSITION.X, vector2f.Y + TextBox.BOX_POSITION.Y), TextBox.BOX_SIZE, 2147450879);
+			this.relativePosition = relativePosition;
+			this.size = size;
+			this.depth = 2147450880;
+			this.actionQueue = new Queue<PrintAction>();
+			this.relativeTypewriterPosition = this.relativePosition + TextBox.TYPEWRITER_POSITION_OFFSET;
+			this.typewriter = new Typewriter(Fonts.Main, VectorMath.ZERO_VECTOR, VectorMath.ZERO_VECTOR, this.size + TextBox.TYPEWRITER_SIZE_OFFSET, showBullets);
+			this.window = new WindowBox(Settings.WindowStyle, Settings.WindowFlavor, VectorMath.ZERO_VECTOR, this.size, 0);
 			this.window.Visible = false;
-			this.pipeline.Add(this.window);
-			this.advanceArrow = new IndexedColorGraphic(Paths.GRAPHICS + "realcursor.dat", "down", new Vector2f(vector2f.X + TextBox.BUTTON_POSITION.X, vector2f.Y + TextBox.BUTTON_POSITION.Y), 2147450880);
+			this.relativeArrowPosition = this.relativePosition + this.size + TextBox.ARROW_POSITION_OFFSET;
+			this.advanceArrow = new IndexedColorGraphic(Paths.GRAPHICS + "cursor.dat", "down", VectorMath.ZERO_VECTOR, 0);
 			this.advanceArrow.Visible = false;
-			this.pipeline.Add(this.advanceArrow);
-			this.nametag = new Nametag(string.Empty, new Vector2f(vector2f.X + TextBox.NAMETAG_POSITION.X, vector2f.Y + TextBox.NAMETAG_POSITION.Y), 2147450880);
-			this.nametag.Visible = false;
-			this.pipeline.Add(this.nametag);
 			this.visible = false;
-			this.nametagVisible = false;
-			this.arrowVisible = false;
 			this.hideAdvanceArrow = false;
-			this.typewriterBox.OnTypewriterComplete += this.TypewriterComplete;
-			this.typewriterBox.OnTextWait += this.TextWait;
-			InputManager.Instance.ButtonPressed += this.ButtonPressed;
+			this.typewriter.OnTypewriterComplete += this.typewriter_OnTypewriterComplete;
 			ViewManager.Instance.OnMove += this.OnViewMove;
 		}
 
-		public void ClearTypewriterComplete()
+		// Token: 0x06000189 RID: 393 RVA: 0x0000A5EA File Offset: 0x000087EA
+		private void typewriter_OnTypewriterComplete(object sender, EventArgs e)
 		{
-			this.OnTypewriterComplete = null;
-		}
-
-		protected virtual void TextWait()
-		{
-			this.textboxWaitForPlayer = true;
-			if (!this.hideAdvanceArrow)
+			if (!this.isPaused && !this.isWaitingOnPlayer)
 			{
-				this.arrowVisible = true;
-				this.advanceArrow.Visible = this.arrowVisible;
+				this.Dequeue();
 			}
 		}
 
-		protected virtual void TypewriterComplete()
+		// Token: 0x0600018A RID: 394 RVA: 0x0000A602 File Offset: 0x00008802
+		private void TimerManager_OnTimerEnd(int timerIndex)
 		{
-			this.textboxWaitForPlayer = true;
-			this.typewriterDone = true;
-			if (!this.hideAdvanceArrow)
+			if (this.pauseTimerIndex == timerIndex && this.isPaused)
 			{
-				this.arrowVisible = true;
-				this.advanceArrow.Visible = this.arrowVisible;
-			}
-			if (this.OnTypewriterComplete != null)
-			{
-				this.OnTypewriterComplete();
+				this.isPaused = false;
+				this.Dequeue();
 			}
 		}
 
-		protected virtual void ButtonPressed(InputManager sender, Button b)
+		// Token: 0x0600018B RID: 395 RVA: 0x0000A622 File Offset: 0x00008822
+		private void OnViewMove(ViewManager sender, Vector2f center)
 		{
-			if (this.textboxWaitForPlayer && b == Button.A)
+			if (this.visible)
 			{
-				this.textboxWaitForPlayer = false;
-				if (!this.typewriterDone)
+				this.Recenter();
+			}
+		}
+
+		// Token: 0x0600018C RID: 396 RVA: 0x0000A632 File Offset: 0x00008832
+		protected void ContinueFromWait()
+		{
+			if (this.isWaitingOnPlayer)
+			{
+				this.isWaitingOnPlayer = false;
+				this.advanceArrow.Visible = false;
+				this.Dequeue();
+			}
+		}
+
+		// Token: 0x0600018D RID: 397 RVA: 0x0000A655 File Offset: 0x00008855
+		public void Enqueue(PrintAction action)
+		{
+			if (action.Type != PrintActionType.None)
+			{
+				this.actionQueue.Enqueue(action);
+			}
+		}
+
+		// Token: 0x0600018E RID: 398 RVA: 0x0000A66C File Offset: 0x0000886C
+		public void EnqueueAll(IEnumerable<PrintAction> actions)
+		{
+			foreach (PrintAction action in actions)
+			{
+				this.Enqueue(action);
+			}
+		}
+
+		// Token: 0x0600018F RID: 399 RVA: 0x0000A6B4 File Offset: 0x000088B4
+		protected virtual void HandlePrintText(string text)
+		{
+			this.typewriter.PrintText(text);
+		}
+
+		// Token: 0x06000190 RID: 400 RVA: 0x0000A6C2 File Offset: 0x000088C2
+		protected virtual void HandlePrintGraphic(string subsprite)
+		{
+			this.typewriter.PrintGraphic(subsprite);
+		}
+
+		// Token: 0x06000191 RID: 401 RVA: 0x0000A6D8 File Offset: 0x000088D8
+		protected virtual void HandlePromptQuestion(object[] options)
+		{
+			string[] options2 = Array.ConvertAll<object, string>(options, (object x) => (string)x);
+			this.typewriter.PrintQuestion(options2);
+		}
+
+		// Token: 0x06000192 RID: 402 RVA: 0x0000A71D File Offset: 0x0000891D
+		protected virtual void HandlePromptList(object[] options)
+		{
+			Array.ConvertAll<object, string>(options, (object x) => (string)x);
+		}
+
+		// Token: 0x06000193 RID: 403 RVA: 0x0000A743 File Offset: 0x00008943
+		protected virtual void HandlePromptNumeric(int minValue, int maxValue)
+		{
+		}
+
+		// Token: 0x06000194 RID: 404 RVA: 0x0000A745 File Offset: 0x00008945
+		protected virtual void HandlePrompt()
+		{
+			this.isWaitingOnPlayer = true;
+			this.advanceArrow.Visible = !this.hideAdvanceArrow;
+		}
+
+		// Token: 0x06000195 RID: 405 RVA: 0x0000A762 File Offset: 0x00008962
+		protected virtual void HandlePause(int duration)
+		{
+			this.isPaused = true;
+			this.pauseTimerIndex = TimerManager.Instance.StartTimer(duration);
+			TimerManager.Instance.OnTimerEnd += this.TimerManager_OnTimerEnd;
+		}
+
+		// Token: 0x06000196 RID: 406 RVA: 0x0000A792 File Offset: 0x00008992
+		protected virtual void HandleLineBreak()
+		{
+			this.typewriter.PrintNewLine();
+		}
+
+		// Token: 0x06000197 RID: 407 RVA: 0x0000A7A0 File Offset: 0x000089A0
+		protected virtual void HandleTrigger(object[] args)
+		{
+			if (this.OnTextTrigger != null)
+			{
+				int type = int.Parse((string)args[0]);
+				string[] args2 = new string[args.Length - 1];
+				this.OnTextTrigger(type, args2);
+			}
+			this.Dequeue();
+		}
+
+		// Token: 0x06000198 RID: 408 RVA: 0x0000A7E1 File Offset: 0x000089E1
+		protected virtual void HandleColor(Color color)
+		{
+			this.typewriter.SetTextColor(color, true);
+		}
+
+		// Token: 0x06000199 RID: 409 RVA: 0x0000A7F0 File Offset: 0x000089F0
+		protected virtual void HandleSound(int type)
+		{
+			int num = Math.Max(0, Math.Min(6, type));
+			Typewriter.BlipSound soundType = Typewriter.BlipSound.None;
+			switch (num)
+			{
+			case 0:
+				soundType = Typewriter.BlipSound.None;
+				break;
+			case 1:
+				soundType = Typewriter.BlipSound.Narration;
+				break;
+			case 2:
+				soundType = Typewriter.BlipSound.Male;
+				break;
+			case 3:
+				soundType = Typewriter.BlipSound.Female;
+				break;
+			case 4:
+				soundType = Typewriter.BlipSound.Awkward;
+				break;
+			case 5:
+				soundType = Typewriter.BlipSound.Robot;
+				break;
+			}
+			this.typewriter.SetTextSound(soundType, true);
+		}
+
+		// Token: 0x0600019A RID: 410 RVA: 0x0000A854 File Offset: 0x00008A54
+		private void HandleAction(PrintAction action)
+		{
+			switch (action.Type)
+			{
+			case PrintActionType.PrintText:
+				this.HandlePrintText((string)action.Data);
+				return;
+			case PrintActionType.PrintGraphic:
+				this.HandlePrintGraphic((string)action.Data);
+				return;
+			case PrintActionType.PromptQuestion:
+				this.HandlePromptQuestion((object[])action.Data);
+				return;
+			case PrintActionType.PromptList:
+				this.HandlePromptList((object[])action.Data);
+				return;
+			case PrintActionType.PromptNumeric:
+			{
+				int[] array = (int[])action.Data;
+				this.HandlePromptNumeric(array[0], array[1]);
+				return;
+			}
+			case PrintActionType.Prompt:
+				this.HandlePrompt();
+				return;
+			case PrintActionType.Pause:
+				this.HandlePause((int)action.Data);
+				return;
+			case PrintActionType.LineBreak:
+				this.HandleLineBreak();
+				return;
+			case PrintActionType.Trigger:
+				this.HandleTrigger((object[])action.Data);
+				return;
+			case PrintActionType.Color:
+				break;
+			case PrintActionType.Sound:
+				this.HandleSound((int)action.Data);
+				break;
+			default:
+				return;
+			}
+		}
+
+		// Token: 0x0600019B RID: 411 RVA: 0x0000A94C File Offset: 0x00008B4C
+		protected void Dequeue()
+		{
+			if (this.actionQueue.Count > 0)
+			{
+				PrintAction action = this.actionQueue.Dequeue();
+				try
 				{
-					this.typewriterBox.ContinueFromWait();
-					if (!this.hideAdvanceArrow)
-					{
-						this.arrowVisible = false;
-						this.advanceArrow.Visible = this.arrowVisible;
-						return;
-					}
+					this.HandleAction(action);
+					this.hasPrinted = true;
+					return;
 				}
-				else if (this.OnTextboxComplete != null)
+				catch (InvalidCastException ex)
+				{
+					Console.WriteLine("Ate an InvalidCastException in the PrintReceiver:");
+					Console.WriteLine(ex.Message);
+					return;
+				}
+			}
+			if (!this.isComplete && !this.isWaitingOnPlayer)
+			{
+				this.isComplete = true;
+				if (this.OnTextboxComplete != null)
 				{
 					this.OnTextboxComplete();
 				}
 			}
 		}
 
-		protected virtual void Recenter()
-		{
-			Vector2f finalCenter = ViewManager.Instance.FinalCenter;
-			Vector2f vector2f = finalCenter - ViewManager.Instance.View.Size / 2f;
-			this.position = new Vector2f(vector2f.X + TextBox.BOX_POSITION.X, vector2f.Y + TextBox.BOX_POSITION.Y);
-			this.window.Position = new Vector2f(this.position.X, this.position.Y + this.textboxY);
-			this.advanceArrow.Position = new Vector2f(vector2f.X + TextBox.BUTTON_POSITION.X, vector2f.Y + TextBox.BUTTON_POSITION.Y);
-			this.nametag.Position = new Vector2f(vector2f.X + TextBox.NAMETAG_POSITION.X, vector2f.Y + TextBox.NAMETAG_POSITION.Y + this.textboxY);
-			this.typewriterBox.Reposition(new Vector2f(vector2f.X + TextBox.TEXT_POSITION.X, vector2f.Y + TextBox.TEXT_POSITION.Y + this.textboxY));
-			this.topLetterbox.Position = new Vector2f(vector2f.X, vector2f.Y + this.topLetterboxY);
-			this.bottomLetterbox.Position = new Vector2f(vector2f.X, vector2f.Y + this.bottomLetterboxY);
-		}
-
-		public virtual void Reset(string text, string namestring, bool suppressSlideIn, bool suppressSlideOut)
-		{
-			this.canTransitionIn = !suppressSlideIn;
-			this.canTransitionOut = !suppressSlideOut;
-			this.typewriterBox.Reset(TextProcessor.Process(Fonts.Main, text, (int)TextBox.TEXT_SIZE.X));
-			this.arrowVisible = false;
-			this.textboxWaitForPlayer = false;
-			this.typewriterDone = false;
-			if (namestring != null && namestring.Length > 0)
-			{
-				this.nametag.Name = namestring;
-				this.nametagVisible = true;
-			}
-			else
-			{
-				this.nametagVisible = false;
-			}
-			this.nametag.Visible = this.nametagVisible;
-			this.window.FrameStyle = (FlagManager.Instance[4] ? WindowBox.Style.Telepathy : Settings.WindowStyle);
-		}
-
-		private void UpdateLetterboxing(float amount)
-		{
-			float num = Math.Max(0f, Math.Min(1f, amount));
-			this.topLetterboxY = (float)((int)(-14f * (1f - num)));
-			this.bottomLetterboxY = (float)(180L - (long)((int)(14f * num)));
-			this.topLetterbox.Position = new Vector2f(ViewManager.Instance.Viewrect.Left, ViewManager.Instance.Viewrect.Top + this.topLetterboxY);
-			this.bottomLetterbox.Position = new Vector2f(ViewManager.Instance.Viewrect.Left, ViewManager.Instance.Viewrect.Top + this.bottomLetterboxY);
-		}
-
-		private void UpdateTextbox(float amount)
-		{
-			this.textboxY = 4f * (1f - Math.Max(0f, Math.Min(1f, amount)));
-			this.typewriterBox.Position = new Vector2f((float)((int)(ViewManager.Instance.Viewrect.Left + TextBox.TEXT_POSITION.X)), (float)((int)(ViewManager.Instance.Viewrect.Top + TextBox.TEXT_POSITION.Y + this.textboxY)));
-			this.window.Position = new Vector2f((float)((int)(ViewManager.Instance.Viewrect.Left + TextBox.BOX_POSITION.X)), (float)((int)(ViewManager.Instance.Viewrect.Top + TextBox.BOX_POSITION.Y + this.textboxY)));
-			this.nametag.Position = new Vector2f((float)((int)(ViewManager.Instance.Viewrect.Left + TextBox.NAMETAG_POSITION.X)), (float)((int)(ViewManager.Instance.Viewrect.Top + TextBox.NAMETAG_POSITION.Y + this.textboxY)));
-		}
-
+		// Token: 0x0600019C RID: 412 RVA: 0x0000A9D8 File Offset: 0x00008BD8
 		public virtual void Show()
 		{
 			if (!this.visible)
 			{
-				this.visible = true;
 				this.Recenter();
+				this.visible = true;
+				this.typewriter.Visible = true;
 				this.window.Visible = true;
-				this.topLetterbox.Visible = true;
-				this.bottomLetterbox.Visible = true;
-				this.typewriterBox.Show();
-				this.nametag.Visible = this.nametagVisible;
-				this.advanceArrow.Visible = this.arrowVisible;
-				this.state = TextBox.AnimationState.SlideIn;
-				this.letterboxProgress = (this.canTransitionIn ? 0f : 1f);
-				this.UpdateLetterboxing(this.letterboxProgress);
+				this.advanceArrow.Visible = false;
+				this.Dequeue();
 			}
 		}
 
+		// Token: 0x0600019D RID: 413 RVA: 0x0000AA24 File Offset: 0x00008C24
 		public virtual void Hide()
 		{
 			if (this.visible)
 			{
 				this.visible = false;
-				this.Recenter();
-				this.advanceArrow.Visible = false;
-				this.state = TextBox.AnimationState.SlideOut;
-				this.letterboxProgress = (this.canTransitionOut ? 1f : 0f);
-				this.UpdateLetterboxing(this.letterboxProgress);
-				this.UpdateTextbox(this.letterboxProgress * 2f);
 			}
 		}
 
-		public void SetDimmer(float dim)
+		// Token: 0x0600019E RID: 414 RVA: 0x0000AA35 File Offset: 0x00008C35
+		public virtual void Clear()
 		{
-			this.dimmer.ChangeColor(new Color(0, 0, 0, (byte)(255f * dim)), 30);
+			this.typewriter.Clear();
+			this.hasPrinted = false;
 		}
 
-		private void OnViewMove(ViewManager sender, Vector2f center)
+		// Token: 0x0600019F RID: 415 RVA: 0x0000AA49 File Offset: 0x00008C49
+		public virtual void Reset()
 		{
-			if (this.visible || this.letterboxProgress > 0f)
+			this.Clear();
+			this.isWaitingOnPlayer = false;
+			this.hasPrinted = false;
+			this.isComplete = false;
+			this.typewriter.SetTextColor(Color.White, false);
+			this.typewriter.SetTextSound(Typewriter.BlipSound.Narration, false);
+		}
+
+		// Token: 0x060001A0 RID: 416 RVA: 0x0000AA84 File Offset: 0x00008C84
+		protected virtual void Recenter()
+		{
+			Vector2f finalCenter = ViewManager.Instance.FinalCenter;
+			Vector2f v = finalCenter - ViewManager.Instance.View.Size / 2f;
+			this.position = v + this.relativePosition;
+			this.window.Position = this.position;
+			this.advanceArrow.Position = v + this.relativeArrowPosition;
+			this.typewriter.Position = v + this.relativeTypewriterPosition;
+		}
+
+		// Token: 0x060001A1 RID: 417 RVA: 0x0000AB0D File Offset: 0x00008D0D
+		public virtual void Update()
+		{
+			if (this.visible)
 			{
-				this.Recenter();
+				if (this.isComplete && this.actionQueue.Count > 0)
+				{
+					this.Dequeue();
+					this.isComplete = false;
+				}
+				this.typewriter.Update();
 			}
 		}
 
-		private float TweenLetterboxing(float progress)
+		// Token: 0x060001A2 RID: 418 RVA: 0x0000AB48 File Offset: 0x00008D48
+		public override void Draw(RenderTarget target)
 		{
-			return (float)(0.5 - Math.Cos((double)progress * 3.141592653589793) / 2.0);
-		}
-
-		public override void Update()
-		{
-			base.Update();
-			switch (this.state)
+			if (this.window.Visible)
 			{
-			case TextBox.AnimationState.SlideIn:
-				if (this.letterboxProgress < 1f)
-				{
-					this.UpdateLetterboxing(this.TweenLetterboxing(this.letterboxProgress));
-					this.UpdateTextbox(this.letterboxProgress);
-					this.letterboxProgress += 0.2f;
-				}
-				else
-				{
-					this.state = TextBox.AnimationState.Textbox;
-					this.UpdateLetterboxing(1f);
-					this.UpdateTextbox(1f);
-				}
-				break;
-			case TextBox.AnimationState.Textbox:
-				if (this.visible)
-				{
-					this.typewriterBox.Input();
-					this.typewriterBox.Update();
-				}
-				break;
-			case TextBox.AnimationState.SlideOut:
-				if (this.letterboxProgress > 0f)
-				{
-					this.UpdateLetterboxing(this.TweenLetterboxing(this.letterboxProgress));
-					this.UpdateTextbox(this.letterboxProgress);
-					this.letterboxProgress -= 0.2f;
-				}
-				else
-				{
-					this.state = TextBox.AnimationState.Hide;
-					this.UpdateLetterboxing(0f);
-					this.UpdateTextbox(0f);
-					this.typewriterBox.Hide();
-					this.nametag.Visible = false;
-					this.window.Visible = false;
-					this.topLetterbox.Visible = false;
-					this.bottomLetterbox.Visible = false;
-				}
-				break;
+				this.window.Draw(target);
 			}
-			this.dimmer.Update();
+			if (this.typewriter.Visible)
+			{
+				this.typewriter.Draw(target);
+			}
+			if (this.advanceArrow.Visible)
+			{
+				this.advanceArrow.Draw(target);
+			}
 		}
 
+		// Token: 0x060001A3 RID: 419 RVA: 0x0000ABA0 File Offset: 0x00008DA0
 		protected override void Dispose(bool disposing)
 		{
+			if (!this.disposed)
+			{
+				if (disposing)
+				{
+					this.advanceArrow.Dispose();
+					this.window.Dispose();
+					this.typewriter.Dispose();
+				}
+				this.typewriter.OnTypewriterComplete -= this.typewriter_OnTypewriterComplete;
+				ViewManager.Instance.OnMove -= this.OnViewMove;
+			}
 			base.Dispose(disposing);
-			this.advanceArrow.Dispose();
-			this.window.Dispose();
-			this.nametag.Dispose();
-			this.topLetterbox.Dispose();
-			this.bottomLetterbox.Dispose();
-			this.typewriterBox.OnTypewriterComplete -= this.TypewriterComplete;
-			this.typewriterBox.OnTextWait -= this.TextWait;
-			InputManager.Instance.ButtonPressed -= this.ButtonPressed;
-			ViewManager.Instance.OnMove -= this.OnViewMove;
-			this.typewriterBox.Dispose();
 		}
 
-		protected const Button ADVANCE_BUTTON = Button.A;
-
-		protected const float LETTERBOX_HEIGHT = 14f;
-
-		protected const float LETTERBOX_SPEED = 0.2f;
-
-		protected const float TEXTBOX_Y_OFFSET = 4f;
-
+		// Token: 0x04000276 RID: 630
 		public const int DEPTH = 2147450880;
 
-		protected static Vector2f BOX_POSITION = new Vector2f(16f, 120f);
+		// Token: 0x04000277 RID: 631
+		private static readonly Vector2f TYPEWRITER_POSITION_OFFSET = new Vector2f(10f, 8f);
 
-		protected static Vector2f BOX_SIZE = new Vector2f(231f, 56f);
+		// Token: 0x04000278 RID: 632
+		private static readonly Vector2f TYPEWRITER_SIZE_OFFSET = new Vector2f(-31f, -14f);
 
-		protected static Vector2f TEXT_POSITION = new Vector2f(TextBox.BOX_POSITION.X + 10f, TextBox.BOX_POSITION.Y + 8f);
+		// Token: 0x04000279 RID: 633
+		private static readonly Vector2f ARROW_POSITION_OFFSET = new Vector2f(-14f, -6f);
 
-		protected static Vector2f TEXT_SIZE = new Vector2f(TextBox.BOX_SIZE.X - 31f, TextBox.BOX_SIZE.Y - 8f);
+		// Token: 0x0400027A RID: 634
+		private Vector2f relativePosition;
 
-		protected static Vector2f NAMETAG_POSITION = new Vector2f(TextBox.BOX_POSITION.X + 3f, TextBox.BOX_POSITION.Y - 14f);
+		// Token: 0x0400027B RID: 635
+		private Vector2f relativeArrowPosition;
 
-		protected static Vector2f NAMETEXT_POSITION = new Vector2f(TextBox.NAMETAG_POSITION.X + 5f, TextBox.NAMETAG_POSITION.Y + 1f);
+		// Token: 0x0400027C RID: 636
+		private Vector2f relativeTypewriterPosition;
 
-		protected static Vector2f BUTTON_POSITION = new Vector2f(TextBox.BOX_POSITION.X + TextBox.BOX_SIZE.X - 14f, TextBox.BOX_POSITION.Y + TextBox.BOX_SIZE.Y - 6f);
-
-		protected RenderPipeline pipeline;
-
-		protected TypewriterBox typewriterBox;
-
-		protected Nametag nametag;
-
+		// Token: 0x0400027D RID: 637
 		protected Graphic advanceArrow;
 
-		private WindowBox window;
+		// Token: 0x0400027E RID: 638
+		protected WindowBox window;
 
-		private ShapeGraphic topLetterbox;
+		// Token: 0x0400027F RID: 639
+		protected Typewriter typewriter;
 
-		private ShapeGraphic bottomLetterbox;
+		// Token: 0x04000280 RID: 640
+		private Queue<PrintAction> actionQueue;
 
-		protected bool visible;
+		// Token: 0x04000281 RID: 641
+		private bool isPaused;
 
-		protected bool nametagVisible;
+		// Token: 0x04000282 RID: 642
+		private int pauseTimerIndex;
 
-		protected bool arrowVisible;
+		// Token: 0x04000283 RID: 643
+		protected bool isWaitingOnPlayer;
 
-		protected bool textboxWaitForPlayer;
-
+		// Token: 0x04000284 RID: 644
 		protected bool hideAdvanceArrow;
 
-		protected bool typewriterDone;
+		// Token: 0x04000285 RID: 645
+		private bool hasPrinted;
 
-		private TextBox.AnimationState state;
+		// Token: 0x04000286 RID: 646
+		private bool isComplete;
 
-		private float letterboxProgress;
-
-		private float topLetterboxY;
-
-		private float bottomLetterboxY;
-
-		private float textboxY;
-
-		private bool canTransitionIn;
-
-		private bool canTransitionOut;
-
-		private ScreenDimmer dimmer;
-
-		private enum AnimationState
-		{
-			SlideIn,
-			Textbox,
-			SlideOut,
-			Hide
-		}
-
+		// Token: 0x02000047 RID: 71
+		// (Invoke) Token: 0x060001A8 RID: 424
 		public delegate void CompletionHandler();
 
-		public delegate void TypewriterCompletionHandler();
+		// Token: 0x02000048 RID: 72
+		// (Invoke) Token: 0x060001AC RID: 428
+		public delegate void TextTriggerHandler(int type, string[] args);
 	}
 }

@@ -10,8 +10,10 @@ using SFML.System;
 
 namespace Mother4.Battle.Background
 {
+	// Token: 0x020000C2 RID: 194
 	internal class BattleBackground
 	{
+		// Token: 0x06000408 RID: 1032 RVA: 0x0001A418 File Offset: 0x00018618
 		public BattleBackground(string file)
 		{
 			LayerParams[] array;
@@ -27,11 +29,13 @@ namespace Mother4.Battle.Background
 			this.Initialize(array);
 		}
 
+		// Token: 0x06000409 RID: 1033 RVA: 0x0001A4A4 File Offset: 0x000186A4
 		public BattleBackground(LayerParams[] parameters)
 		{
 			this.Initialize(parameters);
 		}
 
+		// Token: 0x0600040A RID: 1034 RVA: 0x0001A4B4 File Offset: 0x000186B4
 		private void Initialize(LayerParams[] parameters)
 		{
 			this.CreateLayers(parameters);
@@ -53,6 +57,7 @@ namespace Mother4.Battle.Background
 			this.bbgStateTranslation = new Vector2f(0f, 0f);
 		}
 
+		// Token: 0x0600040B RID: 1035 RVA: 0x0001A604 File Offset: 0x00018804
 		private void CreateLayers(LayerParams[] parameters)
 		{
 			Shader shader = new Shader(EmbeddedResources.GetStream("Mother4.Resources.bbg.vert"), EmbeddedResources.GetStream("Mother4.Resources.bbg.frag"));
@@ -64,6 +69,7 @@ namespace Mother4.Battle.Background
 			}
 		}
 
+		// Token: 0x0600040C RID: 1036 RVA: 0x0001A660 File Offset: 0x00018860
 		public void UpdateParams(LayerParams[] parameters)
 		{
 			if (parameters.Length == this.layers.Length)
@@ -82,6 +88,7 @@ namespace Mother4.Battle.Background
 			this.layers = new BackgroundLayer[0];
 		}
 
+		// Token: 0x0600040D RID: 1037 RVA: 0x0001A6B4 File Offset: 0x000188B4
 		public void ResetTranslation()
 		{
 			int num = this.layers.Length;
@@ -91,6 +98,7 @@ namespace Mother4.Battle.Background
 			}
 		}
 
+		// Token: 0x0600040E RID: 1038 RVA: 0x0001A6E4 File Offset: 0x000188E4
 		public void AddTranslation(float x, float y, float xFactor, float yFactor)
 		{
 			int num = this.layers.Length;
@@ -100,6 +108,7 @@ namespace Mother4.Battle.Background
 			}
 		}
 
+		// Token: 0x0600040F RID: 1039 RVA: 0x0001A718 File Offset: 0x00018918
 		public void SetBackgroundPosition(Vector2f position)
 		{
 			this.bbgStates.Transform.Translate(-this.bbgStateTranslation);
@@ -107,6 +116,7 @@ namespace Mother4.Battle.Background
 			this.bbgStateTranslation = position;
 		}
 
+		// Token: 0x06000410 RID: 1040 RVA: 0x0001A750 File Offset: 0x00018950
 		public void Draw(RenderTarget target)
 		{
 			int num = 0;
@@ -130,14 +140,19 @@ namespace Mother4.Battle.Background
 			target.Draw(this.bbgVerts, this.bbgStates);
 		}
 
+		// Token: 0x04000603 RID: 1539
 		private BackgroundLayer[] layers;
 
+		// Token: 0x04000604 RID: 1540
 		private RenderTexture[] buffers;
 
+		// Token: 0x04000605 RID: 1541
 		private VertexArray bbgVerts;
 
+		// Token: 0x04000606 RID: 1542
 		private RenderStates bbgStates;
 
+		// Token: 0x04000607 RID: 1543
 		private Vector2f bbgStateTranslation;
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Carbine;
@@ -8,18 +9,21 @@ using Carbine.GUI;
 using Carbine.Input;
 using Carbine.Scenes;
 using Carbine.Scenes.Transitions;
+using Carbine.Utility;
 using Mother4.Data;
+using Mother4.Data.Psi;
 using Mother4.GUI;
 using Mother4.GUI.Modifiers;
-using Mother4.Scenes.Transitions;
 using Rufini.Strings;
 using SFML.Graphics;
 using SFML.System;
 
 namespace Mother4.Scenes
 {
+	// Token: 0x02000114 RID: 276
 	internal class TitleScene : StandardScene
 	{
+		// Token: 0x060006A4 RID: 1700 RVA: 0x00029D40 File Offset: 0x00027F40
 		public TitleScene()
 		{
 			Fonts.LoadFonts(Settings.Locale);
@@ -47,9 +51,9 @@ namespace Mother4.Scenes
 					"Quit"
 				};
 			}
-			this.optionList = new ScrollingList(new Vector2f(32f, 80f), 0, items, 5, 16f, 80f, Paths.GRAPHICS + "realcursor.dat");
-			this.optionList.UseHighlightTextColor = true;
-			//optionList.fak= true;
+			this.optionList = new ScrollingList(new Vector2f(32f, 80f), 0, items, 5, 16f, 80f, Paths.GRAPHICS + "cursor.dat");
+			this.optionList.ShowSelectionRectangle = false;
+			this.optionList.UseHighlightTextColor = false;
 			this.pipeline.Add(this.optionList);
 			this.titleImage = new IndexedColorGraphic(Paths.GRAPHICS + "title.dat", "title", new Vector2f(160f, 44f), 100);
 			Version version = Assembly.GetEntryAssembly().GetName().Version;
@@ -59,7 +63,7 @@ namespace Mother4.Scenes
 				version.Minor,
 				version.Build,
 				version.Revision,
-				StringFile.Instance.Get("psi.alpha")
+				StringFile.Instance.Get("psi.symbols.alpha")
 			}));
 			this.versionText.Color = new Color(byte.MaxValue, byte.MaxValue, byte.MaxValue, 128);
 			this.pipeline.Add(this.titleImage);
@@ -70,6 +74,7 @@ namespace Mother4.Scenes
 			this.sfxCancel = AudioManager.Instance.Use(Paths.AUDIO + "cancel.wav", AudioType.Sound);
 		}
 
+		// Token: 0x060006A5 RID: 1701 RVA: 0x00029FC4 File Offset: 0x000281C4
 		private void AxisPressed(InputManager sender, Vector2f axis)
 		{
 			if (axis.Y < -0.1f)
@@ -86,50 +91,88 @@ namespace Mother4.Scenes
 			}
 		}
 
+		// Token: 0x060006A6 RID: 1702 RVA: 0x0002A020 File Offset: 0x00028220
 		private void ButtonPressed(InputManager sender, Button b)
 		{
-			if (b == Button.A || b == Button.Start)
+			if (b > Button.Start)
 			{
-				this.DoSelection();
-				return;
-			}
-			switch (b)
-			{
-			case Button.F1:
-			{
-				SceneManager.Instance.Transition = new IrisTransition(1f);
-				PartyManager.Instance.Clear();
-						PartyManager.Instance.AddAll(new CharacterType[]
+				if (b != Button.F1)
+				{
+					switch (b)
+					{
+					case Button.One:
+						goto IL_46;
+					case Button.Two:
+						SceneManager.Instance.Transition = new ColorFadeTransition(0.25f, Color.Black);
+						SceneManager.Instance.Push(new TextTestScene());
+						return;
+					case Button.Three:
+						SceneManager.Instance.Transition = new ColorFadeTransition(0.25f, Color.Black);
+						SceneManager.Instance.Push(new PsiTestScene());
+						return;
+					case Button.Four:
+						SceneManager.Instance.Transition = new ColorFadeTransition(0.25f, Color.Black);
+						SceneManager.Instance.Push(new SaveScene(SaveScene.Location.Belring, SaveFileManager.Instance.CurrentProfile));
+						return;
+					case Button.Five:
+						SceneManager.Instance.Transition = new ColorFadeTransition(0.25f, Color.Black);
+						SceneManager.Instance.Push(new EnemyTestScene());
+						return;
+					case Button.Six:
+					{
+						List<PsiData> allPsiData = PsiFile.Instance.GetAllPsiData();
+						using (List<PsiData>.Enumerator enumerator = allPsiData.GetEnumerator())
 						{
+							while (enumerator.MoveNext())
+							{
+								PsiData psiData = enumerator.Current;
+								Console.Write(psiData.QualifiedName);
+								Console.Write(" ");
+								for (int i = 0; i < psiData.Symbols.Length; i++)
+								{
+									Console.Write(psiData.GetSymbol(i));
+									if (i < psiData.Symbols.Length - 1)
+									{
+										Console.Write(", ");
+									}
+								}
+								Console.WriteLine();
+							}
+							return;
+						}
+						break;
+					}
+					case Button.Seven:
+						break;
+					default:
+						return;
+					}
+					Console.WriteLine("{0:x}\t{1}", Hash.Get("Hometown Strut"), "Hometown Strut");
+					Console.WriteLine("{0:x}\t{1}", Hash.Get("Hometown Laze"), "Hometown Laze");
+					Console.WriteLine("{0:x}\t{1}", Hash.Get("A House"), "A House");
+					return;
+				}
+				IL_46:
+				SceneManager.Instance.Transition = new ColorFadeTransition(0.25f, Color.Black);
+				PartyManager.Instance.Clear();
+				PartyManager.Instance.AddAll(new CharacterType[]
+				{
 					CharacterType.Travis,
 					CharacterType.Floyd,
-					CharacterType.Meryl,
-					CharacterType.Leo
-						});
-						OverworldScene newScene = new OverworldScene("debug_room.dat", new Vector2f(256f, 128f), 6, false, false, false);
+					CharacterType.Meryl
+				});
+				OverworldScene newScene = new OverworldScene("debug_room.dat", new Vector2f(256f, 128f), 6, false, false, false);
 				SceneManager.Instance.Push(newScene);
 				return;
 			}
-			case Button.F2:
-				SceneManager.Instance.Transition = new ColorFadeTransition(0.5f, Color.Black);
-				SceneManager.Instance.Push(new SaveScene(SaveScene.Location.Belring, SaveFileManager.Instance.CurrentProfile));
-				return;
-				case Button.Eight:
-					Engine.ScreenScale = 5;
-					PartyManager.Instance.AddAll(new CharacterType[]
-	{
-					CharacterType.Travis,
-					CharacterType.Floyd,
-					CharacterType.Meryl,
-					CharacterType.Leo
-	}); SceneManager.Instance.Transition = new BattleSwirlTransition(Overworld.BattleSwirlOverlay.Style.Blue);;
-					SceneManager.Instance.Push(new BattleScene(new EnemyType[1] { EnemyType.MysteriousTank }, true));
-					return;
-				default:
+			if (b != Button.A && b != Button.Start)
+			{
 				return;
 			}
+			this.DoSelection();
 		}
 
+		// Token: 0x060006A7 RID: 1703 RVA: 0x0002A2B0 File Offset: 0x000284B0
 		private void DoSelection()
 		{
 			int num = this.optionList.SelectedIndex;
@@ -141,22 +184,22 @@ namespace Mother4.Scenes
 			{
 			case 0:
 				this.sfxConfirm.Play();
-				SceneManager.Instance.Transition = new ColorFadeTransition(1f, Color.Black);
+				SceneManager.Instance.Transition = new ColorFadeTransition(0.25f, Color.Black);
 				SceneManager.Instance.Push(new MapTestSetupScene());
 				return;
 			case 1:
 				this.sfxConfirm.Play();
-				SceneManager.Instance.Transition = new ColorFadeTransition(1f, Color.Black);
+				SceneManager.Instance.Transition = new ColorFadeTransition(0.25f, Color.Black);
 				SceneManager.Instance.Push(new NamingScene());
 				return;
 			case 2:
 				this.sfxConfirm.Play();
-				SceneManager.Instance.Transition = new ColorFadeTransition(1f, Color.Black);
+				SceneManager.Instance.Transition = new ColorFadeTransition(0.25f, Color.Black);
 				SceneManager.Instance.Push(new ProfilesScene());
 				return;
 			case 3:
 				this.sfxConfirm.Play();
-				SceneManager.Instance.Transition = new ColorFadeTransition(1f, Color.Black);
+				SceneManager.Instance.Transition = new ColorFadeTransition(0.25f, Color.Black);
 				SceneManager.Instance.Push(new OptionsScene());
 				return;
 			case 4:
@@ -168,6 +211,7 @@ namespace Mother4.Scenes
 			}
 		}
 
+		// Token: 0x060006A8 RID: 1704 RVA: 0x0002A3DC File Offset: 0x000285DC
 		public override void Focus()
 		{
 			base.Focus();
@@ -179,6 +223,7 @@ namespace Mother4.Scenes
 			InputManager.Instance.ButtonPressed += this.ButtonPressed;
 		}
 
+		// Token: 0x060006A9 RID: 1705 RVA: 0x0002A466 File Offset: 0x00028666
 		public override void Unfocus()
 		{
 			base.Unfocus();
@@ -186,12 +231,14 @@ namespace Mother4.Scenes
 			InputManager.Instance.ButtonPressed -= this.ButtonPressed;
 		}
 
+		// Token: 0x060006AA RID: 1706 RVA: 0x0002A49A File Offset: 0x0002869A
 		public override void Update()
 		{
 			base.Update();
 			this.mod.Update();
 		}
 
+		// Token: 0x060006AB RID: 1707 RVA: 0x0002A4B0 File Offset: 0x000286B0
 		protected override void Dispose(bool disposing)
 		{
 			if (!this.disposed)
@@ -209,20 +256,28 @@ namespace Mother4.Scenes
 			base.Dispose(disposing);
 		}
 
+		// Token: 0x0400089C RID: 2204
 		private TextRegion versionText;
 
+		// Token: 0x0400089D RID: 2205
 		private ScrollingList optionList;
 
+		// Token: 0x0400089E RID: 2206
 		private IndexedColorGraphic titleImage;
 
+		// Token: 0x0400089F RID: 2207
 		private CarbineSound sfxCursorY;
 
+		// Token: 0x040008A0 RID: 2208
 		private CarbineSound sfxConfirm;
 
+		// Token: 0x040008A1 RID: 2209
 		private CarbineSound sfxCancel;
 
+		// Token: 0x040008A2 RID: 2210
 		private IGraphicModifier mod;
 
+		// Token: 0x040008A3 RID: 2211
 		private bool canContinue;
 	}
 }

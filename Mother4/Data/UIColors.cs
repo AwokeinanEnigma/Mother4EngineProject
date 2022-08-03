@@ -3,8 +3,11 @@ using SFML.Graphics;
 
 namespace Mother4.Data
 {
+	// Token: 0x0200008C RID: 140
 	internal static class UIColors
 	{
+		// Token: 0x17000080 RID: 128
+		// (get) Token: 0x060002D8 RID: 728 RVA: 0x000125BA File Offset: 0x000107BA
 		public static Color HighlightColor
 		{
 			get
@@ -13,6 +16,7 @@ namespace Mother4.Data
 			}
 		}
 
+		// Token: 0x0400042F RID: 1071
 		private static Color[] highlightColors = new Color[]
 		{
 			new Color(66, 240, 15),

@@ -7,8 +7,10 @@ using Mother4.Scripts.Actions;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000137 RID: 311
 	internal class EntityDeleteAction : RufiniAction
 	{
+		// Token: 0x06000721 RID: 1825 RVA: 0x0002DD38 File Offset: 0x0002BF38
 		public EntityDeleteAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -21,6 +23,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x06000722 RID: 1826 RVA: 0x0002DDAC File Offset: 0x0002BFAC
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			string name = base.GetValue<string>("name");

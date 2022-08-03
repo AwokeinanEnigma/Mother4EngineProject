@@ -5,13 +5,16 @@ using Mother4.Battle;
 
 namespace Mother4.Data
 {
+	// Token: 0x0200007A RID: 122
 	internal class LevelUpBuilder
 	{
+		// Token: 0x0600028E RID: 654 RVA: 0x0001009D File Offset: 0x0000E29D
 		public LevelUpBuilder(CharacterType[] party)
 		{
 			this.increases = new Dictionary<CharacterType, StatSet>();
 		}
 
+		// Token: 0x0600028F RID: 655 RVA: 0x000100B0 File Offset: 0x0000E2B0
 		public string GetLevelUpString()
 		{
 			StringBuilder stringBuilder = new StringBuilder();
@@ -39,6 +42,7 @@ namespace Mother4.Data
 			return stringBuilder.ToString();
 		}
 
+		// Token: 0x040003F2 RID: 1010
 		private Dictionary<CharacterType, StatSet> increases;
 	}
 }

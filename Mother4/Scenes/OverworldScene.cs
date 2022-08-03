@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using Carbine;
 using Carbine.Audio;
 using Carbine.Collision;
@@ -17,6 +16,7 @@ using Mother4.Actors.NPCs;
 using Mother4.Battle;
 using Mother4.Battle.Background;
 using Mother4.Data;
+using Mother4.Data.Enemies;
 using Mother4.GUI;
 using Mother4.Items;
 using Mother4.Overworld;
@@ -30,8 +30,11 @@ using SFML.System;
 
 namespace Mother4.Scenes
 {
+	// Token: 0x0200010D RID: 269
 	internal class OverworldScene : StandardScene
 	{
+		// Token: 0x17000104 RID: 260
+		// (get) Token: 0x06000663 RID: 1635 RVA: 0x0002704A File Offset: 0x0002524A
 		public ScreenDimmer Dimmer
 		{
 			get
@@ -40,6 +43,8 @@ namespace Mother4.Scenes
 			}
 		}
 
+		// Token: 0x17000105 RID: 261
+		// (get) Token: 0x06000664 RID: 1636 RVA: 0x00027052 File Offset: 0x00025252
 		public PartyTrain PartyTrain
 		{
 			get
@@ -48,6 +53,8 @@ namespace Mother4.Scenes
 			}
 		}
 
+		// Token: 0x17000106 RID: 262
+		// (get) Token: 0x06000665 RID: 1637 RVA: 0x0002705A File Offset: 0x0002525A
 		public IrisOverlay IrisOverlay
 		{
 			get
@@ -56,6 +63,7 @@ namespace Mother4.Scenes
 			}
 		}
 
+		// Token: 0x06000666 RID: 1638 RVA: 0x00027064 File Offset: 0x00025264
 		public OverworldScene(string mapName, Vector2f initialPosition, int initialDirection, bool initialRunning, bool extendParty, bool enableLoadScripts)
 		{
 			this.mapName = mapName;
@@ -64,20 +72,16 @@ namespace Mother4.Scenes
 			this.initialRunning = initialRunning;
 			this.enableLoadScripts = enableLoadScripts;
 			this.extendParty = extendParty;
+			this.collisionResults = new ICollidable[8];
 			this.initialized = false;
 		}
 
-		public OverworldScene(string mapName, bool enableLoadScripts)
+		// Token: 0x06000667 RID: 1639 RVA: 0x000270B7 File Offset: 0x000252B7
+		public OverworldScene(string mapName, bool enableLoadScripts) : this(mapName, VectorMath.ZERO_VECTOR, 6, false, false, enableLoadScripts)
 		{
-			this.mapName = mapName;
-			this.initialPosition = VectorMath.ZERO_VECTOR;
-			this.initialDirection = 6;
-			this.initialRunning = false;
-			this.enableLoadScripts = enableLoadScripts;
-			this.extendParty = false;
-			this.initialized = false;
 		}
 
+		// Token: 0x06000668 RID: 1640 RVA: 0x000270CC File Offset: 0x000252CC
 		private IrisOverlay GetIrisOverlay()
 		{
 			if (this.iris == null)
@@ -88,6 +92,7 @@ namespace Mother4.Scenes
 			return this.iris;
 		}
 
+		// Token: 0x06000669 RID: 1641 RVA: 0x00027113 File Offset: 0x00025313
 		public void SetTilesetPalette(int tilesetPalette)
 		{
 			if (this.initialized && this.mapGroups.Count > 0)
@@ -96,6 +101,21 @@ namespace Mother4.Scenes
 			}
 		}
 
+		// Token: 0x0600066A RID: 1642 RVA: 0x00027142 File Offset: 0x00025342
+		public void SetLetterboxing(bool enabled)
+		{
+			if (this.initialized)
+			{
+				if (enabled)
+				{
+					this.letterboxing.Show();
+					return;
+				}
+				this.letterboxing.Hide();
+			}
+		}
+
+		// Token: 0x0600066B RID: 1643 RVA: 0x00027168 File Offset: 0x00025368
 		private void SetExecutorScript(string scriptName, bool isTelepathy)
 		{
 			Script? script = ScriptLoader.Load(scriptName);
@@ -114,25 +134,10 @@ namespace Mother4.Scenes
 			}
 		}
 
-		private void HandleCheckAction(bool isTelepathy)
+		// Token: 0x0600066C RID: 1644 RVA: 0x000271E4 File Offset: 0x000253E4
+		private bool HandleNpcCheck(NPC npc, bool isTelepathy)
 		{
-			bool flag = false;
-			Vector2f position = this.player.Position + this.player.CheckVector;
-			PlaceFreeContext placeFreeContext = this.collisionManager.PlaceFree(this.player, position);
-			Console.WriteLine("checking at {0},{1}", position.X, position.Y);
-			while (!(placeFreeContext.CollidingObject is NPC))
-			{
-				if (flag || !(placeFreeContext.CollidingObject is SolidStatic))
-				{
-					this.SetExecutorScript("Default", isTelepathy);
-					return;
-				}
-				Vector2f position2 = this.player.Position + this.player.CheckVector * 2f;
-				placeFreeContext = this.collisionManager.PlaceFree(this.player, position2);
-				Console.WriteLine("checking again at {0},{1}", position2.X, position2.Y);
-				flag = true;
-			}
-			NPC npc = (NPC)placeFreeContext.CollidingObject;
+			bool result = false;
 			Map.NPCtext npctext = new Map.NPCtext
 			{
 				ID = "",
@@ -148,37 +153,91 @@ namespace Mother4.Scenes
 					npctext = npctext2;
 				}
 			}
-			if (npctext.Flag <= -1)
+			if (npctext.Flag > -1)
 			{
-				this.SetExecutorScript("Default", isTelepathy);
-				return;
-			}
-			double num2 = Math.Atan2((double)(npc.Position.Y - this.player.Position.Y), (double)(-(double)(npc.Position.X - this.player.Position.X)));
-			int num3 = (int)Math.Round(num2 / 0.7853981633974483);
-			if (num3 < 0)
-			{
-				num3 += 8;
-			}
-			npc.Direction = num3;
-			Script? script = ScriptLoader.Load(npctext.ID);
-			if (script != null)
-			{
-				Script value = script.Value;
-				if (isTelepathy)
+				double num2 = Math.Atan2((double)(npc.Position.Y - this.player.Position.Y), (double)(-(double)(npc.Position.X - this.player.Position.X)));
+				int num3 = (int)Math.Round(num2 / 0.7853981633974483);
+				if (num3 < 0)
 				{
-					RufiniAction[] array = new RufiniAction[value.Actions.Length + 2];
-					Array.Copy(value.Actions, 0, array, 1, value.Actions.Length);
-					array[0] = new TelepathyStartAction();
-					array[array.Length - 1] = new TelepathyEndAction();
-					value.Actions = array;
+					num3 += 8;
 				}
-				this.executor.SetCheckedNPC(npc);
-				this.executor.PushScript(value);
-				return;
+				npc.Direction = num3;
+				Script? script = ScriptLoader.Load(npctext.ID);
+				if (script != null)
+				{
+					result = true;
+					Script value = script.Value;
+					if (isTelepathy)
+					{
+						RufiniAction[] array = new RufiniAction[value.Actions.Length + 2];
+						Array.Copy(value.Actions, 0, array, 1, value.Actions.Length);
+						array[0] = new TelepathyStartAction();
+						array[array.Length - 1] = new TelepathyEndAction();
+						value.Actions = array;
+					}
+					this.executor.SetCheckedNPC(npc);
+					this.executor.PushScript(value);
+				}
 			}
-			this.SetExecutorScript("Default", isTelepathy);
+			return result;
 		}
 
+		// Token: 0x0600066D RID: 1645 RVA: 0x00027390 File Offset: 0x00025590
+		private void HandleCheckAction(bool isTelepathy)
+		{
+			bool flag = false;
+			bool flag2 = false;
+			Vector2f position = this.player.Position + this.player.CheckVector;
+			Console.WriteLine("Checking at {0},{1}", position.X, position.Y);
+			if (!this.collisionManager.PlaceFree(this.player, position, this.collisionResults))
+			{
+				do
+				{
+					Console.WriteLine("results loop start");
+					for (int i = 0; i < this.collisionResults.Length; i++)
+					{
+						Console.Write("{0}: ", i);
+						ICollidable collidable = this.collisionResults[i];
+						if (collidable is NPC)
+						{
+							Console.WriteLine("Found NPC");
+							flag2 = this.HandleNpcCheck((NPC)collidable, isTelepathy);
+							flag = false;
+							break;
+						}
+						if (!flag && collidable is SolidStatic)
+						{
+							Console.WriteLine("Found SolidStatic");
+							flag = true;
+						}
+						else
+						{
+							Console.WriteLine("Not an NPC or SolidStatic");
+							flag = false;
+							if (collidable == null)
+							{
+								break;
+							}
+						}
+					}
+					Console.WriteLine("results loop end");
+					if (flag)
+					{
+						Vector2f position2 = this.player.Position + this.player.CheckVector * 2f;
+						Console.WriteLine("Checking again at {0},{1}", position2.X, position2.Y);
+						bool flag3 = this.collisionManager.PlaceFree(this.player, position2, this.collisionResults);
+					}
+				}
+				while (flag);
+			}
+			if (!flag2)
+			{
+				Console.WriteLine("Tried checking, but there was no script");
+				this.SetExecutorScript("Default", isTelepathy);
+			}
+		}
+
+		// Token: 0x0600066E RID: 1646 RVA: 0x0002751C File Offset: 0x0002571C
 		private void ButtonPressed(InputManager sender, Button b)
 		{
 			if (b == Button.F1)
@@ -186,7 +245,7 @@ namespace Mother4.Scenes
 				Console.WriteLine("View position: ({0},{1})", ViewManager.Instance.FinalCenter.X, ViewManager.Instance.FinalCenter.Y);
 			}
 			if (!this.executor.Running)
-			{	
+			{
 				if (b == Button.One)
 				{
 					SceneManager.Instance.Transition = new BattleSwirlTransition(BattleSwirlOverlay.Style.Blue);
@@ -228,7 +287,7 @@ namespace Mother4.Scenes
 					});
 					SceneManager.Instance.Push(new BattleScene(new EnemyType[]
 					{
-						EnemyType.Mouse
+						EnemyType.Rat
 					}, true));
 				}
 				else if (b == Button.Three)
@@ -375,20 +434,75 @@ namespace Mother4.Scenes
 				{
 					SceneManager.Instance.Transition = new BattleSwirlTransition(BattleSwirlOverlay.Style.Blue);
 					EnemyType[] array = new EnemyType[Engine.Random.Next(12) + 1];
-					string[] names = Enum.GetNames(typeof(EnemyType));
+					List<EnemyType> allEnemyTypes = EnemyFile.Instance.GetAllEnemyTypes();
 					for (int i = 0; i < array.Length; i++)
 					{
-						array[i] = (EnemyType)Enum.Parse(typeof(EnemyType), names[Engine.Random.Next(names.Length - 1) + 1]);
+						array[i] = allEnemyTypes[Engine.Random.Next(allEnemyTypes.Count - 1) + 1];
 					}
 					SceneManager.Instance.Push(new BattleScene(array, true));
 				}
 				else if (b == Button.Eight)
 				{
 					SceneManager.Instance.Transition = new BattleSwirlTransition(BattleSwirlOverlay.Style.Blue);
+					CharacterStats.SetStats(CharacterType.Leo, new StatSet
+					{
+						HP = 121,
+						MaxHP = 302,
+						PP = 22,
+						MaxPP = 80,
+						Meter = 0.44f,
+						Offense = 20,
+						Level = 5,
+						Speed = 15
+					});
 					SceneManager.Instance.Push(new BattleScene(new EnemyType[]
 					{
-						EnemyType.Flamingo,
-						EnemyType.Flamingo
+						EnemyType.PunkAssassin,
+						EnemyType.PunkAssassin,
+						EnemyType.PunkEnforcer
+					}, true));
+				}
+				else if (b == Button.Nine)
+				{
+					SceneManager.Instance.Transition = new BattleSwirlTransition(BattleSwirlOverlay.Style.Blue);
+					CharacterStats.SetStats(CharacterType.Travis, new StatSet
+					{
+						HP = 223,
+						MaxHP = 302,
+						PP = 44,
+						MaxPP = 80,
+						Meter = 0.29333332f,
+						Offense = 20,
+						Level = 5,
+						Speed = 20
+					});
+					CharacterStats.SetStats(CharacterType.Floyd, new StatSet
+					{
+						HP = 152,
+						MaxHP = 289,
+						PP = 0,
+						MaxPP = 0,
+						Meter = 0.53333336f,
+						Offense = 20,
+						Level = 5,
+						Speed = 15
+					});
+					CharacterStats.SetStats(CharacterType.Meryl, new StatSet
+					{
+						HP = 90,
+						MaxHP = 205,
+						PP = 120,
+						MaxPP = 135,
+						Meter = 0.08f,
+						Offense = 20,
+						Level = 5,
+						Speed = 15
+					});
+					SceneManager.Instance.Push(new BattleScene(new EnemyType[]
+					{
+						EnemyType.RatDispenser,
+						EnemyType.RatDispenser,
+						EnemyType.Rat
 					}, true));
 				}
 				if (b == Button.Start)
@@ -420,22 +534,14 @@ namespace Mother4.Scenes
 				if (b == Button.F6)
 				{
 					SaveProfile currentProfile = SaveFileManager.Instance.CurrentProfile;
-
 					currentProfile.IsValid = true;
 					currentProfile.Party = PartyManager.Instance.ToArray();
 					currentProfile.MapName = this.mapName;
 					currentProfile.Position = this.player.Position;
 					currentProfile.Time += Engine.SessionTime;
 					currentProfile.Flavor = (int)Settings.WindowFlavor;
-
-				//	SceneManager.Instance.Transition = new InstantTransition();
-				//	SceneManager.Instance.Push(new SaveScene(SaveScene.Location.Belring, currentProfile));
-				
-
 					SaveFileManager.Instance.CurrentProfile = currentProfile;
-
 					SaveFileManager.Instance.SaveFile();
-
 					return;
 				}
 				if (b == Button.F7)
@@ -446,15 +552,16 @@ namespace Mother4.Scenes
 			}
 		}
 
+		// Token: 0x0600066F RID: 1647 RVA: 0x00028058 File Offset: 0x00026258
 		private void Initialize()
 		{
-			int colorIndex = 1;
 			ViewManager.Instance.Reset();
 			this.screenDimmer = new ScreenDimmer(this.pipeline, Color.Transparent, 0, 2147450870);
-			this.textbox = new TextBox(this.pipeline, colorIndex);
-			this.actorManager.Add(this.textbox);
-			this.questionbox = new QuestionBox(this.pipeline, colorIndex);
-			this.actorManager.Add(this.questionbox);
+			this.textbox = new OverworldTextBox();
+			this.pipeline.Add(this.textbox);
+			this.letterboxing = new LetterboxingOverlay();
+			this.pipeline.Add(this.letterboxing);
+			this.footstepPlayer = new FootstepPlayer();
 			Map map = MapLoader.Load(Paths.MAPS + this.mapName, Paths.GRAPHICS);
 			if (this.initialPosition == VectorMath.ZERO_VECTOR)
 			{
@@ -465,12 +572,14 @@ namespace Mother4.Scenes
 			this.partyTrain = new PartyTrain(this.initialPosition, this.initialDirection, map.Head.Ocean ? TerrainType.Ocean : TerrainType.None, this.extendParty);
 			this.player = new Player(this.pipeline, this.collisionManager, this.partyTrain, this.initialPosition, this.initialDirection, array[0], map.Head.Shadows, map.Head.Ocean, this.initialRunning);
 			this.player.OnCollision += this.OnPlayerCollision;
+			this.player.OnRunningChange += this.OnPlayerRunningChange;
 			this.actorManager.Add(this.player);
 			this.collisionManager.Add(this.player);
 			for (int i = 1; i < array.Length; i++)
 			{
-				PartyFollower follower = new PartyFollower(this.pipeline, this.partyTrain, array[i], this.player.Position, this.player.Direction, map.Head.Shadows);
-				this.partyTrain.Add(follower);
+				PartyFollower partyFollower = new PartyFollower(this.pipeline, this.collisionManager, this.partyTrain, array[i], this.player.Position, this.player.Direction, map.Head.Shadows);
+				this.partyTrain.Add(partyFollower);
+				this.collisionManager.Add(partyFollower);
 			}
 			List<NPC> addActors = MapPopulator.GenerateNPCs(this.pipeline, this.collisionManager, map);
 			this.actorManager.AddAll<NPC>(addActors);
@@ -500,7 +609,6 @@ namespace Mother4.Scenes
 				ActorManager = this.actorManager,
 				CollisionManager = this.collisionManager,
 				TextBox = this.textbox,
-				QuestionBox = this.questionbox,
 				Player = this.player,
 				Paths = map.Paths,
 				Areas = map.Areas
@@ -547,6 +655,7 @@ namespace Mother4.Scenes
 			this.initialized = true;
 		}
 
+		// Token: 0x06000670 RID: 1648 RVA: 0x000285CC File Offset: 0x000267CC
 		public override void Focus()
 		{
 			base.Focus();
@@ -570,10 +679,10 @@ namespace Mother4.Scenes
 			if (this.battleEnemies != null)
 			{
 				this.player.MovementLocked = false;
-				foreach (Enemy enemy in this.battleEnemies)
+				foreach (EnemyNPC enemyNPC in this.battleEnemies)
 				{
-					this.actorManager.Remove(enemy);
-					this.collisionManager.Remove(enemy);
+					this.actorManager.Remove(enemyNPC);
+					this.collisionManager.Remove(enemyNPC);
 				}
 			}
 			if (FlagManager.Instance[3])
@@ -583,6 +692,7 @@ namespace Mother4.Scenes
 			}
 			Engine.ClearColor = this.backColor;
 			InputManager.Instance.ButtonPressed += this.ButtonPressed;
+			this.footstepPlayer.Resume();
 			if (!this.dontPauseMusic)
 			{
 				if (this.musicName != null)
@@ -604,6 +714,7 @@ namespace Mother4.Scenes
 			}
 		}
 
+		// Token: 0x06000671 RID: 1649 RVA: 0x0002876C File Offset: 0x0002696C
 		public void GoToMap(string map, float xto, float yto, int direction, bool running, bool extendParty, ITransition transition)
 		{
 			Console.WriteLine("DOOR TIME! Loading {0}", map);
@@ -611,6 +722,7 @@ namespace Mother4.Scenes
 			SceneManager.Instance.Push(new OverworldScene(map, new Vector2f(xto, yto), direction, running, extendParty, this.enableLoadScripts), true);
 		}
 
+		// Token: 0x06000672 RID: 1650 RVA: 0x000287AC File Offset: 0x000269AC
 		public void GoToMap(Portal door, ITransition transition)
 		{
 			transition.Blocking = true;
@@ -618,41 +730,58 @@ namespace Mother4.Scenes
 			this.GoToMap(door.Map, door.PositionTo.X, door.PositionTo.Y, direction, this.player.Running, false, transition);
 		}
 
-		private void OnPlayerCollision(Player sender, PlaceFreeContext data)
+		// Token: 0x06000673 RID: 1651 RVA: 0x0002880D File Offset: 0x00026A0D
+		private void OnPlayerRunningChange(Player sender)
 		{
-			if (data.CollidingObject is Portal)
+			if (sender.Running)
 			{
-				this.GoToMap((Portal)data.CollidingObject, new ColorFadeTransition(0.5f, Color.Black));
+				this.footstepPlayer.Start();
 				return;
 			}
-			if (data.CollidingObject is TriggerArea)
+			this.footstepPlayer.Stop();
+		}
+
+		// Token: 0x06000674 RID: 1652 RVA: 0x00028830 File Offset: 0x00026A30
+		private void OnPlayerCollision(Player sender, ICollidable[] collisionObjects)
+		{
+			foreach (ICollidable collidable in collisionObjects)
 			{
-				string script = ((TriggerArea)data.CollidingObject).Script;
-				Console.WriteLine("Trigger Area - " + script);
-				this.SetExecutorScript(script, false);
-				this.executor.Execute();
-				data.CollidingObject.Solid = false;
-				return;
-			}
-			if (data.CollidingObject is Enemy)
-			{
-				Enemy enemy = (Enemy)data.CollidingObject;
-				enemy.MovementLocked = true;
-				enemy.FreezeSpriteForever();
-				this.battleEnemies = new List<Enemy>();
-				this.battleEnemies.Add(enemy);
-				this.player.MovementLocked = true;
-				this.musicPosition = AudioManager.Instance.BGM.Position;
-				AudioManager.Instance.BGM.Stop();
-				this.battleStartSound.Play();
-				SceneManager.Instance.Transition = new BattleSwirlTransition(BattleSwirlOverlay.Style.Blue);
-				SceneManager.Instance.Push(new BattleScene(new EnemyType[]
+				if (collidable is Portal)
 				{
-					enemy.Type
-				}, true));
+					this.GoToMap((Portal)collidable, new ColorFadeTransition(0.5f, Color.Black));
+					return;
+				}
+				if (collidable is TriggerArea)
+				{
+					string script = ((TriggerArea)collidable).Script;
+					Console.WriteLine("Trigger Area - " + script);
+					this.SetExecutorScript(script, false);
+					this.executor.Execute();
+					collidable.Solid = false;
+					return;
+				}
+				if (collidable is EnemyNPC)
+				{
+					EnemyNPC enemyNPC = (EnemyNPC)collidable;
+					enemyNPC.MovementLocked = true;
+					enemyNPC.FreezeSpriteForever();
+					this.battleEnemies = new List<EnemyNPC>();
+					this.battleEnemies.Add(enemyNPC);
+					this.player.MovementLocked = true;
+					this.musicPosition = AudioManager.Instance.BGM.Position;
+					AudioManager.Instance.BGM.Stop();
+					this.battleStartSound.Play();
+					SceneManager.Instance.Transition = new BattleSwirlTransition(BattleSwirlOverlay.Style.Blue);
+					SceneManager.Instance.Push(new BattleScene(new EnemyType[]
+					{
+						enemyNPC.Type
+					}, true));
+					return;
+				}
 			}
 		}
 
+		// Token: 0x06000675 RID: 1653 RVA: 0x00028994 File Offset: 0x00026B94
 		public override void Unfocus()
 		{
 			base.Unfocus();
@@ -674,6 +803,7 @@ namespace Mother4.Scenes
 						((TileGroup)x).AnimationEnabled = false;
 					}
 				});
+				this.footstepPlayer.Pause();
 				this.openingMenu = false;
 			}
 			InputManager.Instance.ButtonPressed -= this.ButtonPressed;
@@ -683,11 +813,13 @@ namespace Mother4.Scenes
 			}
 		}
 
+		// Token: 0x06000676 RID: 1654 RVA: 0x00028A40 File Offset: 0x00026C40
 		public override void Unload()
 		{
 			this.player.OnCollision -= this.OnPlayerCollision;
 		}
 
+		// Token: 0x06000677 RID: 1655 RVA: 0x00028A5C File Offset: 0x00026C5C
 		private void UpdateSpawners()
 		{
 			for (int i = 0; i < this.spawners.Count; i++)
@@ -695,11 +827,11 @@ namespace Mother4.Scenes
 				EnemySpawner enemySpawner = this.spawners[i];
 				if (!enemySpawner.Bounds.Intersects(ViewManager.Instance.Viewrect))
 				{
-					List<Enemy> list = enemySpawner.GenerateEnemies(this.pipeline, this.collisionManager);
+					List<EnemyNPC> list = enemySpawner.GenerateEnemies(this.pipeline, this.collisionManager);
 					if (list != null)
 					{
-						this.actorManager.AddAll<Enemy>(list);
-						this.collisionManager.AddAll<Enemy>(list);
+						this.actorManager.AddAll<EnemyNPC>(list);
+						this.collisionManager.AddAll<EnemyNPC>(list);
 					}
 				}
 				else
@@ -709,6 +841,7 @@ namespace Mother4.Scenes
 			}
 		}
 
+		// Token: 0x06000678 RID: 1656 RVA: 0x00028AE0 File Offset: 0x00026CE0
 		public override void Update()
 		{
 			base.Update();
@@ -722,9 +855,11 @@ namespace Mother4.Scenes
 				this.UpdateSpawners();
 				this.screenDimmer.Update();
 				this.executor.Execute();
+				this.textbox.Update();
 			}
 		}
 
+		// Token: 0x06000679 RID: 1657 RVA: 0x00028B40 File Offset: 0x00026D40
 		public override void Draw()
 		{
 			if (this.testBack != null)
@@ -746,6 +881,7 @@ namespace Mother4.Scenes
 			}
 		}
 
+		// Token: 0x0600067A RID: 1658 RVA: 0x00028C14 File Offset: 0x00026E14
 		protected override void Dispose(bool disposing)
 		{
 			if (!this.disposed)
@@ -757,65 +893,131 @@ namespace Mother4.Scenes
 						this.pipeline.Remove(tileGroup);
 						tileGroup.Dispose();
 					}
+					this.actorManager.Clear();
+					foreach (TileGroup tileGroup2 in this.mapGroups)
+					{
+						tileGroup2.Dispose();
+					}
+					foreach (ParallaxBackground parallaxBackground in this.parallaxes)
+					{
+						parallaxBackground.Dispose();
+					}
+					this.screenDimmer.Dispose();
+					this.letterboxing.Dispose();
+					this.textbox.Dispose();
+					this.footstepPlayer.Dispose();
+					this.pipeline.Clear();
+					if (this.iris != null)
+					{
+						this.iris.Dispose();
+					}
 				}
-				base.Dispose(disposing);
+				this.actorManager = null;
+				this.mapGroups = null;
+				this.parallaxes = null;
+				this.screenDimmer = null;
+				this.letterboxing = null;
+				this.textbox = null;
+				this.pipeline = null;
+				this.collisionManager = null;
+				this.footstepPlayer = null;
+				this.player.OnCollision -= this.OnPlayerCollision;
+				this.player = null;
 			}
+			base.Dispose(disposing);
 		}
 
+		// Token: 0x04000845 RID: 2117
+		private const int COLLISION_RESULTS_SIZE = 8;
+
+		// Token: 0x04000846 RID: 2118
 		private const int DIMMER_DEPTH = 2147450870;
 
+		// Token: 0x04000847 RID: 2119
 		private Color backColor;
 
+		// Token: 0x04000848 RID: 2120
 		private CollisionManager collisionManager;
 
+		// Token: 0x04000849 RID: 2121
+		private ICollidable[] collisionResults;
+
+		// Token: 0x0400084A RID: 2122
 		private Player player;
 
+		// Token: 0x0400084B RID: 2123
 		private PartyTrain partyTrain;
 
+		// Token: 0x0400084C RID: 2124
 		private ScreenDimmer screenDimmer;
 
-		private TextBox textbox;
+		// Token: 0x0400084D RID: 2125
+		private OverworldTextBox textbox;
 
-		private QuestionBox questionbox;
-
+		// Token: 0x0400084E RID: 2126
 		private ScriptExecutor executor;
 
+		// Token: 0x0400084F RID: 2127
 		private CarbineSound battleStartSound;
 
+		// Token: 0x04000850 RID: 2128
 		private string musicName;
 
+		// Token: 0x04000851 RID: 2129
 		private uint musicPosition;
 
+		// Token: 0x04000852 RID: 2130
 		private bool dontPauseMusic;
 
+		// Token: 0x04000853 RID: 2131
 		private IList<EnemySpawner> spawners;
 
-		private IList<Enemy> battleEnemies;
+		// Token: 0x04000854 RID: 2132
+		private IList<EnemyNPC> battleEnemies;
 
+		// Token: 0x04000855 RID: 2133
 		private IList<ParallaxBackground> parallaxes;
 
+		// Token: 0x04000856 RID: 2134
 		private BattleBackgroundRenderable testBack;
 
+		// Token: 0x04000857 RID: 2135
 		private IList<TileGroup> mapGroups;
 
+		// Token: 0x04000858 RID: 2136
 		private string mapName;
 
+		// Token: 0x04000859 RID: 2137
 		private Vector2f initialPosition;
 
+		// Token: 0x0400085A RID: 2138
 		private int initialDirection;
 
+		// Token: 0x0400085B RID: 2139
 		private bool initialRunning;
 
+		// Token: 0x0400085C RID: 2140
 		private IrisOverlay iris;
 
+		// Token: 0x0400085D RID: 2141
+		private LetterboxingOverlay letterboxing;
+
+		// Token: 0x0400085E RID: 2142
 		private bool initialized;
 
+		// Token: 0x0400085F RID: 2143
 		private bool enableLoadScripts;
 
+		// Token: 0x04000860 RID: 2144
 		private bool extendParty;
 
+		// Token: 0x04000861 RID: 2145
 		private bool openingMenu;
 
+		// Token: 0x04000862 RID: 2146
 		private RainOverlay rainOverlay;
+
+		// Token: 0x04000863 RID: 2147
+		private FootstepPlayer footstepPlayer;
 	}
 }

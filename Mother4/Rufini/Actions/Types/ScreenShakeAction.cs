@@ -7,8 +7,10 @@ using SFML.System;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000156 RID: 342
 	internal class ScreenShakeAction : RufiniAction
 	{
+		// Token: 0x0600076C RID: 1900 RVA: 0x000307DC File Offset: 0x0002E9DC
 		public ScreenShakeAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -36,6 +38,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x0600076D RID: 1901 RVA: 0x000308A0 File Offset: 0x0002EAA0
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			bool value = base.GetValue<bool>("x");

@@ -5,8 +5,10 @@ using Mother4.Data;
 
 namespace Mother4.Battle.Actions
 {
+	// Token: 0x020000B6 RID: 182
 	internal class EnemyDecisionAction : DecisionAction
 	{
+		// Token: 0x060003E8 RID: 1000 RVA: 0x00018BF4 File Offset: 0x00016DF4
 		public EnemyDecisionAction(ActionParams aparams) : base(aparams)
 		{
 			this.enemyType = (this.sender as EnemyCombatant).Enemy;
@@ -18,6 +20,7 @@ namespace Mother4.Battle.Actions
 			this.aicontrol = new RandomAI(this.controller, this.sender);
 		}
 
+		// Token: 0x060003E9 RID: 1001 RVA: 0x00018C60 File Offset: 0x00016E60
 		protected override void UpdateAction()
 		{
 			base.UpdateAction();
@@ -56,8 +59,10 @@ namespace Mother4.Battle.Actions
 			this.complete = true;
 		}
 
+		// Token: 0x040005A8 RID: 1448
 		private EnemyType enemyType;
 
+		// Token: 0x040005A9 RID: 1449
 		private IEnemyAI aicontrol;
 	}
 }

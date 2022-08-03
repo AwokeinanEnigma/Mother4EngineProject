@@ -9,8 +9,10 @@ using SFML.System;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x0200013B RID: 315
 	internal class EntityMoveAction : RufiniAction
 	{
+		// Token: 0x0600072C RID: 1836 RVA: 0x0002E574 File Offset: 0x0002C774
 		public EntityMoveAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -53,6 +55,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x0600072D RID: 1837 RVA: 0x0002E6E8 File Offset: 0x0002C8E8
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			ActionReturnContext result = default(ActionReturnContext);
@@ -102,6 +105,7 @@ namespace Rufini.Actions.Types
 			return result;
 		}
 
+		// Token: 0x0600072E RID: 1838 RVA: 0x0002E828 File Offset: 0x0002CA28
 		private void OnMoveComplete(PointMover sender)
 		{
 			sender.OnMoveComplete -= this.OnMoveComplete;
@@ -111,8 +115,10 @@ namespace Rufini.Actions.Types
 			}
 		}
 
+		// Token: 0x04000940 RID: 2368
 		private ExecutionContext context;
 
+		// Token: 0x04000941 RID: 2369
 		private bool blocking;
 	}
 }

@@ -9,8 +9,10 @@ using SFML.Graphics;
 
 namespace Mother4.Scripts.Actions.Types
 {
+	// Token: 0x0200013E RID: 318
 	internal class GoToMapAction : RufiniAction
 	{
+		// Token: 0x06000733 RID: 1843 RVA: 0x0002EA90 File Offset: 0x0002CC90
 		public GoToMapAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -53,6 +55,7 @@ namespace Mother4.Scripts.Actions.Types
 			};
 		}
 
+		// Token: 0x06000734 RID: 1844 RVA: 0x0002EBD8 File Offset: 0x0002CDD8
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			Scene scene = SceneManager.Instance.Peek();

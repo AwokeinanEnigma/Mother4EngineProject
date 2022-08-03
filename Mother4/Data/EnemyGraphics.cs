@@ -1,69 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
+using Mother4.Data.Enemies;
 
 namespace Mother4.Data
 {
+	// Token: 0x020000EF RID: 239
 	internal class EnemyGraphics
 	{
+		// Token: 0x06000580 RID: 1408 RVA: 0x0002169C File Offset: 0x0001F89C
 		public static string GetFilename(EnemyType enemy)
 		{
-			if (EnemyGraphics.graphics.ContainsKey(enemy))
-			{
-				return Paths.GRAPHICS + EnemyGraphics.graphics[enemy];
-			}
-			return Paths.GRAPHICS + "dopefish.dat";
+			EnemyData data = EnemyFile.Instance.GetData(enemy);
+			return Paths.GRAPHICS + data.SpriteName + ".dat";
 		}
-
-		private static Dictionary<EnemyType, string> graphics = new Dictionary<EnemyType, string>
-		{
-			{
-				EnemyType.Dummy,
-				"dopefish.dat"
-			},
-			{
-				EnemyType.MagicSnail,
-				"magicsnail.dat"
-			},
-			{
-				EnemyType.Stickat,
-				"stickat.dat"
-			},
-			{
-				EnemyType.Mouse,
-				"mouse.dat"
-			},
-			{
-				EnemyType.HermitCan,
-				"hermitcan.dat"
-			},
-			{
-				EnemyType.Flamingo,
-				"flamingo.dat"
-			},
-			{
-				EnemyType.AtomicPowerRobo,
-				"atomicpowerrobo.dat"
-			},
-			{
-				EnemyType.CarbonPup,
-				"carbonpup.dat"
-			},
-			{
-				EnemyType.ModernMind,
-				"modernmind.dat"
-			},
-			{
-				EnemyType.MeltyRobot,
-				"meltyrobot.dat"
-			},
-            {
-                EnemyType.NotSoDeer,
-                "notsodeer.dat"
-            },
-            {
-            EnemyType.MysteriousTank,
-			"FATFUCKINGTANK.dat"
-		}
-		};
 	}
 }

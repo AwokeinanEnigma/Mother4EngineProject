@@ -6,8 +6,10 @@ using Mother4.Scripts.Actions;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000157 RID: 343
 	internal class SetBGMAction : RufiniAction
 	{
+		// Token: 0x0600076E RID: 1902 RVA: 0x0003091C File Offset: 0x0002EB1C
 		public SetBGMAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -25,6 +27,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x0600076F RID: 1903 RVA: 0x0003098C File Offset: 0x0002EB8C
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			string value = base.GetValue<string>("bgm");

@@ -9,8 +9,10 @@ using SFML.System;
 
 namespace Mother4.GUI.ProfileMenu
 {
+	// Token: 0x0200004F RID: 79
 	internal class ProfilePanel : MenuPanel
 	{
+		// Token: 0x060001D8 RID: 472 RVA: 0x0000B56C File Offset: 0x0000976C
 		public ProfilePanel(Vector2f position, Vector2f size, int index, SaveProfile profile) : base(position, size, 0, WindowBox.Style.Normal, (uint)profile.Flavor)
 		{
 			TextRegion control = new TextRegion(new Vector2f(1f, -3f), 0, Fonts.Main, string.Format("#{0}", index + 1));
@@ -24,6 +26,7 @@ namespace Mother4.GUI.ProfileMenu
 			base.Add(control2);
 		}
 
+		// Token: 0x060001D9 RID: 473 RVA: 0x0000B60C File Offset: 0x0000980C
 		private void SetupForFile(SaveProfile profile)
 		{
 			int num = 0;
@@ -46,25 +49,31 @@ namespace Mother4.GUI.ProfileMenu
 			base.Add(textRegion);
 		}
 
+		// Token: 0x060001DA RID: 474 RVA: 0x0000B792 File Offset: 0x00009992
 		public override object ButtonPressed(Button b)
 		{
 			return null;
 		}
 
+		// Token: 0x060001DB RID: 475 RVA: 0x0000B795 File Offset: 0x00009995
 		public override void AxisPressed(Vector2f axis)
 		{
 		}
 
+		// Token: 0x060001DC RID: 476 RVA: 0x0000B797 File Offset: 0x00009997
 		public override void Focus()
 		{
 		}
 
+		// Token: 0x060001DD RID: 477 RVA: 0x0000B799 File Offset: 0x00009999
 		public override void Unfocus()
 		{
 		}
 
+		// Token: 0x040002B3 RID: 691
 		private const int DEPTH = 0;
 
+		// Token: 0x040002B4 RID: 692
 		private const int PLAYER_CHARACTER_COUNT = 4;
 	}
 }

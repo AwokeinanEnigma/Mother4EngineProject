@@ -7,8 +7,11 @@ using SFML.System;
 
 namespace Mother4.Scenes.Transitions
 {
+	// Token: 0x02000115 RID: 277
 	internal class BattleFadeTransition : ITransition
 	{
+		// Token: 0x17000107 RID: 263
+		// (get) Token: 0x060006AC RID: 1708 RVA: 0x0002A520 File Offset: 0x00028720
 		public bool IsComplete
 		{
 			get
@@ -17,6 +20,8 @@ namespace Mother4.Scenes.Transitions
 			}
 		}
 
+		// Token: 0x17000108 RID: 264
+		// (get) Token: 0x060006AD RID: 1709 RVA: 0x0002A528 File Offset: 0x00028728
 		public float Progress
 		{
 			get
@@ -25,6 +30,8 @@ namespace Mother4.Scenes.Transitions
 			}
 		}
 
+		// Token: 0x17000109 RID: 265
+		// (get) Token: 0x060006AE RID: 1710 RVA: 0x0002A530 File Offset: 0x00028730
 		public bool ShowNewScene
 		{
 			get
@@ -33,8 +40,12 @@ namespace Mother4.Scenes.Transitions
 			}
 		}
 
+		// Token: 0x1700010A RID: 266
+		// (get) Token: 0x060006AF RID: 1711 RVA: 0x0002A546 File Offset: 0x00028746
+		// (set) Token: 0x060006B0 RID: 1712 RVA: 0x0002A54E File Offset: 0x0002874E
 		public bool Blocking { get; set; }
 
+		// Token: 0x060006B1 RID: 1713 RVA: 0x0002A558 File Offset: 0x00028758
 		public BattleFadeTransition(float duration, Color color)
 		{
 			float num = 60f * duration;
@@ -54,6 +65,7 @@ namespace Mother4.Scenes.Transitions
 			this.renderStates = new RenderStates(transform);
 		}
 
+		// Token: 0x060006B2 RID: 1714 RVA: 0x0002A68C File Offset: 0x0002888C
 		public void Update()
 		{
 			this.progress += this.speed;
@@ -120,6 +132,7 @@ namespace Mother4.Scenes.Transitions
 			this.SetVertColor(3, b2, b3, b4, b);
 		}
 
+		// Token: 0x060006B3 RID: 1715 RVA: 0x0002A91C File Offset: 0x00028B1C
 		private void SetVertColor(int index, byte R, byte G, byte B, byte A)
 		{
 			this.verts[index].Color.R = R;
@@ -128,32 +141,42 @@ namespace Mother4.Scenes.Transitions
 			this.verts[index].Color.A = A;
 		}
 
+		// Token: 0x060006B4 RID: 1716 RVA: 0x0002A988 File Offset: 0x00028B88
 		public void Draw()
 		{
 			this.renderStates.Transform = new Transform(1f, 0f, ViewManager.Instance.FinalCenter.X, 0f, 1f, ViewManager.Instance.FinalCenter.Y, 0f, 0f, 1f);
 			this.target.Draw(this.verts, PrimitiveType.Quads, this.renderStates);
 		}
 
+		// Token: 0x060006B5 RID: 1717 RVA: 0x0002A9FE File Offset: 0x00028BFE
 		public void Reset()
 		{
 			this.isComplete = false;
 			this.progress = 0f;
 		}
 
+		// Token: 0x040008A4 RID: 2212
 		private const int STEPS = 20;
 
+		// Token: 0x040008A5 RID: 2213
 		private float speed;
 
+		// Token: 0x040008A6 RID: 2214
 		private bool isComplete;
 
+		// Token: 0x040008A7 RID: 2215
 		private float progress;
 
+		// Token: 0x040008A8 RID: 2216
 		private RenderTarget target;
 
+		// Token: 0x040008A9 RID: 2217
 		private Vertex[] verts;
 
+		// Token: 0x040008AA RID: 2218
 		private RenderStates renderStates;
 
+		// Token: 0x040008AB RID: 2219
 		private Color color;
 	}
 }

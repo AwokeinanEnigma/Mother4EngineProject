@@ -6,8 +6,12 @@ using SFML.System;
 
 namespace Mother4.GUI
 {
+	// Token: 0x0200008D RID: 141
 	internal class IrisOverlay : Renderable
 	{
+		// Token: 0x17000081 RID: 129
+		// (get) Token: 0x060002DA RID: 730 RVA: 0x000126E0 File Offset: 0x000108E0
+		// (set) Token: 0x060002DB RID: 731 RVA: 0x000126E8 File Offset: 0x000108E8
 		public float Progress
 		{
 			get
@@ -20,6 +24,9 @@ namespace Mother4.GUI
 			}
 		}
 
+		// Token: 0x17000082 RID: 130
+		// (get) Token: 0x060002DC RID: 732 RVA: 0x000126F1 File Offset: 0x000108F1
+		// (set) Token: 0x060002DD RID: 733 RVA: 0x000126F9 File Offset: 0x000108F9
 		public float Speed
 		{
 			get
@@ -32,8 +39,12 @@ namespace Mother4.GUI
 			}
 		}
 
+		// Token: 0x1400000A RID: 10
+		// (add) Token: 0x060002DE RID: 734 RVA: 0x00012704 File Offset: 0x00010904
+		// (remove) Token: 0x060002DF RID: 735 RVA: 0x0001273C File Offset: 0x0001093C
 		public event IrisOverlay.AnimationCompleteHandler OnAnimationComplete;
 
+		// Token: 0x060002E0 RID: 736 RVA: 0x00012774 File Offset: 0x00010974
 		public IrisOverlay(Vector2f position, Vector2f origin, float progress)
 		{
 			this.position = position;
@@ -57,6 +68,7 @@ namespace Mother4.GUI
 			this.states = new RenderStates(BlendMode.Alpha, this.transform, null, this.shader);
 		}
 
+		// Token: 0x060002E1 RID: 737 RVA: 0x00012905 File Offset: 0x00010B05
 		private void UpdatePosition(Vector2f position)
 		{
 			this.position = position;
@@ -65,6 +77,7 @@ namespace Mother4.GUI
 			this.states.Transform = this.transform;
 		}
 
+		// Token: 0x060002E2 RID: 738 RVA: 0x0001293C File Offset: 0x00010B3C
 		private void UpdateProgress(float progress)
 		{
 			float num = this.progress;
@@ -75,6 +88,7 @@ namespace Mother4.GUI
 			}
 		}
 
+		// Token: 0x060002E3 RID: 739 RVA: 0x00012976 File Offset: 0x00010B76
 		private void SetProgress(float progress)
 		{
 			if (this.speed > 0f)
@@ -86,6 +100,7 @@ namespace Mother4.GUI
 			this.UpdateProgress(progress);
 		}
 
+		// Token: 0x060002E4 RID: 740 RVA: 0x0001299C File Offset: 0x00010B9C
 		private void UpdateAnimation()
 		{
 			if (!this.animationDone && this.speed > 0f)
@@ -105,6 +120,7 @@ namespace Mother4.GUI
 			}
 		}
 
+		// Token: 0x060002E5 RID: 741 RVA: 0x00012A28 File Offset: 0x00010C28
 		public override void Draw(RenderTarget target)
 		{
 			this.UpdatePosition(ViewManager.Instance.FinalCenter);
@@ -112,26 +128,38 @@ namespace Mother4.GUI
 			target.Draw(this.verts, this.states);
 		}
 
+		// Token: 0x04000430 RID: 1072
 		private const string PARAM_PROGRESS = "progress";
 
+		// Token: 0x04000431 RID: 1073
 		private const string PARAM_SIZE = "size";
 
+		// Token: 0x04000432 RID: 1074
 		private float progress;
 
+		// Token: 0x04000433 RID: 1075
 		private float targetProgress;
 
+		// Token: 0x04000434 RID: 1076
 		private float speed;
 
+		// Token: 0x04000435 RID: 1077
 		private bool animationDone;
 
+		// Token: 0x04000436 RID: 1078
 		private Shader shader;
 
+		// Token: 0x04000437 RID: 1079
 		private Transform transform;
 
+		// Token: 0x04000438 RID: 1080
 		private RenderStates states;
 
+		// Token: 0x04000439 RID: 1081
 		private VertexArray verts;
 
+		// Token: 0x0200008E RID: 142
+		// (Invoke) Token: 0x060002E7 RID: 743
 		public delegate void AnimationCompleteHandler(IrisOverlay sender);
 	}
 }

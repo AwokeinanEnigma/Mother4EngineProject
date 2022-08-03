@@ -6,8 +6,10 @@ using Mother4.Scenes;
 
 namespace Mother4.Scripts.Actions.Types
 {
+	// Token: 0x02000145 RID: 325
 	internal class IrisOverlayAction : RufiniAction
 	{
+		// Token: 0x06000741 RID: 1857 RVA: 0x0002F178 File Offset: 0x0002D378
 		public IrisOverlayAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -30,6 +32,7 @@ namespace Mother4.Scripts.Actions.Types
 			};
 		}
 
+		// Token: 0x06000742 RID: 1858 RVA: 0x0002F210 File Offset: 0x0002D410
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			float value = base.GetValue<float>("prg");
@@ -59,6 +62,7 @@ namespace Mother4.Scripts.Actions.Types
 			};
 		}
 
+		// Token: 0x06000743 RID: 1859 RVA: 0x0002F2C8 File Offset: 0x0002D4C8
 		private void OnAnimationComplete(IrisOverlay sender)
 		{
 			sender.OnAnimationComplete -= this.OnAnimationComplete;
@@ -68,8 +72,10 @@ namespace Mother4.Scripts.Actions.Types
 			}
 		}
 
+		// Token: 0x04000942 RID: 2370
 		private ExecutionContext context;
 
+		// Token: 0x04000943 RID: 2371
 		private bool isBlocking;
 	}
 }

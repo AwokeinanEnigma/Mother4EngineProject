@@ -8,8 +8,10 @@ using Mother4.Scripts.Actions;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x0200012D RID: 301
 	internal class CameraNPCAction : RufiniAction
 	{
+		// Token: 0x06000706 RID: 1798 RVA: 0x0002CD38 File Offset: 0x0002AF38
 		public CameraNPCAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -32,6 +34,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x06000707 RID: 1799 RVA: 0x0002CDFC File Offset: 0x0002AFFC
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			ActionReturnContext result = default(ActionReturnContext);
@@ -59,12 +62,14 @@ namespace Rufini.Actions.Types
 			return result;
 		}
 
+		// Token: 0x06000708 RID: 1800 RVA: 0x0002CEBE File Offset: 0x0002B0BE
 		private void OnMoveToComplete(ViewManager sender)
 		{
 			ViewManager.Instance.OnMoveToComplete -= this.OnMoveToComplete;
 			this.context.Executor.Continue();
 		}
 
+		// Token: 0x0400092C RID: 2348
 		private ExecutionContext context;
 	}
 }

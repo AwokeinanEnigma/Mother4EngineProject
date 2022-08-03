@@ -6,8 +6,10 @@ using Mother4.Scripts.Actions.ParamTypes;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000146 RID: 326
 	internal class ItemAddAction : RufiniAction
 	{
+		// Token: 0x06000744 RID: 1860 RVA: 0x0002F2F4 File Offset: 0x0002D4F4
 		public ItemAddAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -35,6 +37,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x06000745 RID: 1861 RVA: 0x0002F3B8 File Offset: 0x0002D5B8
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			Console.WriteLine("NOT IMPLEMENTED - BUG DAVE");

@@ -1,12 +1,15 @@
 ﻿using System;
+using Carbine.Utility;
 using Mother4.Battle.Combatants;
 using Mother4.Battle.UI;
 using Mother4.Data;
 
 namespace Mother4.Battle.Actions
 {
+	// Token: 0x020000BB RID: 187
 	internal class PlayerDecisionAction : DecisionAction
 	{
+		// Token: 0x060003F7 RID: 1015 RVA: 0x00019428 File Offset: 0x00017628
 		public PlayerDecisionAction(ActionParams aparams) : base(aparams)
 		{
 			this.combatant = (this.sender as PlayerCombatant);
@@ -25,6 +28,7 @@ namespace Mother4.Battle.Actions
 			this.state = PlayerDecisionAction.State.Initialize;
 		}
 
+		// Token: 0x060003F8 RID: 1016 RVA: 0x000194B0 File Offset: 0x000176B0
 		protected override void UpdateAction()
 		{
 			base.UpdateAction();
@@ -32,8 +36,8 @@ namespace Mother4.Battle.Actions
 			{
 			case PlayerDecisionAction.State.Initialize:
 			{
-				bool flag = this.HandleStatusEffects(false);
-				Console.WriteLine("{0} is deciding what to do!", Enum.GetName(typeof(CharacterType), this.character));
+				this.HandleStatusEffects(false);
+				bool flag = this.CanSkipNormalAction();
 				this.controller.InterfaceController.OnInteractionComplete += this.InteractionComplete;
 				if (!flag)
 				{
@@ -68,6 +72,49 @@ namespace Mother4.Battle.Actions
 			}
 		}
 
+		// Token: 0x060003F9 RID: 1017 RVA: 0x000195FC File Offset: 0x000177FC
+		private ActionParams BuildPsiActionParams(SelectionState selectionState, int actionPriority)
+		{
+			ActionParams result;
+			if (selectionState.Psi.PsiType.Identifier == Hash.Get("psi.shield"))
+			{
+				result = new ActionParams
+				{
+					actionType = typeof(ShieldAction),
+					controller = this.controller,
+					sender = this.combatant,
+					priority = actionPriority,
+					targets = selectionState.Targets,
+					data = new object[]
+					{
+						new StatusEffectInstance
+						{
+							Type = StatusEffect.Shield,
+							TurnsRemaining = -1,
+							Strength = 1f
+						}
+					}
+				};
+			}
+			else
+			{
+				result = new ActionParams
+				{
+					actionType = typeof(PsiAction),
+					controller = this.controller,
+					sender = this.combatant,
+					priority = actionPriority,
+					targets = selectionState.Targets,
+					data = new object[]
+					{
+						selectionState.Psi
+					}
+				};
+			}
+			return result;
+		}
+
+		// Token: 0x060003FA RID: 1018 RVA: 0x00019728 File Offset: 0x00017928
 		public void InteractionComplete(SelectionState selectionState)
 		{
 			Console.WriteLine(" Type: {0}", selectionState.Type);
@@ -88,7 +135,7 @@ namespace Mother4.Battle.Actions
 				}
 				Console.WriteLine();
 			}
-			int priority = this.isGroovy ? 2147483646 : this.combatant.Stats.Speed;
+			int num = this.isGroovy ? 2147483646 : this.combatant.Stats.Speed;
 			bool flag = false;
 			ActionParams? actionParams = null;
 			StatusEffectInstance[] statusEffects = this.sender.GetStatusEffects();
@@ -99,7 +146,8 @@ namespace Mother4.Battle.Actions
 			}
 			else if (statusEffects.Length > 0)
 			{
-				flag = this.HandleStatusEffects(true);
+				this.HandleStatusEffects(true);
+				flag = this.CanSkipNormalAction();
 			}
 			if (!flag)
 			{
@@ -111,25 +159,12 @@ namespace Mother4.Battle.Actions
 						actionType = typeof(PlayerBashAction),
 						controller = this.controller,
 						sender = this.combatant,
-						priority = priority,
+						priority = num,
 						targets = selectionState.Targets
 					});
 					break;
 				case SelectionState.SelectionType.PSI:
-					
-					actionParams = new ActionParams?(new ActionParams
-					{
-						actionType = typeof(PlayerPsiAction),
-						controller = this.controller,
-						sender = this.combatant,
-						priority = priority,
-						targets = selectionState.Targets,
-						data = new object[]
-						{
-							selectionState.Psi,
-							selectionState.PsiLevel
-						}
-					});
+					actionParams = new ActionParams?(this.BuildPsiActionParams(selectionState, num));
 					break;
 				case SelectionState.SelectionType.Talk:
 					actionParams = new ActionParams?(new ActionParams
@@ -137,7 +172,7 @@ namespace Mother4.Battle.Actions
 						actionType = typeof(FloydTalkAction),
 						controller = this.controller,
 						sender = this.combatant,
-						priority = priority,
+						priority = num,
 						targets = selectionState.Targets
 					});
 					break;
@@ -147,7 +182,7 @@ namespace Mother4.Battle.Actions
 						actionType = typeof(MessageAction),
 						controller = this.controller,
 						sender = this.combatant,
-						priority = priority,
+						priority = num,
 						targets = selectionState.Targets,
 						data = new object[]
 						{
@@ -170,6 +205,7 @@ namespace Mother4.Battle.Actions
 			this.state = PlayerDecisionAction.State.Finish;
 		}
 
+		// Token: 0x060003FB RID: 1019 RVA: 0x000199FC File Offset: 0x00017BFC
 		private void OnGroovyBonusActionComplete(BattleAction action)
 		{
 			this.controller.InterfaceController.SetCardGroovy(this.combatant.ID, false);
@@ -179,18 +215,28 @@ namespace Mother4.Battle.Actions
 			});
 		}
 
-		private bool HandleStatusEffects(bool addActions)
+		// Token: 0x060003FC RID: 1020 RVA: 0x00019A54 File Offset: 0x00017C54
+		private bool CanSkipNormalAction()
 		{
 			bool flag = false;
-			StatusEffectInstance[] statusEffects = this.sender.GetStatusEffects();
-			foreach (StatusEffectInstance statusEffectInstance in statusEffects)
+			foreach (StatusEffectInstance statusEffectInstance in this.sender.GetStatusEffects())
 			{
 				flag |= (statusEffectInstance.Type == StatusEffect.Talking || statusEffectInstance.Type == StatusEffect.Diamondized || statusEffectInstance.Type == StatusEffect.Unconscious);
-				if (addActions)
+			}
+			return flag;
+		}
+
+		// Token: 0x060003FD RID: 1021 RVA: 0x00019AB0 File Offset: 0x00017CB0
+		private void HandleStatusEffects(bool addActions)
+		{
+			foreach (StatusEffectInstance statusEffectInstance in this.sender.GetStatusEffects())
+			{
+				Type actionType;
+				if (addActions && StatusEffectActions.TryGet(statusEffectInstance.Type, out actionType))
 				{
 					ActionParams aparams = new ActionParams
 					{
-						actionType = StatusEffectActions.Get(statusEffectInstance.Type),
+						actionType = actionType,
 						controller = this.controller,
 						sender = this.sender,
 						targets = this.sender.SavedTargets,
@@ -203,25 +249,34 @@ namespace Mother4.Battle.Actions
 					this.controller.AddAction(BattleAction.GetInstance(aparams));
 				}
 			}
-			return flag;
 		}
 
+		// Token: 0x040005CC RID: 1484
 		private const int CARD_POP_HEIGHT = 28;
 
+		// Token: 0x040005CD RID: 1485
 		private PlayerCombatant combatant;
 
+		// Token: 0x040005CE RID: 1486
 		private CharacterType character;
 
+		// Token: 0x040005CF RID: 1487
 		private PlayerDecisionAction.State state;
 
+		// Token: 0x040005D0 RID: 1488
 		private bool isGroovy;
 
+		// Token: 0x040005D1 RID: 1489
 		private bool isFromUndo;
 
+		// Token: 0x020000BC RID: 188
 		private enum State
 		{
+			// Token: 0x040005D3 RID: 1491
 			Initialize,
+			// Token: 0x040005D4 RID: 1492
 			WaitForUI,
+			// Token: 0x040005D5 RID: 1493
 			Finish
 		}
 	}

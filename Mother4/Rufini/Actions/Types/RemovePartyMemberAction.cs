@@ -13,8 +13,10 @@ using Mother4.Scripts.Actions.ParamTypes;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000152 RID: 338
 	internal class RemovePartyMemberAction : RufiniAction
 	{
+		// Token: 0x06000761 RID: 1889 RVA: 0x00030220 File Offset: 0x0002E420
 		public RemovePartyMemberAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -32,18 +34,19 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x06000762 RID: 1890 RVA: 0x00030290 File Offset: 0x0002E490
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
-			CharacterType option = (CharacterType)base.GetValue<RufiniOption>("char").Option;
+			CharacterType byOptionInt = CharacterType.GetByOptionInt(base.GetValue<RufiniOption>("char").Option);
 			string value = base.GetValue<string>("name");
 			Scene scene = SceneManager.Instance.Peek();
 			if (scene is OverworldScene)
 			{
 				PartyTrain partyTrain = ((OverworldScene)scene).PartyTrain;
-				IList<PartyFollower> list = partyTrain.Remove(option);
-				if (list.Count > 0)
+				IList<PartyFollower> list = partyTrain.Remove(byOptionInt);
+				for (int i = 0; i < list.Count; i++)
 				{
-					PartyFollower partyFollower = list[0];
+					PartyFollower partyFollower = list[i];
 					Map.NPC npcData = new Map.NPC
 					{
 						Name = value,
@@ -57,10 +60,11 @@ namespace Rufini.Actions.Types
 					};
 					NPC actor = new NPC(context.Pipeline, context.CollisionManager, npcData, null);
 					context.ActorManager.Add(actor);
+					context.CollisionManager.Remove(partyFollower);
 					partyFollower.Dispose();
 				}
 			}
-			PartyManager.Instance.Remove(option);
+			PartyManager.Instance.Remove(byOptionInt);
 			return default(ActionReturnContext);
 		}
 	}

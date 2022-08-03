@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Carbine;
 using Carbine.Audio;
 using Carbine.Graphics;
@@ -9,25 +10,33 @@ using Mother4.Battle.Background;
 using Mother4.Battle.Combatants;
 using Mother4.Battle.Combos;
 using Mother4.Data;
+using Mother4.Data.Enemies;
+using Mother4.GUI.Text;
+using Mother4.Scripts.Actions.ParamTypes;
+using Rufini.Strings;
 using SFML.Graphics;
 using SFML.System;
 
 namespace Mother4.Scenes
 {
+	// Token: 0x02000107 RID: 263
 	internal class BattleScene : StandardScene
 	{
+		// Token: 0x06000614 RID: 1556 RVA: 0x000239E3 File Offset: 0x00021BE3
 		public BattleScene(EnemyType[] enemies, bool letterboxing)
 		{
 			this.enemies = enemies;
 			this.letterboxing = letterboxing;
 		}
 
+		// Token: 0x06000615 RID: 1557 RVA: 0x000239F9 File Offset: 0x00021BF9
 		public BattleScene(EnemyType[] enemies, bool letterboxing, int bgmOverride, int bbgOverride) : this(enemies, letterboxing)
 		{
 			this.bgmOverride = bgmOverride;
 			this.bbgOverride = bbgOverride;
 		}
 
+		// Token: 0x06000616 RID: 1558 RVA: 0x00023A14 File Offset: 0x00021C14
 		private void Initialize()
 		{
 			CharacterType[] party = PartyManager.Instance.ToArray();
@@ -45,7 +54,6 @@ namespace Mother4.Scenes
 			PlayerCombatant playerCombatant = factionCombatants2[0] as PlayerCombatant;
 			PlayerCombatant playerCombatant2 = factionCombatants2[(factionCombatants2.Length > 1) ? 1 : 0] as PlayerCombatant;
 			string music = EnemyMusic.GetMusic(enemyCombatant.Enemy);
-			Console.WriteLine($"MUSIC - { music } // ENEMY - {enemyCombatant.Enemy}");
 			ComboSet combos = ComboLoader.Load(music);
 			AudioManager.Instance.SetBGM(music);
 			this.comboControl = new ComboController(combos, party);
@@ -58,47 +66,56 @@ namespace Mother4.Scenes
 			this.debugLastBgmPos = this.debugBgmPos;
 		}
 
+		// Token: 0x06000617 RID: 1559 RVA: 0x00023B8C File Offset: 0x00021D8C
 		private void GenerateIntroMessage(int partyCount, int enemyCount, CharacterType partyLead, CharacterType partySecondary, EnemyType enemyLead)
 		{
-			string arg;
-			if (partyCount == 1)
+			EnemyData data = EnemyFile.Instance.GetData(enemyLead);
+			string value = string.Empty;
+			string text = string.Empty;
+			string text2 = null;
+			if (enemyCount == 2)
 			{
-				arg = CharacterNames.GetName(partyLead);
+				text2 = "system.party.enemyTwo";
 			}
-			else if (partyCount == 2)
+			else if (enemyCount > 2)
 			{
-				arg = string.Format("{0} and {1}", CharacterNames.GetName(partyLead), CharacterNames.GetName(partySecondary));
+				text2 = "system.party.enemyMany";
 			}
-			else
+			if (text2 != null)
 			{
-				arg = string.Format("{0} and friends", CharacterNames.GetName(partyLead));
+				RufiniString rufiniString = StringFile.Instance.Get(text2);
+				if (rufiniString.Value != null)
+				{
+					Dictionary<string, string> contextDictionary = data.GetContextDictionary();
+					value = TextProcessor.ProcessReplacements(rufiniString.Value, contextDictionary);
+				}
 			}
-			string arg2;
-			if (enemyCount == 1)
+			string qualifiedName;
+			if (data.TryGetStringQualifiedName("encounter", out qualifiedName))
 			{
-				arg2 = string.Format("{0}{1}", EnemyNames.GetArticle(enemyLead), EnemyNames.GetName(enemyLead));
+				RufiniString rufiniString2 = StringFile.Instance.Get(qualifiedName);
+				if (rufiniString2.Value != null)
+				{
+					Dictionary<string, string> contextDictionary2 = data.GetContextDictionary();
+					contextDictionary2.Add("enemy-party", value);
+					text = TextProcessor.ProcessReplacements(rufiniString2.Value, contextDictionary2);
+				}
 			}
-			else if (enemyCount == 2)
+			ActionParams aparams = new ActionParams
 			{
-				arg2 = string.Format("{0}{1} and {2} cohort", EnemyNames.GetArticle(enemyLead), EnemyNames.GetName(enemyLead), EnemyNames.GetPosessivePronoun(enemyLead));
-			}
-			else
-			{
-				arg2 = string.Format("{0}{1} and {2} cohorts", EnemyNames.GetArticle(enemyLead), EnemyNames.GetName(enemyLead), EnemyNames.GetPosessivePronoun(enemyLead));
-			}
-			string text = string.Format("{0} engaged {1}.", arg, arg2);
-			ActionParams aparams = default(ActionParams);
-			aparams.actionType = typeof(MessageAction);
-			aparams.controller = this.controller;
-			aparams.sender = null;
-			aparams.data = new object[]
-			{
-				text,
-				false
+				actionType = typeof(MessageAction),
+				controller = this.controller,
+				sender = null,
+				data = new object[]
+				{
+					text,
+					false
+				}
 			};
 			this.controller.AddAction(BattleAction.GetInstance(aparams));
 		}
 
+		// Token: 0x06000618 RID: 1560 RVA: 0x00023CA8 File Offset: 0x00021EA8
 		private void GenerateDebugVerts()
 		{
 			this.debugRenderStates = new RenderStates(BlendMode.None, Transform.Identity, null, null);
@@ -140,6 +157,7 @@ namespace Mother4.Scenes
 			}
 		}
 
+		// Token: 0x06000619 RID: 1561 RVA: 0x00024018 File Offset: 0x00022218
 		public override void Focus()
 		{
 			ViewManager.Instance.Reset();
@@ -151,6 +169,7 @@ namespace Mother4.Scenes
 			this.initialized = true;
 		}
 
+		// Token: 0x0600061A RID: 1562 RVA: 0x00024078 File Offset: 0x00022278
 		private void ButtonPressed(InputManager sender, Button b)
 		{
 			Combatant combatant = null;
@@ -185,17 +204,20 @@ namespace Mother4.Scenes
 			}
 		}
 
+		// Token: 0x0600061B RID: 1563 RVA: 0x0002413C File Offset: 0x0002233C
 		public override void Unfocus()
 		{
 			AudioManager.Instance.BGM.Stop();
 			InputManager.Instance.ButtonPressed -= this.ButtonPressed;
 		}
 
+		// Token: 0x0600061C RID: 1564 RVA: 0x00024163 File Offset: 0x00022363
 		public override void Unload()
 		{
 			base.Dispose();
 		}
 
+		// Token: 0x0600061D RID: 1565 RVA: 0x0002416B File Offset: 0x0002236B
 		public override void Update()
 		{
 			if (this.initialized)
@@ -206,6 +228,7 @@ namespace Mother4.Scenes
 			base.Update();
 		}
 
+		// Token: 0x0600061E RID: 1566 RVA: 0x00024194 File Offset: 0x00022394
 		public override void Draw()
 		{
 			if (this.initialized)
@@ -226,49 +249,67 @@ namespace Mother4.Scenes
 			}
 		}
 
+		// Token: 0x0600061F RID: 1567 RVA: 0x0002428B File Offset: 0x0002248B
 		protected override void Dispose(bool disposing)
 		{
 			if (!this.disposed && disposing)
 			{
-				this.controller?.Dispose();
-				this.uiController?.Dispose();
-				this.comboControl?.Dispose();
+				this.controller.Dispose();
+				this.uiController.Dispose();
+				this.comboControl.Dispose();
 			}
 			base.Dispose(disposing);
 		}
 
+		// Token: 0x040007E1 RID: 2017
 		private const float DEBUG_SCALE = 0.1f;
 
+		// Token: 0x040007E2 RID: 2018
 		private CombatantController combatantController;
 
+		// Token: 0x040007E3 RID: 2019
 		private BattleInterfaceController uiController;
 
+		// Token: 0x040007E4 RID: 2020
 		private BattleController controller;
 
+		// Token: 0x040007E5 RID: 2021
 		private ComboController comboControl;
 
+		// Token: 0x040007E6 RID: 2022
 		private BattleBackground background;
 
+		// Token: 0x040007E7 RID: 2023
 		private VertexArray debugRect;
 
+		// Token: 0x040007E8 RID: 2024
 		private VertexArray debugCrosshairVerts;
 
+		// Token: 0x040007E9 RID: 2025
 		private VertexArray debugBeatVerts;
 
+		// Token: 0x040007EA RID: 2026
 		private RenderStates debugRenderStates;
 
+		// Token: 0x040007EB RID: 2027
 		private long debugBgmPos;
 
+		// Token: 0x040007EC RID: 2028
 		private long debugLastBgmPos;
 
+		// Token: 0x040007ED RID: 2029
 		private bool initialized;
 
+		// Token: 0x040007EE RID: 2030
 		private EnemyType[] enemies;
 
+		// Token: 0x040007EF RID: 2031
 		private bool letterboxing;
 
+		// Token: 0x040007F0 RID: 2032
 		private int bgmOverride;
 
+		// Token: 0x040007F1 RID: 2033
 		private int bbgOverride;
 	}
 }

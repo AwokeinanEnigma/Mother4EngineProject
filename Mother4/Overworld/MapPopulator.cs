@@ -12,8 +12,10 @@ using SFML.Graphics;
 
 namespace Mother4.Overworld
 {
+	// Token: 0x02000172 RID: 370
 	internal class MapPopulator
 	{
+		// Token: 0x060007C7 RID: 1991 RVA: 0x0003225C File Offset: 0x0003045C
 		public static List<NPC> GenerateNPCs(RenderPipeline pipeline, CollisionManager collisions, Map map)
 		{
 			List<NPC> list = new List<NPC>();
@@ -51,6 +53,7 @@ namespace Mother4.Overworld
 			return list;
 		}
 
+		// Token: 0x060007C8 RID: 1992 RVA: 0x000323E0 File Offset: 0x000305E0
 		public static IList<ICollidable> GeneratePortals(Map map)
 		{
 			IList<ICollidable> list = new List<ICollidable>();
@@ -72,6 +75,7 @@ namespace Mother4.Overworld
 			return list;
 		}
 
+		// Token: 0x060007C9 RID: 1993 RVA: 0x000324F8 File Offset: 0x000306F8
 		public static List<EnemySpawner> GenerateSpawners(Map map)
 		{
 			List<EnemySpawner> list = new List<EnemySpawner>();
@@ -83,6 +87,7 @@ namespace Mother4.Overworld
 			return list;
 		}
 
+		// Token: 0x060007CA RID: 1994 RVA: 0x00032580 File Offset: 0x00030780
 		public static List<ParallaxBackground> GenerateParallax(Map map)
 		{
 			List<ParallaxBackground> list = new List<ParallaxBackground>();
@@ -95,6 +100,7 @@ namespace Mother4.Overworld
 			return list;
 		}
 
+		// Token: 0x060007CB RID: 1995 RVA: 0x0003260C File Offset: 0x0003080C
 		public static BattleBackgroundRenderable GenerateBBGOverlay(Map map)
 		{
 			BattleBackgroundRenderable result = null;
@@ -120,6 +126,7 @@ namespace Mother4.Overworld
 			return result;
 		}
 
+		// Token: 0x060007CC RID: 1996 RVA: 0x000326B4 File Offset: 0x000308B4
 		public static IList<ICollidable> GenerateTriggerAreas(Map map)
 		{
 			IList<ICollidable> list = new List<ICollidable>();

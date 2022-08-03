@@ -10,8 +10,10 @@ using SFML.System;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000138 RID: 312
 	internal class EntityDirectionAction : RufiniAction
 	{
+		// Token: 0x06000723 RID: 1827 RVA: 0x0002DE14 File Offset: 0x0002C014
 		public EntityDirectionAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -34,6 +36,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x06000724 RID: 1828 RVA: 0x0002DED8 File Offset: 0x0002C0D8
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			ActionReturnContext result = default(ActionReturnContext);
@@ -67,6 +70,7 @@ namespace Rufini.Actions.Types
 			return result;
 		}
 
+		// Token: 0x06000725 RID: 1829 RVA: 0x0002E02C File Offset: 0x0002C22C
 		private void TurnStep(bool isFirst)
 		{
 			int num = this.npc.Direction;
@@ -93,6 +97,7 @@ namespace Rufini.Actions.Types
 			this.context.Executor.Continue();
 		}
 
+		// Token: 0x06000726 RID: 1830 RVA: 0x0002E0C2 File Offset: 0x0002C2C2
 		private void OnTimer(int timerIndex)
 		{
 			if (this.timerId == timerIndex)
@@ -101,16 +106,22 @@ namespace Rufini.Actions.Types
 			}
 		}
 
+		// Token: 0x04000936 RID: 2358
 		private ExecutionContext context;
 
+		// Token: 0x04000937 RID: 2359
 		private int timerId;
 
+		// Token: 0x04000938 RID: 2360
 		private int directionTo;
 
+		// Token: 0x04000939 RID: 2361
 		private int increment;
 
+		// Token: 0x0400093A RID: 2362
 		private float speed;
 
+		// Token: 0x0400093B RID: 2363
 		private NPC npc;
 	}
 }

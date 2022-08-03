@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using Mother4.Battle.Actions;
+using Mother4.Data.Enemies;
 
 namespace Mother4.Data
 {
+	// Token: 0x02000081 RID: 129
 	internal static class EnemyBattleActions
 	{
+		// Token: 0x060002AB RID: 683 RVA: 0x00010C10 File Offset: 0x0000EE10
 		public static List<ActionParams> GetBattleActionParams(EnemyType enemy)
 		{
-			List<ActionParams> result = null;
-			if (EnemyBattleActions.battleActionTypes.ContainsKey(enemy))
-			{
-				result = EnemyBattleActions.battleActionTypes[enemy];
-			}
-			return result;
+			EnemyData data = EnemyFile.Instance.GetData(enemy);
+			return data.GetActionParams();
 		}
 
+		// Token: 0x0400041C RID: 1052
 		private static Dictionary<EnemyType, List<ActionParams>> battleActionTypes = new Dictionary<EnemyType, List<ActionParams>>
 		{
 			{
@@ -62,24 +62,16 @@ namespace Mother4.Data
 				}
 			},
 			{
-				EnemyType.Mouse,
+				EnemyType.Rat,
 				new List<ActionParams>
 				{
-					new ActionParams
-					{
-						actionType = typeof(EnemyTurnWasteAction),
-						data = new object[]
-						{
-							"The Mouse is just laying there like a slug.",
-							false
-						}
-					},
 					new ActionParams
 					{
 						actionType = typeof(EnemyBashAction),
 						data = new object[]
 						{
-							2f
+							2f,
+							"{0}{1} bit {2}!"
 						}
 					}
 				}
@@ -165,37 +157,11 @@ namespace Mother4.Data
 				{
 					new ActionParams
 					{
-						actionType = typeof(DisablePSIAction),
-						data = new object[]
-						{
-							"a comet",
-							5
-						}
-					},
-					new ActionParams
-					{
 						actionType = typeof(EnemyProjectileAction),
 						data = new object[]
 						{
 							"a comet",
-							5
-						}
-					},
-					new ActionParams
-					{
-						actionType = typeof(EnemyTurnWasteAction),
-						data = new object[]
-						{
-							"The Modern Mind is having trouble thinking!",
-							true
-						}
-					},
-					new ActionParams
-					{
-						actionType = typeof(EnemyBashAction),
-						data = new object[]
-						{
-							3f
+							850
 						}
 					}
 				}
@@ -216,43 +182,48 @@ namespace Mother4.Data
 				}
 			},
 			{
-			EnemyType.MysteriousTank,
-			new List<ActionParams>
-			{
-				new ActionParams
+				EnemyType.PunkAssassin,
+				new List<ActionParams>
 				{
-				},
-				new ActionParams
-				{
-					actionType = typeof(EnemyProjectileAction),
-					data = new object[]
+					new ActionParams
 					{
-						"a comet",
-						40,
-						true,
-						"fired!"
-					}
-				},
-				new ActionParams
-				{
-					actionType = typeof(EnemyTurnWasteAction),
-					data = new object[]
-					{
-						"Something inside the tank is moving!",
-						true
-					}
-				},
-				new ActionParams
-				{
-					actionType = typeof(EnemyBashAction),
-					data = new object[]
-					{
-						25f,
-						true,
-						"rolled over"
+						actionType = typeof(EnemyBashAction),
+						data = new object[]
+						{
+							2f,
+							"{0}{1} brandished a knife!"
+						}
 					}
 				}
-			}
+			},
+			{
+				EnemyType.PunkEnforcer,
+				new List<ActionParams>
+				{
+					new ActionParams
+					{
+						actionType = typeof(EnemyBashAction),
+						data = new object[]
+						{
+							2f,
+							"{0}{1} swung at {2}'s head!"
+						}
+					}
+				}
+			},
+			{
+				EnemyType.RatDispenser,
+				new List<ActionParams>
+				{
+					new ActionParams
+					{
+						actionType = typeof(EnemyTurnWasteAction),
+						data = new object[]
+						{
+							"The Rat Dispenser gave a gentle grin."
+						}
+					}
+				}
 			}
 		};
 	}

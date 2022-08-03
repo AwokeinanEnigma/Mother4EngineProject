@@ -9,8 +9,10 @@ using Mother4.Scripts.Actions;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x0200012F RID: 303
 	internal class ChangeSpriteNPCAction : RufiniAction
 	{
+		// Token: 0x0600070C RID: 1804 RVA: 0x0002CFE8 File Offset: 0x0002B1E8
 		public ChangeSpriteNPCAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -33,6 +35,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x0600070D RID: 1805 RVA: 0x0002D0AC File Offset: 0x0002B2AC
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			string name = base.GetValue<string>("name");

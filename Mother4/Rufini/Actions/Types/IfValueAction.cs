@@ -7,8 +7,10 @@ using Mother4.Scripts.Actions.ParamTypes;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000144 RID: 324
 	internal class IfValueAction : RufiniAction
 	{
+		// Token: 0x0600073F RID: 1855 RVA: 0x0002F040 File Offset: 0x0002D240
 		public IfValueAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -31,6 +33,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x06000740 RID: 1856 RVA: 0x0002F0D8 File Offset: 0x0002D2D8
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			int value = base.GetValue<int>("id");

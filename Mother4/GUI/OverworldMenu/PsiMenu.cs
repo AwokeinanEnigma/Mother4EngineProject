@@ -1,25 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 using Carbine.Graphics;
 using Carbine.GUI;
 using Carbine.Input;
 using Carbine.Utility;
 using Mother4.Battle;
 using Mother4.Data;
-using Mother4.Psi;
+using Mother4.Data.Character;
+using Mother4.Data.Psi;
 using Rufini.Strings;
 using SFML.Graphics;
 using SFML.System;
 
 namespace Mother4.GUI.OverworldMenu
 {
+	// Token: 0x02000099 RID: 153
 	internal class PsiMenu : MenuPanel
 	{
+		// Token: 0x0600031F RID: 799 RVA: 0x00013F28 File Offset: 0x00012128
 		public PsiMenu() : base(ViewManager.Instance.FinalTopLeft + PsiMenu.PANEL_POSITION, PsiMenu.PANEL_SIZE, 0)
 		{
-			Console.Write("create");
-
 			RectangleShape rectangleShape = new RectangleShape(new Vector2f(1f, PsiMenu.PANEL_SIZE.Y * 0.6f));
 			rectangleShape.FillColor = PsiMenu.DIVIDER_COLOR;
 			this.vertDivider = new ShapeGraphic(rectangleShape, new Vector2f(PsiMenu.PANEL_SIZE.X * 0.33f, PsiMenu.PANEL_SIZE.Y * 0.3f), VectorMath.Truncate(rectangleShape.Size / 2f), rectangleShape.Size, 1);
@@ -31,282 +31,104 @@ namespace Mother4.GUI.OverworldMenu
 			CharacterType[] array = PartyManager.Instance.ToArray();
 			this.tabs = new IndexedColorGraphic[array.Length];
 			this.tabLabels = new TextRegion[array.Length];
-			uint num = Settings.WindowFlavor * 2U;
-			int num2 = 0;
+			this.charactersWithPsi = new CharacterType[array.Length];
+			int num = 0;
 			for (int i = 0; i < array.Length; i++)
 			{
-				if (PsiManager.Instance.CharacterHasPsi(array[i]))
+				StatSet stats = CharacterStats.GetStats(array[i]);
+				CharacterData data = CharacterFile.Instance.GetData(array[i]);
+				if (data.HasPsi(stats.Level))
 				{
-					this.tabs[num2] = new IndexedColorGraphic(Paths.GRAPHICS + "pause.dat", (num2 == this.selectedTab) ? "firsttag" : "tag", new Vector2f(-8f, -7f) + new Vector2f(50f * (float)num2, 0f), (num2 == this.selectedTab) ? 1 : -2);
-					this.tabs[num2].CurrentPalette = ((num2 == this.selectedTab) ? num : (num + 1U));
-					base.Add(this.tabs[num2]);
-					this.tabLabels[num2] = new TextRegion(new Vector2f(-4f, -21f) + new Vector2f(50f * (float)num2, 0f), (num2 == this.selectedTab) ? 2 : -1, Fonts.Main, CharacterNames.GetName(array[i]));
-					this.tabLabels[num2].Color = ((num2 == this.selectedTab) ? PsiMenu.ACTIVE_TAB_TEXT_COLOR : PsiMenu.INACTIVE_TAB_TEXT_COLOR);
-					base.Add(this.tabLabels[num2]);
-					num2++;
+					this.tabs[num] = new IndexedColorGraphic(Paths.GRAPHICS + "pause.dat", (num == this.selectedTab) ? "firsttag" : "tag", new Vector2f(-8f, -7f) + new Vector2f(50f * (float)num, 0f), (num == this.selectedTab) ? 1 : -2);
+					this.tabs[num].CurrentPalette = this.GetTabPaletteIndex(num);
+					base.Add(this.tabs[num]);
+					this.tabLabels[num] = new TextRegion(new Vector2f(-4f, -21f) + new Vector2f(50f * (float)num, 0f), (num == this.selectedTab) ? 2 : -1, Fonts.Main, CharacterNames.GetName(array[i]));
+					this.tabLabels[num].Color = ((num == this.selectedTab) ? PsiMenu.ACTIVE_TAB_TEXT_COLOR : PsiMenu.INACTIVE_TAB_TEXT_COLOR);
+					base.Add(this.tabLabels[num]);
+					this.charactersWithPsi[num] = array[i];
+					num++;
 				}
 			}
-			Array.Resize<IndexedColorGraphic>(ref this.tabs, num2);
-			Array.Resize<TextRegion>(ref this.tabLabels, num2);
-			this.psiTypeList = new ScrollingList(new Vector2f(8f, 0f), 0, PsiMenu.PSI_TYPE_STRINGS, 4, 14f, 50f, PsiMenu.CURSOR_FILE);
-			base.Add(this.psiTypeList);
-			this.selectedList = this.psiTypeList;
-			this.SetupPsiList();
+			Array.Resize<IndexedColorGraphic>(ref this.tabs, num);
+			Array.Resize<TextRegion>(ref this.tabLabels, num);
+			Array.Resize<CharacterType>(ref this.charactersWithPsi, num);
+			this.psiList = new PsiList[this.charactersWithPsi.Length];
+			for (int j = 0; j < this.charactersWithPsi.Length; j++)
+			{
+				this.psiList[j] = new PsiList(PsiMenu.PSI_LIST_POSITION, this.charactersWithPsi[j], PsiMenu.PSI_LIST_WIDTH, 4, this.depth);
+				this.psiList[j].Visible = false;
+				if (j == this.selectedTab)
+				{
+					this.psiList[j].Show();
+				}
+				base.Add(this.psiList[j]);
+			}
 			this.descriptionText = new TextRegion(new Vector2f(8f, (float)((int)(PsiMenu.PANEL_SIZE.Y * 0.66f) + 4)), 0, Fonts.Main, this.GetDescription());
 			base.Add(this.descriptionText);
 		}
 
+		// Token: 0x06000320 RID: 800 RVA: 0x0001430C File Offset: 0x0001250C
+		private uint GetTabPaletteIndex(int tabIndex)
+		{
+			uint num = Settings.WindowFlavor * 2U;
+			if (tabIndex != this.selectedTab)
+			{
+				return num + 1U;
+			}
+			return num;
+		}
+
+		// Token: 0x06000321 RID: 801 RVA: 0x00014330 File Offset: 0x00012530
 		private string GetDescription()
 		{
 			string text = null;
-			if (this.selectedList != this.psiTypeList && this.selectedList == this.psiList)
+			if (this.psiList[this.selectedTab].SelectedPsiLevel != null)
 			{
-				string arg = this.psiList.SelectedItem.Replace(" ", "").ToLower();
-				string str = string.Format("{0}{1}", arg, this.selectedLevel + 1);
-				text = StringFile.Instance.Get("psiDesc." + str).Value;
+				PsiLevel value = this.psiList[this.selectedTab].SelectedPsiLevel.Value;
+				PsiData data = PsiFile.Instance.GetData(value.PsiType);
+				StringBuilder stringBuilder = new StringBuilder(data.Key.Length + 4);
+				stringBuilder.Append(data.Key);
+				stringBuilder.Replace("psi", "psiDesc");
+				stringBuilder.Append(value.Level + 1);
+				string qualifiedName = stringBuilder.ToString();
+				text = StringFile.Instance.Get(qualifiedName).Value;
 			}
-			if (text == null)
-			{
-				text = string.Empty;
-			}
-			return text;
+			return text ?? string.Empty;
 		}
 
-		private void ChangeSelectedLevel(int newLevel)
-		{
-			this.levelList[this.selectedLevel].ShowCursor = false;
-			this.selectedLevel = newLevel;
-			this.levelList[this.selectedLevel].ShowCursor = true;
-		}
-
+		// Token: 0x06000322 RID: 802 RVA: 0x000143F8 File Offset: 0x000125F8
 		private void UpdateDescription()
 		{
 			string description = this.GetDescription();
 			this.descriptionText.Reset(description, 0, description.Length);
 		}
 
-		private void SelectPsiList()
-		{
-			this.psiTypeList.ShowSelectionRectangle = false;
-			this.psiTypeList.ShowCursor = false;
-			this.psiTypeList.Focused = false;
-			this.selectedList = this.psiList;
-			this.UpdateDescription();
-			this.selectedList.ShowSelectionRectangle = true;
-			this.selectedList.Focused = true;
-			for (int i = 0; i < this.levelList.Length; i++)
-			{
-				this.levelList[i].ShowSelectionRectangle = true;
-				this.levelList[i].Focused = true;
-			}
-		}
-
-		private void SelectPsiTypeList()
-		{
-			if (this.psiList != null)
-			{
-				this.psiList.SelectedIndex = 0;
-				this.psiList.ShowSelectionRectangle = false;
-				this.psiList.Focused = false;
-				for (int i = 0; i < this.levelList.Length; i++)
-				{
-					this.levelList[i].SelectedIndex = 0;
-					this.levelList[i].ShowSelectionRectangle = false;
-					this.levelList[i].Focused = false;
-				}
-			}
-			this.selectedList = this.psiTypeList;
-			this.UpdateDescription();
-			this.selectedList.ShowSelectionRectangle = true;
-			this.selectedList.ShowCursor = true;
-			this.selectedList.Focused = true;
-			Console.Write("list");
-
-		}
-
+		// Token: 0x06000323 RID: 803 RVA: 0x00014420 File Offset: 0x00012620
 		public override void AxisPressed(Vector2f axis)
 		{
 			if (axis.Y < 0f)
 			{
-				int selectedIndex = this.selectedList.SelectedIndex;
-				this.selectedList.SelectPrevious();
-				if (selectedIndex != this.selectedList.SelectedIndex)
-				{
-					if (this.selectedList == this.psiTypeList)
-					{
-						this.SetupPsiList();
-					}
-					else if (this.selectedList == this.psiList)
-					{
-						for (int i = 0; i < this.levelList.Length; i++)
-						{
-							this.levelList[i].SelectPrevious();
-						}
-						while (this.levelList[this.selectedLevel].SelectedItem.Length == 0)
-						{
-							this.ChangeSelectedLevel(this.selectedLevel - 1);
-						}
-					}
-					this.UpdateDescription();
-					return;
-				}
+				this.psiList[this.selectedTab].SelectUp();
 			}
 			else if (axis.Y > 0f)
 			{
-				int selectedIndex2 = this.selectedList.SelectedIndex;
-				this.selectedList.SelectNext();
-				if (selectedIndex2 != this.selectedList.SelectedIndex)
-				{
-					if (this.selectedList == this.psiTypeList)
-					{
-						this.SetupPsiList();
-					}
-					else if (this.selectedList == this.psiList)
-					{
-						for (int j = 0; j < this.levelList.Length; j++)
-						{
-							this.levelList[j].SelectNext();
-						}
-						while (this.levelList[this.selectedLevel].SelectedItem.Length == 0)
-						{
-							this.ChangeSelectedLevel(this.selectedLevel - 1);
-						}
-					}
-					this.UpdateDescription();
-					return;
-				}
+				this.psiList[this.selectedTab].SelectDown();
 			}
-			else if (axis.X != 0f)
+			if (axis.X < 0f)
 			{
-				if (this.selectedList == this.psiTypeList)
-				{
-					if (axis.X > 0f)
-					{
-						if (this.psiList != null)
-						{
-							this.SelectPsiList();
-							return;
-						}
-					}
-					else if (axis.X < 0f)
-					{
-						return;
-					}
-				}
-				else if (this.selectedList == this.psiList)
-				{
-					if (axis.X < 0f)
-					{
-						if (this.selectedLevel <= 0)
-						{
-							this.SelectPsiTypeList();
-							return;
-						}
-						this.ChangeSelectedLevel(this.selectedLevel - 1);
-						this.UpdateDescription();
-						return;
-					}
-					else if (axis.X > 0f)
-					{
-						int num = Math.Min(this.levelList.Length - 1, this.selectedLevel + 1);
-						if (this.levelList[num].SelectedItem.Length > 0)
-						{
-							this.ChangeSelectedLevel(num);
-							this.UpdateDescription();
-						}
-					}
-				}
+				this.psiList[this.selectedTab].SelectLeft();
 			}
+			else if (axis.X > 0f)
+			{
+				this.psiList[this.selectedTab].SelectRight();
+			}
+			this.UpdateDescription();
 		}
 
-		private void SetupPsiList()
-		{
-			CharacterType[] array = PartyManager.Instance.ToArray();
-			CharacterType characterType = array[this.selectedTab];
-			IEnumerable<IPsi> collection;
-			switch (this.psiTypeList.SelectedIndex)
-			{
-			case 1:
-				collection = PsiManager.Instance.GetCharacterAssistPsi(characterType).Cast<IPsi>();
-				break;
-			case 2:
-				collection = PsiManager.Instance.GetCharacterDefensePsi(characterType).Cast<IPsi>();
-				break;
-			case 3:
-				collection = PsiManager.Instance.GetCharacterOtherPsi(characterType).Cast<IPsi>();
-				break;
-			default:
-				collection = PsiManager.Instance.GetCharacterOffensePsi(characterType).Cast<IPsi>();
-				break;
-			}
-			this.psiItemList = new List<IPsi>(collection);
-			if (this.psiList != null)
-			{
-				base.Remove(this.psiList);
-				this.psiList.Dispose();
-				this.psiList = null;
-			}
-			if (this.levelList != null)
-			{
-				for (int i = 0; i < this.levelList.Length; i++)
-				{
-					if (this.levelList[i] != null)
-					{
-						base.Remove(this.levelList[i]);
-						this.levelList[i].Dispose();
-						this.levelList[i] = null;
-					}
-				}
-			}
-			else
-			{
-				this.levelList = new ScrollingList[4];
-			}
-			if (this.psiItemList.Count > 0)
-			{
-				Console.Write("psi>0");
-				StatSet stats = CharacterStats.GetStats(characterType);
-				string[] array2 = new string[this.psiItemList.Count];
-				string[][] array3 = new string[4][];
-				for (int j = 0; j < array3.Length; j++)
-				{
-					array3[j] = new string[array2.Length];
-				}
-				for (int k = 0; k < array2.Length; k++)
-				{
-					array2[k] = this.psiItemList[k].Name;
-					for (int l = 0; l < array3.Length; l++)
-					{
-						if (l < this.psiItemList[k].Levels.Length && this.psiItemList[k].Levels[l] <= stats.Level)
-						{
-							Console.Write(PsiMenu.PSI_LEVEL_STRINGS[l]);
-							array3[l][k] = PsiMenu.PSI_LEVEL_STRINGS[l];
-						}
-						else
-						{
-							array3[l][k] = PsiMenu.PSI_LEVEL_STRINGS[l];
-						}
-					}
-				}
-				this.psiList = new ScrollingList(new Vector2f(PsiMenu.PANEL_SIZE.X * 0.33f + 8f, 0f), 1, array2, 5, 14f, PsiMenu.PANEL_SIZE.X * 0.66f - 2f, PsiMenu.CURSOR_FILE);
-				this.psiList.ShowSelectionRectangle = false;
-				this.psiList.ShowCursor = false;
-				this.psiList.Focused = false;
-				base.Add(this.psiList);
-				for (int m = 0; m < this.levelList.Length; m++)
-				{
-					this.levelList[m] = new ScrollingList(new Vector2f(PsiMenu.PANEL_SIZE.X * 0.33f + 80f + (float)(16 * m), 0f), 1, array3[m], 5, 14f, 1f, PsiMenu.CURSOR_FILE);
-					this.levelList[m].ShowSelectionRectangle = false;
-					this.levelList[m].ShowCursor = (m == 0);
-					this.levelList[m].Focused = false;
-				//	levelList.[m]
-					base.Add(this.levelList[m]);
-				}
-			}
-		}
-
+		// Token: 0x06000324 RID: 804 RVA: 0x000144B8 File Offset: 0x000126B8
 		private void SelectTab(int index)
 		{
+			this.psiList[this.selectedTab].Hide();
 			if (index < 0)
 			{
 				this.selectedTab = this.tabs.Length - 1;
@@ -321,38 +143,38 @@ namespace Mother4.GUI.OverworldMenu
 			}
 			for (int i = 0; i < this.tabs.Length; i++)
 			{
-				this.tabs[i].CurrentPalette = ((i == this.selectedTab) ? 0U : 1U);
+				this.tabs[i].CurrentPalette = this.GetTabPaletteIndex(i);
 				this.tabs[i].Depth = ((i == this.selectedTab) ? 1 : -2);
 				this.tabLabels[i].Color = ((i == this.selectedTab) ? PsiMenu.ACTIVE_TAB_TEXT_COLOR : PsiMenu.INACTIVE_TAB_TEXT_COLOR);
 				this.tabLabels[i].Depth = ((i == this.selectedTab) ? 2 : -1);
 			}
-			this.SelectPsiTypeList();
-			this.SetupPsiList();
+			this.psiList[this.selectedTab].Show();
 		}
 
+		// Token: 0x06000325 RID: 805 RVA: 0x00014598 File Offset: 0x00012798
 		public override object ButtonPressed(Button button)
 		{
 			object result = null;
 			if (button == Button.A)
 			{
-				if (this.selectedList == this.psiTypeList)
+				if (this.psiList[this.selectedTab].SelectedPanelType == PsiList.PanelType.PsiTypePanel && this.psiList[this.selectedTab].SelectedPsiLevel != null)
 				{
-					this.SelectPsiList();
+					result = this.psiList[this.selectedTab].SelectedPsiLevel.Value;
 				}
-				else if (this.selectedList == this.psiList)
+				else
 				{
-					result = new Tuple<IPsi, int>(this.psiItemList[this.psiList.SelectedIndex], this.selectedLevel);
+					this.psiList[this.selectedTab].Accept();
 				}
 			}
 			else if (button == Button.B)
 			{
-				if (this.selectedList == this.psiTypeList)
+				if (this.psiList[this.selectedTab].SelectedPanelType == PsiList.PanelType.PsiGroupPanel)
 				{
 					result = -1;
 				}
-				else if (this.selectedList == this.psiList)
+				else
 				{
-					this.SelectPsiTypeList();
+					this.psiList[this.selectedTab].Cancel();
 				}
 			}
 			else if (button == Button.L)
@@ -366,76 +188,83 @@ namespace Mother4.GUI.OverworldMenu
 			return result;
 		}
 
+		// Token: 0x06000326 RID: 806 RVA: 0x0001466D File Offset: 0x0001286D
 		public override void Focus()
 		{
 		}
 
+		// Token: 0x06000327 RID: 807 RVA: 0x0001466F File Offset: 0x0001286F
 		public override void Unfocus()
 		{
 		}
 
-		public const int PANEL_DEPTH = 0;
+		// Token: 0x04000496 RID: 1174
+		private const int PSI_LIST_ROWS = 4;
 
-		public const float TAB_WIDTH = 50f;
+		// Token: 0x04000497 RID: 1175
+		private const int PANEL_DEPTH = 0;
 
-		public const int MAX_SUPPORTED_PARTY_MEMBERS = 4;
+		// Token: 0x04000498 RID: 1176
+		private const float TAB_WIDTH = 50f;
 
+		// Token: 0x04000499 RID: 1177
+		private const int MAX_SUPPORTED_PARTY_MEMBERS = 4;
+
+		// Token: 0x0400049A RID: 1178
 		private const string FILE = "pause.dat";
 
+		// Token: 0x0400049B RID: 1179
 		private const string FRONT_TAG = "firsttag";
 
+		// Token: 0x0400049C RID: 1180
 		private const string TAG = "tag";
 
-		public static readonly Vector2f PANEL_POSITION = MainMenu.PANEL_POSITION + new Vector2f(MainMenu.PANEL_SIZE.X + 20f, 13f);
+		// Token: 0x0400049D RID: 1181
+		private static readonly Vector2f PANEL_POSITION = MainMenu.PANEL_POSITION + new Vector2f(MainMenu.PANEL_SIZE.X + 20f, 13f);
 
-		public static readonly Vector2f PANEL_SIZE = new Vector2f(320f - PsiMenu.PANEL_POSITION.X - 20f, 99f);
+		// Token: 0x0400049E RID: 1182
+		private static readonly Vector2f PANEL_SIZE = new Vector2f(320f - PsiMenu.PANEL_POSITION.X - 20f, 99f);
 
-		public static readonly Color ACTIVE_TAB_TEXT_COLOR = Color.Black;
+		// Token: 0x0400049F RID: 1183
+		private static readonly Vector2f PSI_LIST_POSITION = new Vector2f(8f, 2f);
 
-		public static readonly Color INACTIVE_TAB_TEXT_COLOR = new Color(65, 80, 79);
+		// Token: 0x040004A0 RID: 1184
+		private static readonly int PSI_LIST_WIDTH = (int)(PsiMenu.PANEL_SIZE.X - PsiMenu.PSI_LIST_POSITION.X);
 
-		public static readonly Color DIVIDER_COLOR = new Color(128, 140, 138);
+		// Token: 0x040004A1 RID: 1185
+		private static readonly Color ACTIVE_TAB_TEXT_COLOR = Color.Black;
 
-		private static readonly string CURSOR_FILE = Paths.GRAPHICS + "realcursor.dat";
+		// Token: 0x040004A2 RID: 1186
+		private static readonly Color INACTIVE_TAB_TEXT_COLOR = new Color(65, 80, 79);
 
-		private static readonly string[] PSI_TYPE_STRINGS = new string[]
-		{
-			StringFile.Instance.Get("psi.offense").Value,
-			StringFile.Instance.Get("psi.recovery").Value,
-			StringFile.Instance.Get("psi.support").Value,
-			StringFile.Instance.Get("psi.other").Value
-		};
+		// Token: 0x040004A3 RID: 1187
+		private static readonly Color DIVIDER_COLOR = new Color(128, 140, 138);
 
-		private static readonly string[] PSI_LEVEL_STRINGS = new string[]
-		{
-			"α",
-			"β",
-			"γ",
-			"Ω"
-		};
+		// Token: 0x040004A4 RID: 1188
+		private static readonly string CURSOR_FILE = Paths.GRAPHICS + "cursor.dat";
 
+		// Token: 0x040004A5 RID: 1189
 		private ShapeGraphic horizDivider;
 
+		// Token: 0x040004A6 RID: 1190
 		private ShapeGraphic vertDivider;
 
+		// Token: 0x040004A7 RID: 1191
 		private IndexedColorGraphic[] tabs;
 
+		// Token: 0x040004A8 RID: 1192
 		private TextRegion[] tabLabels;
 
+		// Token: 0x040004A9 RID: 1193
 		private int selectedTab;
 
-		private ScrollingList psiTypeList;
+		// Token: 0x040004AA RID: 1194
+		private PsiList[] psiList;
 
-		private ScrollingList psiList;
+		// Token: 0x040004AB RID: 1195
+		private CharacterType[] charactersWithPsi;
 
-		private ScrollingList selectedList;
-
-		private ScrollingList[] levelList;
-
-		private int selectedLevel;
-
-		private List<IPsi> psiItemList;
-
+		// Token: 0x040004AC RID: 1196
 		private TextRegion descriptionText;
 	}
 }

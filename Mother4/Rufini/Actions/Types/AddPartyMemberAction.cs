@@ -5,6 +5,7 @@ using Carbine.Scenes;
 using Mother4.Actors;
 using Mother4.Actors.NPCs;
 using Mother4.Data;
+using Mother4.GUI.Text.PrintActions;
 using Mother4.Overworld;
 using Mother4.Scenes;
 using Mother4.Scripts;
@@ -15,8 +16,10 @@ using SFML.System;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000121 RID: 289
 	internal class AddPartyMemberAction : RufiniAction
 	{
+		// Token: 0x060006E7 RID: 1767 RVA: 0x0002BE98 File Offset: 0x0002A098
 		public AddPartyMemberAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -39,13 +42,14 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x060006E8 RID: 1768 RVA: 0x0002BF5C File Offset: 0x0002A15C
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			ActionReturnContext result = default(ActionReturnContext);
-			CharacterType option = (CharacterType)base.GetValue<RufiniOption>("char").Option;
+			CharacterType byOptionInt = CharacterType.GetByOptionInt(base.GetValue<RufiniOption>("char").Option);
 			string npcName = base.GetValue<string>("name");
 			bool value = base.GetValue<bool>("sup");
-			PartyManager.Instance.Add(option);
+			PartyManager.Instance.Add(byOptionInt);
 			Scene scene = SceneManager.Instance.Peek();
 			if (scene is OverworldScene)
 			{
@@ -65,18 +69,19 @@ namespace Rufini.Actions.Types
 					direction = context.Player.Direction;
 				}
 				PartyTrain partyTrain = ((OverworldScene)scene).PartyTrain;
-				PartyFollower follower = new PartyFollower(context.Pipeline, partyTrain, option, position, direction, true);
-				partyTrain.Add(follower);
+				PartyFollower partyFollower = new PartyFollower(context.Pipeline, context.CollisionManager, partyTrain, byOptionInt, position, direction, true);
+				partyTrain.Add(partyFollower);
+				context.CollisionManager.Add(partyFollower);
 			}
 			if (!value)
 			{
 				this.context = context;
 				string text = StringFile.Instance.Get("system.partyJoin").Value;
-				text = text.Replace("$newMember", CharacterNames.GetName(option));
+				text = text.Replace("$newMember", CharacterNames.GetName(byOptionInt));
 				this.context.TextBox.OnTextboxComplete += this.ContinueAfterTextbox;
-				this.context.TextBox.Reset(text, string.Empty, false, false);
+				this.context.TextBox.Enqueue(new PrintAction(PrintActionType.PrintText, text));
+				this.context.TextBox.Enqueue(new PrintAction(PrintActionType.Prompt, new object[0]));
 				this.context.TextBox.Show();
-				this.context.Player.MovementLocked = true;
 				result = new ActionReturnContext
 				{
 					Wait = ScriptExecutor.WaitType.Event
@@ -85,16 +90,17 @@ namespace Rufini.Actions.Types
 			return result;
 		}
 
+		// Token: 0x060006E9 RID: 1769 RVA: 0x0002C130 File Offset: 0x0002A330
 		private void ContinueAfterTextbox()
 		{
-			this.context.TextBox.Hide();
 			this.context.TextBox.OnTextboxComplete -= this.ContinueAfterTextbox;
-			this.context.Player.MovementLocked = false;
 			this.context.Executor.Continue();
 		}
 
+		// Token: 0x04000916 RID: 2326
 		private const string MSG_KEY = "system.partyJoin";
 
+		// Token: 0x04000917 RID: 2327
 		private ExecutionContext context;
 	}
 }

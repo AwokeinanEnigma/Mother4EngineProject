@@ -7,8 +7,10 @@ using Mother4.Scripts.Actions;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000139 RID: 313
 	internal class EntityDepthAction : RufiniAction
 	{
+		// Token: 0x06000727 RID: 1831 RVA: 0x0002E0D4 File Offset: 0x0002C2D4
 		public EntityDepthAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -36,6 +38,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x06000728 RID: 1832 RVA: 0x0002E1C4 File Offset: 0x0002C3C4
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			ActionReturnContext result = default(ActionReturnContext);

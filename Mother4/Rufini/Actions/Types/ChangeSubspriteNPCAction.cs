@@ -7,8 +7,10 @@ using Mother4.Scripts.Actions;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000131 RID: 305
 	internal class ChangeSubspriteNPCAction : RufiniAction
 	{
+		// Token: 0x06000710 RID: 1808 RVA: 0x0002D230 File Offset: 0x0002B430
 		public ChangeSubspriteNPCAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -26,6 +28,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x06000711 RID: 1809 RVA: 0x0002D2CC File Offset: 0x0002B4CC
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			string name = base.GetValue<string>("name");

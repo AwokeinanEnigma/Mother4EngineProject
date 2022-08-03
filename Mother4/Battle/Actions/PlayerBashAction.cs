@@ -8,8 +8,10 @@ using Mother4.Data;
 
 namespace Mother4.Battle.Actions
 {
+	// Token: 0x020000B9 RID: 185
 	internal class PlayerBashAction : BattleAction
 	{
+		// Token: 0x060003ED RID: 1005 RVA: 0x00018E7C File Offset: 0x0001707C
 		public PlayerBashAction(ActionParams aparams) : base(aparams)
 		{
 			this.combatant = (this.sender as PlayerCombatant);
@@ -27,6 +29,7 @@ namespace Mother4.Battle.Actions
 			throw new NotImplementedException("Cannot target more than one combatant while bashing.");
 		}
 
+		// Token: 0x060003EE RID: 1006 RVA: 0x00018F08 File Offset: 0x00017108
 		protected override void UpdateAction()
 		{
 			base.UpdateAction();
@@ -54,6 +57,7 @@ namespace Mother4.Battle.Actions
 			}
 		}
 
+		// Token: 0x060003EF RID: 1007 RVA: 0x00018F63 File Offset: 0x00017163
 		public void ButtonPressed(InputManager sender, Button b)
 		{
 			if (b == Button.A)
@@ -63,6 +67,7 @@ namespace Mother4.Battle.Actions
 			}
 		}
 
+		// Token: 0x060003F0 RID: 1008 RVA: 0x00018F84 File Offset: 0x00017184
 		private void Initialize()
 		{
 			Console.WriteLine("BASHMÖDE ({0})", this.combatant.Character);
@@ -82,20 +87,23 @@ namespace Mother4.Battle.Actions
 			this.state = PlayerBashAction.State.PopMessage;
 			if (this.target is EnemyCombatant)
 			{
-				this.controller.InterfaceController.StartComboCircle(this.target as EnemyCombatant, this.sender as PlayerCombatant);
+				this.controller.InterfaceController.StartComboCircle(this.target as EnemyCombatant);
 			}
 		}
 
+		// Token: 0x060003F1 RID: 1009 RVA: 0x000190C0 File Offset: 0x000172C0
 		private void PopMessage()
 		{
 			if (this.messageStack.Count > 0)
 			{
 				string message = this.messageStack.Pop();
-				this.controller.InterfaceController.ShowMessage(message, true);
+				this.controller.InterfaceController.ClearTextBox();
+				this.controller.InterfaceController.ShowTextBox(message, true);
 				this.state = PlayerBashAction.State.WaitForUI;
 			}
 		}
 
+		// Token: 0x060003F2 RID: 1010 RVA: 0x00019110 File Offset: 0x00017310
 		private int AccumulateDamage(Combatant target, out bool smash)
 		{
 			int num;
@@ -114,6 +122,7 @@ namespace Mother4.Battle.Actions
 			return num;
 		}
 
+		// Token: 0x060003F3 RID: 1011 RVA: 0x00019194 File Offset: 0x00017394
 		private void Combo()
 		{
 			if (!(this.target is EnemyCombatant))
@@ -154,6 +163,7 @@ namespace Mother4.Battle.Actions
 			}
 		}
 
+		// Token: 0x060003F4 RID: 1012 RVA: 0x000192FE File Offset: 0x000174FE
 		private void FinishCombo()
 		{
 			if (this.controller.InterfaceController.IsComboCircleDone())
@@ -162,6 +172,7 @@ namespace Mother4.Battle.Actions
 			}
 		}
 
+		// Token: 0x060003F5 RID: 1013 RVA: 0x0001931C File Offset: 0x0001751C
 		private void Finish()
 		{
 			Console.WriteLine("Total hpDelta={0}", this.statDelta.HP);
@@ -175,62 +186,92 @@ namespace Mother4.Battle.Actions
 			this.complete = true;
 		}
 
+		// Token: 0x060003F6 RID: 1014 RVA: 0x000193D0 File Offset: 0x000175D0
 		public void InteractionComplete()
 		{
 			if (this.state == PlayerBashAction.State.WaitForUI)
 			{
 				this.state = ((this.messageStack.Count == 0) ? PlayerBashAction.State.Combo : PlayerBashAction.State.PopMessage);
-				return;
+				if (this.state == PlayerBashAction.State.Combo)
+				{
+					this.controller.InterfaceController.HideTextBox();
+					return;
+				}
 			}
-			if (this.state == PlayerBashAction.State.Combo)
+			else if (this.state == PlayerBashAction.State.Combo)
 			{
 				this.state = PlayerBashAction.State.FinishCombo;
 			}
 		}
 
+		// Token: 0x040005B3 RID: 1459
 		private const Button COMBO_BUTTON = Button.A;
 
+		// Token: 0x040005B4 RID: 1460
 		private const int MAX_COMBOS = 16;
 
+		// Token: 0x040005B5 RID: 1461
 		private const float ONE_GP = 0.013333334f;
 
+		// Token: 0x040005B6 RID: 1462
 		private const int CARD_POP_HEIGHT = 12;
 
+		// Token: 0x040005B7 RID: 1463
 		private PlayerBashAction.State state;
 
+		// Token: 0x040005B8 RID: 1464
 		private float power;
 
+		// Token: 0x040005B9 RID: 1465
 		private PlayerCombatant combatant;
 
+		// Token: 0x040005BA RID: 1466
 		private Combatant target;
 
+		// Token: 0x040005BB RID: 1467
 		private StatSet statDelta;
 
+		// Token: 0x040005BC RID: 1468
 		private StatSet meterDelta;
 
+		// Token: 0x040005BD RID: 1469
 		private int firstHpDelta;
 
+		// Token: 0x040005BE RID: 1470
 		private Stack<string> messageStack;
 
+		// Token: 0x040005BF RID: 1471
 		private bool buttonPressed;
 
+		// Token: 0x040005C0 RID: 1472
 		private int comboCount;
 
+		// Token: 0x040005C1 RID: 1473
 		private uint bgmPosition;
 
+		// Token: 0x040005C2 RID: 1474
 		private bool comboEdge;
 
+		// Token: 0x040005C3 RID: 1475
 		private bool lastComboEdge;
 
+		// Token: 0x040005C4 RID: 1476
 		private bool lastLastComboEdge;
 
+		// Token: 0x020000BA RID: 186
 		private enum State
 		{
+			// Token: 0x040005C6 RID: 1478
 			Initialize,
+			// Token: 0x040005C7 RID: 1479
 			Combo,
+			// Token: 0x040005C8 RID: 1480
 			FinishCombo,
+			// Token: 0x040005C9 RID: 1481
 			PopMessage,
+			// Token: 0x040005CA RID: 1482
 			WaitForUI,
+			// Token: 0x040005CB RID: 1483
 			Finish
 		}
 	}

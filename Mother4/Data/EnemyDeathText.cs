@@ -1,69 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
+using Mother4.Data.Enemies;
+using Rufini.Strings;
 
 namespace Mother4.Data
 {
+	// Token: 0x02000077 RID: 119
 	internal class EnemyDeathText
 	{
+		// Token: 0x06000288 RID: 648 RVA: 0x0000FF0C File Offset: 0x0000E10C
 		public static string Get(EnemyType enemy)
 		{
-			if (EnemyDeathText.texts.ContainsKey(enemy))
+			string result = string.Empty;
+			EnemyData data = EnemyFile.Instance.GetData(enemy);
+			string qualifiedName;
+			if (data.TryGetStringQualifiedName("defeat", out qualifiedName))
 			{
-				return EnemyDeathText.texts[enemy];
+				result = StringFile.Instance.Get(qualifiedName).Value;
 			}
-			return "was defeated!";
+			return result;
 		}
-
-		private static Dictionary<EnemyType, string> texts = new Dictionary<EnemyType, string>
-		{
-			{
-				EnemyType.Dummy,
-				"no longer lives!"
-			},
-			{
-				EnemyType.MagicSnail,
-				"went back to normal."
-			},
-			{
-				EnemyType.Stickat,
-				"disappeared into thin air."
-			},
-			{
-				EnemyType.Mouse,
-				"went back to normal."
-			},
-			{
-				EnemyType.HermitCan,
-				"hid itself away forever."
-			},
-			{
-				EnemyType.Flamingo,
-				"flew off to bother someone else."
-			},
-			{
-				EnemyType.AtomicPowerRobo,
-				"blew up into a million pieces."
-			},
-			{
-				EnemyType.CarbonPup,
-				"bit the dust."
-			},
-			{
-				EnemyType.MeltyRobot,
-				"melted into nothingness."
-			},
-			{
-				EnemyType.ModernMind,
-				"burst into light!"
-			},
-            {
-                EnemyType.NotSoDeer,
-                "went back to normal."
-            },
-            {
-                EnemyType.MysteriousTank,
-                "exploded!"
-            }
-		};
 	}
 }

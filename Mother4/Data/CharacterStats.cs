@@ -1,110 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using Mother4.Battle;
+using Mother4.Data.Character;
 
 namespace Mother4.Data
 {
+	// Token: 0x020000EB RID: 235
 	internal static class CharacterStats
 	{
+		// Token: 0x0600056B RID: 1387 RVA: 0x00021094 File Offset: 0x0001F294
 		public static StatSet GetStats(CharacterType character)
 		{
-			StatSet result;
-			CharacterStats.stats.TryGetValue(character, out result);
-			return result;
+			StatSet initialStatSet;
+			if (!CharacterStats.STATS_DICT.TryGetValue(character, out initialStatSet))
+			{
+				CharacterData data = CharacterFile.Instance.GetData(character);
+				initialStatSet = data.InitialStatSet;
+				CharacterStats.STATS_DICT.Add(character, initialStatSet);
+			}
+			return initialStatSet;
 		}
 
+		// Token: 0x0600056C RID: 1388 RVA: 0x000210D0 File Offset: 0x0001F2D0
 		public static void SetStats(CharacterType character, StatSet statset)
 		{
-			if (CharacterStats.stats.ContainsKey(character))
+			if (CharacterStats.STATS_DICT.ContainsKey(character))
 			{
-				CharacterStats.stats[character] = statset;
+				CharacterStats.STATS_DICT[character] = statset;
 			}
 		}
 
-		private static Dictionary<CharacterType, StatSet> stats = new Dictionary<CharacterType, StatSet>
-		{
-			{
-				CharacterType.Travis,
-				new StatSet
-				{
-					MaxHP = 98,
-					MaxPP = 50,
-					HP = 84,
-					PP = 31,
-					Speed = 8,
-					Offense = 12,
-					Defense = 5,
-					IQ = 3,
-					Guts = 80,
-					Luck = 2,
-					Meter = 0.12f,
-					Level = 16
-				}
-			},
-			{
-				CharacterType.Meryl,
-				new StatSet
-				{
-					HP = 21,
-					PP = 32,
-					Speed = 8,
-					Offense = 4,
-					Defense = 5,
-					IQ = 3,
-					Guts = 2,
-					Luck = 2,
-					Meter = 0.5f,
-					Level = 1
-				}
-			},
-			{
-				CharacterType.Floyd,
-				new StatSet
-				{
-					HP = 31,
-					PP = 0,
-					Speed = 10,
-					Offense = 5,
-					Defense = 5,
-					IQ = 3,
-					Guts = 2,
-					Luck = 2,
-					Meter = 0.5f,
-					Level = 1
-				}
-			},
-			{
-				CharacterType.Leo,
-				new StatSet
-				{
-					HP = 42,
-					PP = 20,
-					Speed = 5,
-					Offense = 7,
-					Defense = 6,
-					IQ = 3,
-					Guts = 2,
-					Luck = 2,
-					Meter = 0.5f,
-					Level = 1
-				}
-			},
-			{
-				CharacterType.Zack,
-				new StatSet
-				{
-					HP = 15,
-					PP = 0,
-					Speed = 1,
-					Offense = 1,
-					Defense = 1,
-					IQ = 1,
-					Guts = 1,
-					Luck = 1,
-					Meter = 0.5f,
-					Level = 1
-				}
-			}
-		};
+		// Token: 0x0400073E RID: 1854
+		private static Dictionary<CharacterType, StatSet> STATS_DICT = new Dictionary<CharacterType, StatSet>();
 	}
 }

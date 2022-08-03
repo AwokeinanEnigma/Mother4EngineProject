@@ -6,8 +6,10 @@ using Mother4.Scripts.Actions;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x0200014F RID: 335
 	internal class PlaySFXAction : RufiniAction
 	{
+		// Token: 0x06000758 RID: 1880 RVA: 0x0002FE70 File Offset: 0x0002E070
 		public PlaySFXAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -30,6 +32,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x06000759 RID: 1881 RVA: 0x0002FF08 File Offset: 0x0002E108
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			string value = base.GetValue<string>("sfx");
@@ -42,6 +45,7 @@ namespace Rufini.Actions.Types
 			return default(ActionReturnContext);
 		}
 
+		// Token: 0x0600075A RID: 1882 RVA: 0x0002FF74 File Offset: 0x0002E174
 		private void SoundComplete(CarbineSound sender)
 		{
 			AudioManager.Instance.Unuse(sender);

@@ -1,69 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
+using Mother4.Data.Enemies;
 
 namespace Mother4.Data
 {
+	// Token: 0x02000082 RID: 130
 	internal class EnemyBattleBackgrounds
 	{
+		// Token: 0x060002AD RID: 685 RVA: 0x0001112C File Offset: 0x0000F32C
 		public static string GetFile(EnemyType enemy)
 		{
-			if (EnemyBattleBackgrounds.backgrounds.ContainsKey(enemy))
-			{
-				return Paths.GRAPHICS + "BBG/xml/" + EnemyBattleBackgrounds.backgrounds[enemy];
-			}
-			return "";
+			EnemyData data = EnemyFile.Instance.GetData(enemy);
+			return Paths.GRAPHICS + "BBG/xml/" + data.BackgroundName + ".xml";
 		}
-
-		private static Dictionary<EnemyType, string> backgrounds = new Dictionary<EnemyType, string>
-		{
-			{
-				EnemyType.Dummy,
-				"Fiestabands1.xml"
-			},
-			{
-				EnemyType.MagicSnail,
-				"stripedcandy.xml"
-			},
-			{
-				EnemyType.Stickat,
-				"stripedcandy.xml"
-			},
-			{
-				EnemyType.Mouse,
-				"Flowerpop1.xml"
-			},
-			{
-				EnemyType.HermitCan,
-				"Blopple.xml"
-			},
-			{
-				EnemyType.Flamingo,
-				"Blopple.xml"
-			},
-			{
-				EnemyType.AtomicPowerRobo,
-				"Technodrome.xml"
-			},
-			{
-				EnemyType.CarbonPup,
-				"Diamondine.xml"
-			},
-			{
-				EnemyType.MeltyRobot,
-				"Diamondine.xml"
-			},
-			{
-				EnemyType.ModernMind,
-				"blue.xml"
-			},
-            {
-                EnemyType.NotSoDeer,
-                "Deer.xml"
-			},
-            {
-				EnemyType.MysteriousTank,
-				"FATFUCKINGTANK.xml"
-			}
-		};
 	}
 }

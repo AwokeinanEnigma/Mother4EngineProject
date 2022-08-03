@@ -6,10 +6,16 @@ using SFML.System;
 
 namespace Mother4.Battle.UI
 {
+	// Token: 0x0200007D RID: 125
 	internal class TotalDamageNumber : IDisposable
 	{
+		// Token: 0x14000008 RID: 8
+		// (add) Token: 0x06000298 RID: 664 RVA: 0x000105A0 File Offset: 0x0000E7A0
+		// (remove) Token: 0x06000299 RID: 665 RVA: 0x000105D8 File Offset: 0x0000E7D8
 		public event TotalDamageNumber.CompletionHandler OnComplete;
 
+		// Token: 0x1700007C RID: 124
+		// (get) Token: 0x0600029A RID: 666 RVA: 0x0001060D File Offset: 0x0000E80D
 		public bool Done
 		{
 			get
@@ -18,6 +24,7 @@ namespace Mother4.Battle.UI
 			}
 		}
 
+		// Token: 0x0600029B RID: 667 RVA: 0x00010618 File Offset: 0x0000E818
 		public TotalDamageNumber(RenderPipeline pipeline, Vector2f position, int number)
 		{
 			this.pipeline = pipeline;
@@ -25,17 +32,20 @@ namespace Mother4.Battle.UI
 			this.state = TotalDamageNumber.State.Waiting;
 		}
 
+		// Token: 0x0600029C RID: 668 RVA: 0x00010638 File Offset: 0x0000E838
 		~TotalDamageNumber()
 		{
 			this.Dispose(false);
 		}
 
+		// Token: 0x0600029D RID: 669 RVA: 0x00010668 File Offset: 0x0000E868
 		public void AddToNumber(int add)
 		{
 			this.number += add;
 			this.Reset(this.position, this.number);
 		}
 
+		// Token: 0x0600029E RID: 670 RVA: 0x0001068C File Offset: 0x0000E88C
 		public void Reset(Vector2f position, int number)
 		{
 			this.position = position;
@@ -79,6 +89,7 @@ namespace Mother4.Battle.UI
 			}
 		}
 
+		// Token: 0x0600029F RID: 671 RVA: 0x00010874 File Offset: 0x0000EA74
 		public void SetVisibility(bool visible)
 		{
 			for (int i = 0; i < this.numbers.Length; i++)
@@ -87,6 +98,7 @@ namespace Mother4.Battle.UI
 			}
 		}
 
+		// Token: 0x060002A0 RID: 672 RVA: 0x000108A4 File Offset: 0x0000EAA4
 		public void Start()
 		{
 			this.paused = false;
@@ -95,6 +107,7 @@ namespace Mother4.Battle.UI
 			this.state = TotalDamageNumber.State.Rising;
 		}
 
+		// Token: 0x060002A1 RID: 673 RVA: 0x00010900 File Offset: 0x0000EB00
 		public void Update()
 		{
 			if (!this.paused)
@@ -154,6 +167,7 @@ namespace Mother4.Battle.UI
 			}
 		}
 
+		// Token: 0x060002A2 RID: 674 RVA: 0x00010A70 File Offset: 0x0000EC70
 		private void UpdatePosition()
 		{
 			this.position += this.translation;
@@ -163,12 +177,14 @@ namespace Mother4.Battle.UI
 			}
 		}
 
+		// Token: 0x060002A3 RID: 675 RVA: 0x00010AF9 File Offset: 0x0000ECF9
 		public void Dispose()
 		{
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 
+		// Token: 0x060002A4 RID: 676 RVA: 0x00010B08 File Offset: 0x0000ED08
 		protected virtual void Dispose(bool disposing)
 		{
 			if (!this.disposed && disposing)
@@ -180,54 +196,82 @@ namespace Mother4.Battle.UI
 			}
 		}
 
+		// Token: 0x04000401 RID: 1025
 		private const int PADDING = -1;
 
+		// Token: 0x04000402 RID: 1026
 		private const int RISE_HEIGHT = 24;
 
+		// Token: 0x04000403 RID: 1027
 		private const int HANG_TIME = 38;
 
+		// Token: 0x04000404 RID: 1028
 		private const float ACCELERATION = 0.2f;
 
+		// Token: 0x04000405 RID: 1029
 		private const float TOP_Y_BOUND = 12f;
 
+		// Token: 0x04000406 RID: 1030
 		private const float BOTTOM_Y_BOUND = 115f;
 
+		// Token: 0x04000407 RID: 1031
 		private static readonly string YELLOW_RESOURCE = Paths.GRAPHICS + "numberset2.dat";
 
+		// Token: 0x04000408 RID: 1032
 		private static readonly Vector2f UP_OFFSET = new Vector2f(0f, -32f);
 
+		// Token: 0x04000409 RID: 1033
 		private static readonly Vector2f RIGHT_OFFSET = new Vector2f(320f, 0f);
 
+		// Token: 0x0400040A RID: 1034
 		private bool disposed;
 
+		// Token: 0x0400040B RID: 1035
 		private Vector2f position;
 
+		// Token: 0x0400040C RID: 1036
 		private Vector2f goal;
 
+		// Token: 0x0400040D RID: 1037
 		private Vector2f translation;
 
+		// Token: 0x0400040E RID: 1038
 		private Graphic[] numbers;
 
+		// Token: 0x0400040F RID: 1039
 		private RenderPipeline pipeline;
 
+		// Token: 0x04000410 RID: 1040
 		private TotalDamageNumber.State state;
 
+		// Token: 0x04000411 RID: 1041
 		private int timer;
 
+		// Token: 0x04000412 RID: 1042
 		private int number;
 
+		// Token: 0x04000413 RID: 1043
 		private bool paused;
 
+		// Token: 0x0200007E RID: 126
 		private enum State
 		{
+			// Token: 0x04000416 RID: 1046
 			Waiting,
+			// Token: 0x04000417 RID: 1047
 			Rising,
+			// Token: 0x04000418 RID: 1048
 			Hanging,
+			// Token: 0x04000419 RID: 1049
 			Exiting,
+			// Token: 0x0400041A RID: 1050
 			CleanUp,
+			// Token: 0x0400041B RID: 1051
 			Finished
 		}
 
+		// Token: 0x0200007F RID: 127
+		// (Invoke) Token: 0x060002A7 RID: 679
 		public delegate void CompletionHandler(TotalDamageNumber sender);
 	}
 }

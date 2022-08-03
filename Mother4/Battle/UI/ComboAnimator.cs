@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using Carbine;
 using Carbine.Graphics;
-using Mother4.Battle.Combatants;
 using Mother4.Data;
 using SFML.System;
 
 namespace Mother4.Battle.UI
 {
+	// Token: 0x02000070 RID: 112
 	internal class ComboAnimator : IDisposable
 	{
+		// Token: 0x14000007 RID: 7
+		// (add) Token: 0x0600025F RID: 607 RVA: 0x0000EE78 File Offset: 0x0000D078
+		// (remove) Token: 0x06000260 RID: 608 RVA: 0x0000EEB0 File Offset: 0x0000D0B0
 		public event ComboAnimator.AnimationCompleteHandler OnAnimationComplete;
 
+		// Token: 0x17000078 RID: 120
+		// (get) Token: 0x06000261 RID: 609 RVA: 0x0000EEE5 File Offset: 0x0000D0E5
 		public Vector2f Position
 		{
 			get
@@ -20,6 +25,8 @@ namespace Mother4.Battle.UI
 			}
 		}
 
+		// Token: 0x17000079 RID: 121
+		// (get) Token: 0x06000262 RID: 610 RVA: 0x0000EEED File Offset: 0x0000D0ED
 		public int Depth
 		{
 			get
@@ -28,6 +35,8 @@ namespace Mother4.Battle.UI
 			}
 		}
 
+		// Token: 0x1700007A RID: 122
+		// (get) Token: 0x06000263 RID: 611 RVA: 0x0000EEF5 File Offset: 0x0000D0F5
 		public bool Stopped
 		{
 			get
@@ -36,6 +45,7 @@ namespace Mother4.Battle.UI
 			}
 		}
 
+		// Token: 0x06000264 RID: 612 RVA: 0x0000EF00 File Offset: 0x0000D100
 		public ComboAnimator(RenderPipeline pipeline, int depth)
 		{
 			this.pipeline = pipeline;
@@ -46,10 +56,9 @@ namespace Mother4.Battle.UI
 			this.bounceFlag = new bool[16];
 			this.starVelocity = new Vector2f[16];
 			Vector2f vector2f = new Vector2f(-320f, -180f);
-
 			for (int i = 0; i < this.starGraphics.Length; i++)
 			{
-				this.starGraphics[i] = new IndexedColorGraphic(HITSPARK_RESOURCE, "star", vector2f, depth);
+				this.starGraphics[i] = new IndexedColorGraphic(ComboAnimator.HITSPARK_RESOURCE, "star", vector2f, depth);
 				this.starGraphics[i].Visible = false;
 				pipeline.Add(this.starGraphics[i]);
 				this.starVelocity[i] = new Vector2f(0f, 0f);
@@ -61,58 +70,22 @@ namespace Mother4.Battle.UI
 			this.hitsparks = new Graphic[2];
 			for (int j = 0; j < this.hitsparks.Length; j++)
 			{
-				this.hitsparks[j] = new IndexedColorGraphic(HITSPARK_RESOURCE, "combohitspark", vector2f, depth + 20);
+				this.hitsparks[j] = new IndexedColorGraphic(ComboAnimator.HITSPARK_RESOURCE, "combohitspark", vector2f, depth + 20);
 				this.hitsparks[j].Visible = false;
 				pipeline.Add(this.hitsparks[j]);
 			}
 			this.state = ComboAnimator.State.Stopped;
 		}
 
+		// Token: 0x06000265 RID: 613 RVA: 0x0000F06C File Offset: 0x0000D26C
 		~ComboAnimator()
 		{
 			this.Dispose(false);
 		}
 
-		public void Setup(Graphic graphic, PlayerCombatant playa)
+		// Token: 0x06000266 RID: 614 RVA: 0x0000F09C File Offset: 0x0000D29C
+		public void Setup(Graphic graphic)
 		{
-			string hitSrung = "travis";
-			switch (playa.Character)
-			{
-				case CharacterType.Travis:
-					//do nothing
-					break;
-				case CharacterType.Floyd:
-					hitSrung = "";
-					break;
-				case CharacterType.Meryl:
-					hitSrung = "meryl";
-					break;
-				case CharacterType.Leo:
-					hitSrung = "leo";
-					break;
-
-			}
-			Console.Write(playa.Character);
-			string load = Paths.GRAPHICS + $"{hitSrung}hitsparks.dat";
-
-			Vector2f vector2f = new Vector2f(-320f, -180f);
-			this.starGraphics = new IndexedColorGraphic[16];
-			for (int i = 0; i < this.starGraphics.Length; i++)
-			{
-				this.starGraphics[i] = new IndexedColorGraphic(load, "star", vector2f, depth);
-				this.starGraphics[i].Visible = false;
-				pipeline.Add(this.starGraphics[i]);
-				this.starVelocity[i] = new Vector2f(0f, 0f);
-			}
-
-			this.hitsparks = new Graphic[2];
-			for (int j = 0; j < this.hitsparks.Length; j++)
-			{
-				this.hitsparks[j] = new IndexedColorGraphic(load, "combohitspark", vector2f, depth + 20);
-				this.hitsparks[j].Visible = false;
-				pipeline.Add(this.hitsparks[j]);
-			}
-
 			this.wobble = 0f;
 			this.wobbleSpeed = 0f;
 			this.wobbleDamp = 0f;
@@ -138,6 +111,7 @@ namespace Mother4.Battle.UI
 			this.state = ComboAnimator.State.Circling;
 		}
 
+		// Token: 0x06000267 RID: 615 RVA: 0x0000F240 File Offset: 0x0000D440
 		public void Stop(bool explode)
 		{
 			this.state = ComboAnimator.State.Falling;
@@ -149,6 +123,7 @@ namespace Mother4.Battle.UI
 			this.totalDamageNumber.Start();
 		}
 
+		// Token: 0x06000268 RID: 616 RVA: 0x0000F2B4 File Offset: 0x0000D4B4
 		private void End()
 		{
 			this.state = ComboAnimator.State.Stopped;
@@ -166,6 +141,7 @@ namespace Mother4.Battle.UI
 			this.starCount = 0;
 		}
 
+		// Token: 0x06000269 RID: 617 RVA: 0x0000F33C File Offset: 0x0000D53C
 		public void AddHit(int damage, bool smash)
 		{
 			this.AddStar();
@@ -191,16 +167,19 @@ namespace Mother4.Battle.UI
 			this.hitsparkIndex = (this.hitsparkIndex + 1) % this.hitsparks.Length;
 		}
 
-		private void HitsparkAnimationComplete(Graphic graphic)
+		// Token: 0x0600026A RID: 618 RVA: 0x0000F507 File Offset: 0x0000D707
+		private void HitsparkAnimationComplete(AnimatedRenderable graphic)
 		{
 			graphic.Visible = false;
 		}
 
+		// Token: 0x0600026B RID: 619 RVA: 0x0000F510 File Offset: 0x0000D710
 		private void DamageNumberComplete(DamageNumber sender)
 		{
 			this.damageNumbersToRemove.Add(sender);
 		}
 
+		// Token: 0x0600026C RID: 620 RVA: 0x0000F520 File Offset: 0x0000D720
 		private void AddStar()
 		{
 			if (this.starCount < 16)
@@ -212,6 +191,7 @@ namespace Mother4.Battle.UI
 			}
 		}
 
+		// Token: 0x0600026D RID: 621 RVA: 0x0000F59C File Offset: 0x0000D79C
 		public void Update()
 		{
 			if (this.state == ComboAnimator.State.Circling)
@@ -285,12 +265,14 @@ namespace Mother4.Battle.UI
 			this.totalDamageNumber.Update();
 		}
 
+		// Token: 0x0600026E RID: 622 RVA: 0x0000FA28 File Offset: 0x0000DC28
 		public void Dispose()
 		{
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 
+		// Token: 0x0600026F RID: 623 RVA: 0x0000FA38 File Offset: 0x0000DC38
 		protected virtual void Dispose(bool disposing)
 		{
 			if (!this.disposed && disposing)
@@ -306,79 +288,118 @@ namespace Mother4.Battle.UI
 			this.disposed = true;
 		}
 
+		// Token: 0x040003B5 RID: 949
 		private const int MAX_STARS = 16;
 
+		// Token: 0x040003B6 RID: 950
 		private const int MAX_DAMAGE_NUMBERS = 3;
 
+		// Token: 0x040003B7 RID: 951
 		private const float ROT_SPEED = 0.07f;
 
+		// Token: 0x040003B8 RID: 952
 		private const float MODULATION_SPEED = 0.035f;
 
+		// Token: 0x040003B9 RID: 953
 		private const float GRAVITY = 0.1f;
 
+		// Token: 0x040003BA RID: 954
 		private const int GROUND_Y = 135;
 
+		// Token: 0x040003BB RID: 955
 		private const float EXPLODE_SUCCESS_FACTOR = 7.5f;
 
+		// Token: 0x040003BC RID: 956
 		private const float EXPLODE_FAIL_FACTOR = 100f;
 
-		private string HITSPARK_RESOURCE = Paths.GRAPHICS + "hitsparks.dat";
+		// Token: 0x040003BD RID: 957
+		private static readonly string HITSPARK_RESOURCE = Paths.GRAPHICS + "hitsparks.dat";
 
+		// Token: 0x040003BE RID: 958
 		private bool disposed;
 
+		// Token: 0x040003BF RID: 959
 		private Vector2f position;
 
+		// Token: 0x040003C0 RID: 960
 		private Vector2f size;
 
+		// Token: 0x040003C1 RID: 961
 		private int depth;
 
+		// Token: 0x040003C2 RID: 962
 		private RenderPipeline pipeline;
 
+		// Token: 0x040003C3 RID: 963
 		private IndexedColorGraphic[] starGraphics;
 
+		// Token: 0x040003C4 RID: 964
 		private ComboAnimator.State state;
 
+		// Token: 0x040003C5 RID: 965
 		private int starCount;
 
+		// Token: 0x040003C6 RID: 966
 		private float rotAngle;
 
+		// Token: 0x040003C7 RID: 967
 		private float modAngle;
 
+		// Token: 0x040003C8 RID: 968
 		private bool[] bounceFlag;
 
+		// Token: 0x040003C9 RID: 969
 		private Vector2f[] starVelocity;
 
+		// Token: 0x040003CA RID: 970
 		private List<DamageNumber> damageNumbers;
 
+		// Token: 0x040003CB RID: 971
 		private List<DamageNumber> damageNumbersToRemove;
 
+		// Token: 0x040003CC RID: 972
 		private TotalDamageNumber totalDamageNumber;
 
+		// Token: 0x040003CD RID: 973
 		private Graphic[] hitsparks;
 
+		// Token: 0x040003CE RID: 974
 		private int hitsparkIndex;
 
+		// Token: 0x040003CF RID: 975
 		private Graphic enemyGraphic;
 
+		// Token: 0x040003D0 RID: 976
 		private Vector2f initialEnemyPosition;
 
+		// Token: 0x040003D1 RID: 977
 		private float wobble;
 
+		// Token: 0x040003D2 RID: 978
 		private float wobbleSpeed;
 
+		// Token: 0x040003D3 RID: 979
 		private float wobbleDamp;
 
+		// Token: 0x040003D4 RID: 980
 		private float bounce;
 
+		// Token: 0x040003D5 RID: 981
 		private float bounceSpeed;
 
+		// Token: 0x02000071 RID: 113
 		private enum State
 		{
+			// Token: 0x040003D8 RID: 984
 			Circling,
+			// Token: 0x040003D9 RID: 985
 			Falling,
+			// Token: 0x040003DA RID: 986
 			Stopped
 		}
 
+		// Token: 0x02000072 RID: 114
+		// (Invoke) Token: 0x06000272 RID: 626
 		public delegate void AnimationCompleteHandler(int starCount);
 	}
 }

@@ -5,8 +5,10 @@ using Mother4.Scripts.Actions;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000140 RID: 320
 	internal class HopPlayerAction : RufiniAction
 	{
+		// Token: 0x06000737 RID: 1847 RVA: 0x0002EE10 File Offset: 0x0002D010
 		public HopPlayerAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -24,6 +26,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x06000738 RID: 1848 RVA: 0x0002EE80 File Offset: 0x0002D080
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			base.GetValue<string>("name");

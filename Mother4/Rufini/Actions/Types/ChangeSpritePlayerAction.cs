@@ -7,8 +7,10 @@ using Mother4.Scripts.Actions;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000130 RID: 304
 	internal class ChangeSpritePlayerAction : RufiniAction
 	{
+		// Token: 0x0600070E RID: 1806 RVA: 0x0002D14C File Offset: 0x0002B34C
 		public ChangeSpritePlayerAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -26,6 +28,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x0600070F RID: 1807 RVA: 0x0002D1BC File Offset: 0x0002B3BC
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			string value = base.GetValue<string>("spr");

@@ -12,7 +12,8 @@ using Mother4.Battle.UI.Modifiers;
 using Mother4.Data;
 using Mother4.Data.Psi;
 using Mother4.GUI.Modifiers;
-
+using Mother4.GUI.Text;
+using Mother4.GUI.Text.PrintActions;
 using Mother4.Utility;
 using SFML.Graphics;
 using SFML.System;
@@ -186,30 +187,30 @@ namespace Mother4.Battle
 			{
 				switch (combatant.Faction)
 				{
-					case BattleFaction.PlayerTeam:
-						{
-							PlayerCombatant playerCombatant = (PlayerCombatant)combatant;
-							playerCombatant.OnStatChange += this.OnPlayerStatChange;
-							playerCombatant.OnStatusEffectChange += this.OnPlayerStatusEffectChange;
-							this.partyIDs.Add(playerCombatant.ID);
-							break;
-						}
-					case BattleFaction.EnemyTeam:
-						{
-							EnemyCombatant enemyCombatant = (EnemyCombatant)combatant;
-							enemyCombatant.OnStatusEffectChange += this.OnEnemyStatusEffectChange;
-							IndexedColorGraphic indexedColorGraphic = new IndexedColorGraphic(EnemyGraphics.GetFilename(enemyCombatant.Enemy), "front", default(Vector2f), 0);
-							indexedColorGraphic.CurrentPalette = uint.MaxValue;
-							indexedColorGraphic.CurrentPalette = 0U;
-							this.enemyGraphics.Add(enemyCombatant.ID, indexedColorGraphic);
-							pipeline.Add(indexedColorGraphic);
-							this.enemyIDs.Add(enemyCombatant.ID);
-							Graphic graphic2 = new IndexedColorGraphic(Paths.GRAPHICS + "cursor.dat", "down", VectorMath.Truncate(indexedColorGraphic.Position - indexedColorGraphic.Origin + new Vector2f(indexedColorGraphic.Size.X / 2f, 4f)), indexedColorGraphic.Depth + 10);
-							graphic2.Visible = false;
-							this.pipeline.Add(graphic2);
-							this.selectionMarkers.Add(indexedColorGraphic, graphic2);
-							break;
-						}
+				case BattleFaction.PlayerTeam:
+				{
+					PlayerCombatant playerCombatant = (PlayerCombatant)combatant;
+					playerCombatant.OnStatChange += this.OnPlayerStatChange;
+					playerCombatant.OnStatusEffectChange += this.OnPlayerStatusEffectChange;
+					this.partyIDs.Add(playerCombatant.ID);
+					break;
+				}
+				case BattleFaction.EnemyTeam:
+				{
+					EnemyCombatant enemyCombatant = (EnemyCombatant)combatant;
+					enemyCombatant.OnStatusEffectChange += this.OnEnemyStatusEffectChange;
+					IndexedColorGraphic indexedColorGraphic = new IndexedColorGraphic(EnemyGraphics.GetFilename(enemyCombatant.Enemy), "front", default(Vector2f), 0);
+					indexedColorGraphic.CurrentPalette = uint.MaxValue;
+					indexedColorGraphic.CurrentPalette = 0U;
+					this.enemyGraphics.Add(enemyCombatant.ID, indexedColorGraphic);
+					pipeline.Add(indexedColorGraphic);
+					this.enemyIDs.Add(enemyCombatant.ID);
+					Graphic graphic2 = new IndexedColorGraphic(Paths.GRAPHICS + "cursor.dat", "down", VectorMath.Truncate(indexedColorGraphic.Position - indexedColorGraphic.Origin + new Vector2f(indexedColorGraphic.Size.X / 2f, 4f)), indexedColorGraphic.Depth + 10);
+					graphic2.Visible = false;
+					this.pipeline.Add(graphic2);
+					this.selectionMarkers.Add(indexedColorGraphic, graphic2);
+					break;
+				}
 				}
 			}
 			this.AlignEnemyGraphics();
@@ -281,52 +282,52 @@ namespace Mother4.Battle
 		{
 			switch (type)
 			{
-				case 0:
-					this.youWon = new YouWon(this.pipeline);
+			case 0:
+				this.youWon = new YouWon(this.pipeline);
+				return;
+			case 1:
+			{
+				CharacterType character;
+				bool flag = Enum.TryParse<CharacterType>(args[0], true, out character);
+				if (flag)
+				{
+					this.jingler.Play(character);
 					return;
-				case 1:
-					{
-						CharacterType character;
-						bool flag = Enum.TryParse<CharacterType>(args[0], true, out character);
-						if (flag)
-						{
-							this.jingler.Play(character);
-							return;
-						}
-						break;
-					}
-				case 2:
-					{
-						int i = 0;
-						int hp = 0;
-						int.TryParse(args[0], out i);
-						int.TryParse(args[1], out hp);
-						StatSet statChange = new StatSet
-						{
-							HP = hp
-						};
-						this.combatantController[i].AlterStats(statChange);
-						return;
-					}
-				case 3:
-					{
-						int i2 = 0;
-						int pp = 0;
-						int.TryParse(args[0], out i2);
-						int.TryParse(args[1], out pp);
-						StatSet statChange2 = new StatSet
-						{
-							PP = pp
-						};
-						this.combatantController[i2].AlterStats(statChange2);
-						return;
-					}
-				default:
-					if (this.OnTextTrigger != null)
-					{
-						this.OnTextTrigger(type, args);
-					}
-					break;
+				}
+				break;
+			}
+			case 2:
+			{
+				int i = 0;
+				int hp = 0;
+				int.TryParse(args[0], out i);
+				int.TryParse(args[1], out hp);
+				StatSet statChange = new StatSet
+				{
+					HP = hp
+				};
+				this.combatantController[i].AlterStats(statChange);
+				return;
+			}
+			case 3:
+			{
+				int i2 = 0;
+				int pp = 0;
+				int.TryParse(args[0], out i2);
+				int.TryParse(args[1], out pp);
+				StatSet statChange2 = new StatSet
+				{
+					PP = pp
+				};
+				this.combatantController[i2].AlterStats(statChange2);
+				return;
+			}
+			default:
+				if (this.OnTextTrigger != null)
+				{
+					this.OnTextTrigger(type, args);
+				}
+				break;
 			}
 		}
 
@@ -397,23 +398,23 @@ namespace Mother4.Battle
 				}
 				switch (statusEffect)
 				{
-					case StatusEffect.Shield:
-						this.SetCardGlow(sender.ID, BattleCard.GlowType.Shield);
-						return;
-					case StatusEffect.PsiShield:
-						this.SetCardGlow(sender.ID, BattleCard.GlowType.PsiSheild);
-						return;
-					case StatusEffect.Counter:
-						this.SetCardGlow(sender.ID, BattleCard.GlowType.Counter);
-						return;
-					case StatusEffect.PsiCounter:
-						this.SetCardGlow(sender.ID, BattleCard.GlowType.PsiCounter);
-						return;
-					case StatusEffect.Eraser:
-						this.SetCardGlow(sender.ID, BattleCard.GlowType.Eraser);
-						return;
-					default:
-						return;
+				case StatusEffect.Shield:
+					this.SetCardGlow(sender.ID, BattleCard.GlowType.Shield);
+					return;
+				case StatusEffect.PsiShield:
+					this.SetCardGlow(sender.ID, BattleCard.GlowType.PsiSheild);
+					return;
+				case StatusEffect.Counter:
+					this.SetCardGlow(sender.ID, BattleCard.GlowType.Counter);
+					return;
+				case StatusEffect.PsiCounter:
+					this.SetCardGlow(sender.ID, BattleCard.GlowType.PsiCounter);
+					return;
+				case StatusEffect.Eraser:
+					this.SetCardGlow(sender.ID, BattleCard.GlowType.Eraser);
+					return;
+				default:
+					return;
 				}
 			}
 			else
@@ -426,15 +427,15 @@ namespace Mother4.Battle
 				}
 				switch (statusEffect)
 				{
-					case StatusEffect.Shield:
-					case StatusEffect.PsiShield:
-					case StatusEffect.Counter:
-					case StatusEffect.PsiCounter:
-					case StatusEffect.Eraser:
-						this.SetCardGlow(sender.ID, BattleCard.GlowType.None);
-						return;
-					default:
-						return;
+				case StatusEffect.Shield:
+				case StatusEffect.PsiShield:
+				case StatusEffect.Counter:
+				case StatusEffect.PsiCounter:
+				case StatusEffect.Eraser:
+					this.SetCardGlow(sender.ID, BattleCard.GlowType.None);
+					return;
+				default:
+					return;
 				}
 			}
 		}
@@ -667,89 +668,55 @@ namespace Mother4.Battle
 		// Token: 0x0600045B RID: 1115 RVA: 0x0001C67C File Offset: 0x0001A87C
 		private void ResetTargetingSelection()
 		{
-			using (Dictionary<int, IndexedColorGraphic>.Enumerator enumerator = this.enemyGraphics.GetEnumerator())
+			foreach (KeyValuePair<int, IndexedColorGraphic> enemyGraphic in this.enemyGraphics)
 			{
-				while (enumerator.MoveNext())
+				KeyValuePair<int, IndexedColorGraphic> kvp = enemyGraphic;
+				this.graphicModifiers.RemoveAll((Predicate<IGraphicModifier>)(x => x.Graphic == kvp.Value && x is GraphicFader));
+				if (this.selectionState.TargetingMode == TargetingMode.Enemy)
 				{
-					KeyValuePair<int, IndexedColorGraphic> kvp = enumerator.Current;
-					this.graphicModifiers.RemoveAll(delegate (IGraphicModifier x)
+					if (kvp.Key == this.selectedTargetId)
 					{
-						IndexedColorGraphic graphic = x.Graphic;
-						KeyValuePair<int, IndexedColorGraphic> kvp17 = kvp;
-						return graphic == kvp17.Value && x is GraphicFader;
-					});
-					if (this.selectionState.TargetingMode == TargetingMode.Enemy)
-					{
-						KeyValuePair<int, IndexedColorGraphic> kvp18 = kvp;
-						if (kvp18.Key == this.selectedTargetId)
-						{
-							KeyValuePair<int, IndexedColorGraphic> kvp2 = kvp;
-							kvp2.Value.Color = Color.White;
-							List<IGraphicModifier> list = this.graphicModifiers;
-							KeyValuePair<int, IndexedColorGraphic> kvp3 = kvp;
-							list.Add(new GraphicFader(kvp3.Value, new Color(64, 64, 64), ColorBlendMode.Screen, 30, -1));
-							KeyValuePair<int, IndexedColorGraphic> kvp4 = kvp;
-							this.SetSelectionMarkerVisibility(kvp4.Value, true);
-						}
-						else
-						{
-							KeyValuePair<int, IndexedColorGraphic> kvp5 = kvp;
-							kvp5.Value.ColorBlendMode = ColorBlendMode.Multiply;
-							KeyValuePair<int, IndexedColorGraphic> kvp6 = kvp;
-							kvp6.Value.Color = new Color(128, 128, 128);
-							KeyValuePair<int, IndexedColorGraphic> kvp7 = kvp;
-							this.SetSelectionMarkerVisibility(kvp7.Value, false);
-						}
-					}
-					else if (this.selectionState.TargetingMode == TargetingMode.AllEnemies)
-					{
-						KeyValuePair<int, IndexedColorGraphic> kvp8 = kvp;
-						kvp8.Value.Color = Color.White;
-						List<IGraphicModifier> list2 = this.graphicModifiers;
-						KeyValuePair<int, IndexedColorGraphic> kvp9 = kvp;
-						list2.Add(new GraphicFader(kvp9.Value, new Color(64, 64, 64), ColorBlendMode.Screen, 30, -1));
-						KeyValuePair<int, IndexedColorGraphic> kvp10 = kvp;
-						this.SetSelectionMarkerVisibility(kvp10.Value, true);
-					}
-					else if (this.selectionState.TargetingMode == TargetingMode.PartyMember || this.selectionState.TargetingMode == TargetingMode.AllPartyMembers)
-					{
-						KeyValuePair<int, IndexedColorGraphic> kvp11 = kvp;
-						kvp11.Value.ColorBlendMode = ColorBlendMode.Multiply;
-						KeyValuePair<int, IndexedColorGraphic> kvp12 = kvp;
-						kvp12.Value.Color = new Color(128, 128, 128);
-						KeyValuePair<int, IndexedColorGraphic> kvp13 = kvp;
-						this.SetSelectionMarkerVisibility(kvp13.Value, false);
+						kvp.Value.Color = Color.White;
+						this.graphicModifiers.Add((IGraphicModifier)new GraphicFader(kvp.Value, new Color((byte)64, (byte)64, (byte)64), ColorBlendMode.Screen, 30, -1));
+						this.SetSelectionMarkerVisibility((Graphic)kvp.Value, true);
 					}
 					else
 					{
-						KeyValuePair<int, IndexedColorGraphic> kvp14 = kvp;
-						kvp14.Value.ColorBlendMode = ColorBlendMode.Multiply;
-						KeyValuePair<int, IndexedColorGraphic> kvp15 = kvp;
-						kvp15.Value.Color = Color.White;
-						KeyValuePair<int, IndexedColorGraphic> kvp16 = kvp;
-						this.SetSelectionMarkerVisibility(kvp16.Value, false);
+						kvp.Value.ColorBlendMode = ColorBlendMode.Multiply;
+						kvp.Value.Color = new Color((byte)128, (byte)128, (byte)128);
+						this.SetSelectionMarkerVisibility((Graphic)kvp.Value, false);
 					}
 				}
-			}
-			for (int i = 0; i < this.partyIDs.Count; i++)
-			{
-				Graphic cardGraphic = this.cardBar.GetCardGraphic(i);
-				if (this.selectionState.TargetingMode == TargetingMode.PartyMember)
+				else if (this.selectionState.TargetingMode == TargetingMode.AllEnemies)
 				{
-					this.SetSelectionMarkerVisibility(cardGraphic, this.partySelectIndex == i);
+					kvp.Value.Color = Color.White;
+					this.graphicModifiers.Add((IGraphicModifier)new GraphicFader(kvp.Value, new Color((byte)64, (byte)64, (byte)64), ColorBlendMode.Screen, 30, -1));
+					this.SetSelectionMarkerVisibility((Graphic)kvp.Value, true);
 				}
-				else if (this.selectionState.TargetingMode == TargetingMode.AllPartyMembers)
+				else if (this.selectionState.TargetingMode == TargetingMode.PartyMember || this.selectionState.TargetingMode == TargetingMode.AllPartyMembers)
 				{
-					this.SetSelectionMarkerVisibility(cardGraphic, true);
+					kvp.Value.ColorBlendMode = ColorBlendMode.Multiply;
+					kvp.Value.Color = new Color((byte)128, (byte)128, (byte)128);
+					this.SetSelectionMarkerVisibility((Graphic)kvp.Value, false);
 				}
 				else
 				{
-					this.SetSelectionMarkerVisibility(cardGraphic, false);
+					kvp.Value.ColorBlendMode = ColorBlendMode.Multiply;
+					kvp.Value.Color = Color.White;
+					this.SetSelectionMarkerVisibility((Graphic)kvp.Value, false);
 				}
 			}
-		}
-
-		// Token: 0x0600045C RID: 1116 RVA: 0x0001C9A4 File Offset: 0x0001ABA4
+			for (int index = 0; index < this.partyIDs.Count; ++index)
+			{
+				Graphic cardGraphic = this.cardBar.GetCardGraphic(index);
+				if (this.selectionState.TargetingMode == TargetingMode.PartyMember)
+					this.SetSelectionMarkerVisibility(cardGraphic, this.partySelectIndex == index);
+				else if (this.selectionState.TargetingMode == TargetingMode.AllPartyMembers)
+					this.SetSelectionMarkerVisibility(cardGraphic, true);
+				else
+					this.SetSelectionMarkerVisibility(cardGraphic, false);
+			}
+		}       // Token: 0x0600045C RID: 1116 RVA: 0x0001C9A4 File Offset: 0x0001ABA4
 		private void AlignEnemyGraphics()
 		{
 			int num = 0;
@@ -834,93 +801,93 @@ namespace Mother4.Battle
 			}
 			switch (this.state)
 			{
-				case BattleInterfaceController.State.Waiting:
-				case BattleInterfaceController.State.SpecialSelection:
-				case BattleInterfaceController.State.ItemSelection:
-					break;
-				case BattleInterfaceController.State.TopLevelSelection:
-					if (flag)
-					{
-						this.buttonBar.SelectLeft();
-						return;
-					}
-					if (flag2)
-					{
-						this.buttonBar.SelectRight();
-						return;
-					}
-					break;
-				case BattleInterfaceController.State.PsiTypeSelection:
-					if (flag3)
-					{
-						this.psiMenu.SelectUp();
-						return;
-					}
-					if (flag4)
-					{
-						this.psiMenu.SelectDown();
-						return;
-					}
-					if (flag)
-					{
-						this.psiMenu.SelectLeft();
-						return;
-					}
-					if (flag2)
-					{
-						this.psiMenu.SelectRight();
-						return;
-					}
-					break;
-				case BattleInterfaceController.State.EnemySelection:
-					if (flag)
-					{
-						this.enemySelectIndex--;
-						if (this.enemySelectIndex < 0)
-						{
-							this.enemySelectIndex = this.enemyIDs.Count - 1;
-						}
-						this.selectedTargetId = this.enemyIDs[this.enemySelectIndex];
-						this.ResetTargetingSelection();
-						return;
-					}
-					if (flag2)
-					{
-						this.enemySelectIndex++;
-						if (this.enemySelectIndex >= this.enemyIDs.Count)
-						{
-							this.enemySelectIndex = 0;
-						}
-						this.selectedTargetId = this.enemyIDs[this.enemySelectIndex];
-						this.ResetTargetingSelection();
-						return;
-					}
-					break;
-				case BattleInterfaceController.State.AllySelection:
-					if (flag)
-					{
-						this.partySelectIndex--;
-						if (this.partySelectIndex < 0)
-						{
-							this.partySelectIndex = this.partyIDs.Count - 1;
-						}
-						this.selectedTargetId = this.partyIDs[this.partySelectIndex];
-						this.ResetTargetingSelection();
-						return;
-					}
-					if (flag2)
-					{
-						this.partySelectIndex++;
-						if (this.partySelectIndex >= this.partyIDs.Count)
-						{
-							this.partySelectIndex = 0;
-						}
-						this.selectedTargetId = this.partyIDs[this.partySelectIndex];
-						this.ResetTargetingSelection();
-					}
-					break;
-				default:
+			case BattleInterfaceController.State.Waiting:
+			case BattleInterfaceController.State.SpecialSelection:
+			case BattleInterfaceController.State.ItemSelection:
+				break;
+			case BattleInterfaceController.State.TopLevelSelection:
+				if (flag)
+				{
+					this.buttonBar.SelectLeft();
 					return;
+				}
+				if (flag2)
+				{
+					this.buttonBar.SelectRight();
+					return;
+				}
+				break;
+			case BattleInterfaceController.State.PsiTypeSelection:
+				if (flag3)
+				{
+					this.psiMenu.SelectUp();
+					return;
+				}
+				if (flag4)
+				{
+					this.psiMenu.SelectDown();
+					return;
+				}
+				if (flag)
+				{
+					this.psiMenu.SelectLeft();
+					return;
+				}
+				if (flag2)
+				{
+					this.psiMenu.SelectRight();
+					return;
+				}
+				break;
+			case BattleInterfaceController.State.EnemySelection:
+				if (flag)
+				{
+					this.enemySelectIndex--;
+					if (this.enemySelectIndex < 0)
+					{
+						this.enemySelectIndex = this.enemyIDs.Count - 1;
+					}
+					this.selectedTargetId = this.enemyIDs[this.enemySelectIndex];
+					this.ResetTargetingSelection();
+					return;
+				}
+				if (flag2)
+				{
+					this.enemySelectIndex++;
+					if (this.enemySelectIndex >= this.enemyIDs.Count)
+					{
+						this.enemySelectIndex = 0;
+					}
+					this.selectedTargetId = this.enemyIDs[this.enemySelectIndex];
+					this.ResetTargetingSelection();
+					return;
+				}
+				break;
+			case BattleInterfaceController.State.AllySelection:
+				if (flag)
+				{
+					this.partySelectIndex--;
+					if (this.partySelectIndex < 0)
+					{
+						this.partySelectIndex = this.partyIDs.Count - 1;
+					}
+					this.selectedTargetId = this.partyIDs[this.partySelectIndex];
+					this.ResetTargetingSelection();
+					return;
+				}
+				if (flag2)
+				{
+					this.partySelectIndex++;
+					if (this.partySelectIndex >= this.partyIDs.Count)
+					{
+						this.partySelectIndex = 0;
+					}
+					this.selectedTargetId = this.partyIDs[this.partySelectIndex];
+					this.ResetTargetingSelection();
+				}
+				break;
+			default:
+				return;
 			}
 		}
 
@@ -940,26 +907,26 @@ namespace Mother4.Battle
 			}
 			switch (this.state)
 			{
-				case BattleInterfaceController.State.Waiting:
-					break;
-				case BattleInterfaceController.State.TopLevelSelection:
-					this.TopLevelSelection(b);
-					return;
-				case BattleInterfaceController.State.PsiTypeSelection:
-					this.PsiTypeSelection(b);
-					return;
-				case BattleInterfaceController.State.SpecialSelection:
-					this.SpecialSelection(b);
-					return;
-				case BattleInterfaceController.State.ItemSelection:
-					this.ItemSelection(b);
-					return;
-				case BattleInterfaceController.State.EnemySelection:
-				case BattleInterfaceController.State.AllySelection:
-					this.TargetSelection(b);
-					break;
-				default:
-					return;
+			case BattleInterfaceController.State.Waiting:
+				break;
+			case BattleInterfaceController.State.TopLevelSelection:
+				this.TopLevelSelection(b);
+				return;
+			case BattleInterfaceController.State.PsiTypeSelection:
+				this.PsiTypeSelection(b);
+				return;
+			case BattleInterfaceController.State.SpecialSelection:
+				this.SpecialSelection(b);
+				return;
+			case BattleInterfaceController.State.ItemSelection:
+				this.ItemSelection(b);
+				return;
+			case BattleInterfaceController.State.EnemySelection:
+			case BattleInterfaceController.State.AllySelection:
+				this.TargetSelection(b);
+				break;
+			default:
+				return;
 			}
 		}
 
@@ -1006,53 +973,53 @@ namespace Mother4.Battle
 		{
 			switch (b)
 			{
-				case Button.A:
-					switch (this.buttonBar.SelectedAction)
-					{
-						case ButtonBar.Action.Bash:
-							this.selectionState.TargetingMode = TargetingMode.Enemy;
-							this.StartTargetSelection();
-							return;
-						case ButtonBar.Action.Psi:
-							{
-								PlayerCombatant playerCombatant = this.CurrentPlayerCombatant();
-								this.state = BattleInterfaceController.State.PsiTypeSelection;
-								this.buttonBar.Hide();
-								this.psiMenu.Show(playerCombatant.Character);
-								return;
-							}
-						case ButtonBar.Action.Items:
-							this.state = BattleInterfaceController.State.ItemSelection;
-							this.buttonBar.Hide();
-							return;
-						case ButtonBar.Action.Talk:
-							this.selectionState.TargetingMode = TargetingMode.Enemy;
-							this.state = BattleInterfaceController.State.EnemySelection;
-							this.buttonBar.Hide();
-							this.selectedTargetId = this.enemyIDs[this.enemySelectIndex % this.enemyIDs.Count];
-							this.ResetTargetingSelection();
-							return;
-						case ButtonBar.Action.Guard:
-							this.CompleteMenuGuard();
-							return;
-						case ButtonBar.Action.Run:
-							this.buttonBar.Hide();
-							this.RunAttempted = true;
-							this.CompleteMenuRun();
-							this.state = BattleInterfaceController.State.Waiting;
-							return;
-						default:
-							throw new NotImplementedException("Tried to use unimplemented button action.");
-					}
-					break;
-				case Button.B:
-					if (this.isUndoAllowed)
-					{
-						this.CompleteMenuUndo();
-					}
+			case Button.A:
+				switch (this.buttonBar.SelectedAction)
+				{
+				case ButtonBar.Action.Bash:
+					this.selectionState.TargetingMode = TargetingMode.Enemy;
+					this.StartTargetSelection();
+					return;
+				case ButtonBar.Action.Psi:
+				{
+					PlayerCombatant playerCombatant = this.CurrentPlayerCombatant();
+					this.state = BattleInterfaceController.State.PsiTypeSelection;
+					this.buttonBar.Hide();
+					this.psiMenu.Show(playerCombatant.Character);
+					return;
+				}
+				case ButtonBar.Action.Items:
+					this.state = BattleInterfaceController.State.ItemSelection;
+					this.buttonBar.Hide();
+					return;
+				case ButtonBar.Action.Talk:
+					this.selectionState.TargetingMode = TargetingMode.Enemy;
+					this.state = BattleInterfaceController.State.EnemySelection;
+					this.buttonBar.Hide();
+					this.selectedTargetId = this.enemyIDs[this.enemySelectIndex % this.enemyIDs.Count];
+					this.ResetTargetingSelection();
+					return;
+				case ButtonBar.Action.Guard:
+					this.CompleteMenuGuard();
+					return;
+				case ButtonBar.Action.Run:
+					this.buttonBar.Hide();
+					this.RunAttempted = true;
+					this.CompleteMenuRun();
+					this.state = BattleInterfaceController.State.Waiting;
 					return;
 				default:
-					return;
+					throw new NotImplementedException("Tried to use unimplemented button action.");
+				}
+				break;
+			case Button.B:
+				if (this.isUndoAllowed)
+				{
+					this.CompleteMenuUndo();
+				}
+				return;
+			default:
+				return;
 			}
 		}
 
@@ -1061,38 +1028,38 @@ namespace Mother4.Battle
 		{
 			switch (b)
 			{
-				case Button.A:
-					{
-						if (!this.psiMenu.HasSelection)
-						{
-							this.psiMenu.Accept();
-							return;
-						}
-						PsiLevel value = this.psiMenu.SelectedPsi.Value;
-						PsiData data = PsiFile.Instance.GetData(value.PsiType);
-						if ((int)data.PP[value.Level] <= this.CurrentPlayerCombatant().Stats.PP)
-						{
-							this.psiMenu.Hide();
-							this.selectionState.Psi = value;
-							this.selectionState.TargetingMode = (TargetingMode)data.Targets[value.Level];
-							this.StartTargetSelection();
-							return;
-						}
-						this.ShowTextBox("Not enough PP!", false);
-						return;
-					}
-				case Button.B:
-					if (this.psiMenu.HasSelection)
-					{
-						this.psiMenu.Cancel();
-						return;
-					}
+			case Button.A:
+			{
+				if (!this.psiMenu.HasSelection)
+				{
+					this.psiMenu.Accept();
+					return;
+				}
+				PsiLevel value = this.psiMenu.SelectedPsi.Value;
+				PsiData data = PsiFile.Instance.GetData(value.PsiType);
+				if ((int)data.PP[value.Level] <= this.CurrentPlayerCombatant().Stats.PP)
+				{
 					this.psiMenu.Hide();
-					this.state = BattleInterfaceController.State.TopLevelSelection;
-					this.ShowButtonBar();
+					this.selectionState.Psi = value;
+					this.selectionState.TargetingMode = (TargetingMode)data.Targets[value.Level];
+					this.StartTargetSelection();
 					return;
-				default:
+				}
+				this.ShowTextBox("Not enough PP!", false);
+				return;
+			}
+			case Button.B:
+				if (this.psiMenu.HasSelection)
+				{
+					this.psiMenu.Cancel();
 					return;
+				}
+				this.psiMenu.Hide();
+				this.state = BattleInterfaceController.State.TopLevelSelection;
+				this.ShowButtonBar();
+				return;
+			default:
+				return;
 			}
 		}
 
@@ -1101,14 +1068,14 @@ namespace Mother4.Battle
 		{
 			switch (b)
 			{
-				case Button.A:
-					break;
-				case Button.B:
-					this.state = BattleInterfaceController.State.TopLevelSelection;
-					this.ShowButtonBar();
-					break;
-				default:
-					return;
+			case Button.A:
+				break;
+			case Button.B:
+				this.state = BattleInterfaceController.State.TopLevelSelection;
+				this.ShowButtonBar();
+				break;
+			default:
+				return;
 			}
 		}
 
@@ -1117,14 +1084,14 @@ namespace Mother4.Battle
 		{
 			switch (b)
 			{
-				case Button.A:
-					break;
-				case Button.B:
-					this.state = BattleInterfaceController.State.TopLevelSelection;
-					this.ShowButtonBar();
-					break;
-				default:
-					return;
+			case Button.A:
+				break;
+			case Button.B:
+				this.state = BattleInterfaceController.State.TopLevelSelection;
+				this.ShowButtonBar();
+				break;
+			default:
+				return;
 			}
 		}
 
@@ -1133,18 +1100,18 @@ namespace Mother4.Battle
 		{
 			switch (b)
 			{
-				case Button.A:
-					this.CompleteTargetSelection(this.buttonBar.SelectedAction);
-					return;
-				case Button.B:
-					this.selectedTargetId = -1;
-					this.selectionState.TargetingMode = TargetingMode.None;
-					this.ResetTargetingSelection();
-					this.state = BattleInterfaceController.State.TopLevelSelection;
-					this.ShowButtonBar();
-					return;
-				default:
-					return;
+			case Button.A:
+				this.CompleteTargetSelection(this.buttonBar.SelectedAction);
+				return;
+			case Button.B:
+				this.selectedTargetId = -1;
+				this.selectionState.TargetingMode = TargetingMode.None;
+				this.ResetTargetingSelection();
+				this.state = BattleInterfaceController.State.TopLevelSelection;
+				this.ShowButtonBar();
+				return;
+			default:
+				return;
 			}
 		}
 
@@ -1165,31 +1132,31 @@ namespace Mother4.Battle
 			{
 				switch (buttonAction)
 				{
-					case ButtonBar.Action.Bash:
-						this.selectionState.Type = SelectionState.SelectionType.Bash;
-						break;
-					case ButtonBar.Action.Psi:
-						this.selectionState.Type = SelectionState.SelectionType.PSI;
-						break;
-					case ButtonBar.Action.Talk:
-						this.selectionState.Type = SelectionState.SelectionType.Talk;
-						break;
+				case ButtonBar.Action.Bash:
+					this.selectionState.Type = SelectionState.SelectionType.Bash;
+					break;
+				case ButtonBar.Action.Psi:
+					this.selectionState.Type = SelectionState.SelectionType.PSI;
+					break;
+				case ButtonBar.Action.Talk:
+					this.selectionState.Type = SelectionState.SelectionType.Talk;
+					break;
 				}
 				switch (this.selectionState.TargetingMode)
 				{
-					case TargetingMode.PartyMember:
-					case TargetingMode.Enemy:
-						this.selectionState.Targets = new Combatant[]
-						{
+				case TargetingMode.PartyMember:
+				case TargetingMode.Enemy:
+					this.selectionState.Targets = new Combatant[]
+					{
 						this.combatantController[this.selectedTargetId]
-						};
-						break;
-					case TargetingMode.AllPartyMembers:
-						this.selectionState.Targets = this.combatantController.GetFactionCombatants(BattleFaction.PlayerTeam);
-						break;
-					case TargetingMode.AllEnemies:
-						this.selectionState.Targets = this.combatantController.GetFactionCombatants(BattleFaction.EnemyTeam);
-						break;
+					};
+					break;
+				case TargetingMode.AllPartyMembers:
+					this.selectionState.Targets = this.combatantController.GetFactionCombatants(BattleFaction.PlayerTeam);
+					break;
+				case TargetingMode.AllEnemies:
+					this.selectionState.Targets = this.combatantController.GetFactionCombatants(BattleFaction.EnemyTeam);
+					break;
 				}
 				this.selectionState.AttackIndex = 0;
 				this.selectionState.ItemIndex = -1;

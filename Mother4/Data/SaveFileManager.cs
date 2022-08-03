@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using Carbine.Flags;
 using fNbt;
+using Mother4.Data.Character;
 using SFML.System;
 
 namespace Mother4.Data
 {
+	// Token: 0x02000035 RID: 53
 	internal class SaveFileManager
 	{
+		// Token: 0x1700004E RID: 78
+		// (get) Token: 0x06000101 RID: 257 RVA: 0x00006771 File Offset: 0x00004971
 		public static SaveFileManager Instance
 		{
 			get
@@ -21,6 +25,9 @@ namespace Mother4.Data
 			}
 		}
 
+		// Token: 0x1700004F RID: 79
+		// (get) Token: 0x06000102 RID: 258 RVA: 0x0000678B File Offset: 0x0000498B
+		// (set) Token: 0x06000103 RID: 259 RVA: 0x00006793 File Offset: 0x00004993
 		public SaveProfile CurrentProfile
 		{
 			get
@@ -33,6 +40,7 @@ namespace Mother4.Data
 			}
 		}
 
+		// Token: 0x06000104 RID: 260 RVA: 0x0000679C File Offset: 0x0000499C
 		private SaveFileManager()
 		{
 			if (File.Exists("sav.dat"))
@@ -46,37 +54,30 @@ namespace Mother4.Data
 			}
 			if (!this.file.RootTag.Contains("v"))
 			{
-				this.file.RootTag.Add(new NbtInt("v", 1));
+				this.file.RootTag.Add(new NbtInt("v", 2));
 			}
 		}
 
-		private CharacterType[] IntArrayToParty(int[] intArray)
+		// Token: 0x06000105 RID: 261 RVA: 0x00006818 File Offset: 0x00004A18
+		private string[] PartyToStringArray(CharacterType[] party)
 		{
-			CharacterType[] array = new CharacterType[(intArray == null) ? 0 : intArray.Length];
+			string[] array = new string[(party == null) ? 0 : party.Length];
 			for (int i = 0; i < array.Length; i++)
 			{
-				array[i] = (CharacterType)intArray[i];
+				CharacterData data = CharacterFile.Instance.GetData(party[i]);
+				array[i] = data.QualifiedName;
 			}
 			return array;
 		}
 
-		private int[] PartyToIntArray(CharacterType[] party)
-		{
-			int[] array = new int[(party == null) ? 0 : party.Length];
-			for (int i = 0; i < array.Length; i++)
-			{
-				array[i] = (int)party[i];
-			}
-			return array;
-		}
-
+		// Token: 0x06000106 RID: 262 RVA: 0x00006864 File Offset: 0x00004A64
 		private SaveProfile LoadSaveProfile(NbtCompound saveTag)
 		{
 			bool flag = true;
 			NbtInt nbtInt = null;
 			flag &= saveTag.TryGet<NbtInt>("idx", out nbtInt);
-			NbtIntArray nbtIntArray = null;
-			flag &= saveTag.TryGet<NbtIntArray>("prty", out nbtIntArray);
+			NbtList nbtList = null;
+			flag &= saveTag.TryGet<NbtList>("prty", out nbtList);
 			NbtString nbtString = null;
 			flag &= saveTag.TryGet<NbtString>("map", out nbtString);
 			NbtInt nbtInt2 = null;
@@ -93,11 +94,25 @@ namespace Mother4.Data
 				position.X = (float)nbtInt2.IntValue;
 				position.Y = (float)nbtInt3.IntValue;
 			}
+			CharacterType[] array;
+			if (nbtList != null)
+			{
+				array = new CharacterType[nbtList.Count];
+				for (int i = 0; i < array.Length; i++)
+				{
+					NbtString nbtString2 = nbtList.Get<NbtString>(i);
+					array[i] = CharacterFile.Instance.GetCharacterType(nbtString2.Value);
+				}
+			}
+			else
+			{
+				array = new CharacterType[0];
+			}
 			return new SaveProfile
 			{
 				IsValid = flag,
 				Index = ((nbtInt == null) ? 0 : nbtInt.IntValue),
-				Party = ((nbtIntArray == null) ? new CharacterType[0] : this.IntArrayToParty(nbtIntArray.IntArrayValue)),
+				Party = array,
 				MapName = ((nbtString == null) ? string.Empty : nbtString.StringValue),
 				Position = position,
 				Time = ((nbtInt4 == null) ? 0 : nbtInt4.IntValue),
@@ -105,20 +120,28 @@ namespace Mother4.Data
 			};
 		}
 
+		// Token: 0x06000107 RID: 263 RVA: 0x000069F8 File Offset: 0x00004BF8
 		private NbtTag SaveProfileToNBT(SaveProfile profile)
 		{
-			return new NbtCompound("prf")
+			NbtCompound nbtCompound = new NbtCompound("prf");
+			nbtCompound.Add(new NbtInt("idx", profile.Index));
+			nbtCompound.Add(new NbtString("map", profile.MapName ?? string.Empty));
+			nbtCompound.Add(new NbtInt("x", (int)profile.Position.X));
+			nbtCompound.Add(new NbtInt("y", (int)profile.Position.Y));
+			nbtCompound.Add(new NbtInt("tm", profile.Time));
+			nbtCompound.Add(new NbtInt("flv", profile.Flavor));
+			NbtList nbtList = new NbtList("prty", NbtTagType.String);
+			string[] array = this.PartyToStringArray(profile.Party);
+			for (int i = 0; i < array.Length; i++)
 			{
-				new NbtInt("idx", profile.Index),
-				new NbtIntArray("prty", this.PartyToIntArray(profile.Party)),
-				new NbtString("map", profile.MapName ?? string.Empty),
-				new NbtInt("x", (int)profile.Position.X),
-				new NbtInt("y", (int)profile.Position.Y),
-				new NbtInt("tm", profile.Time),
-				new NbtInt("flv", profile.Flavor)
-			};
+				NbtString newTag = new NbtString(array[i]);
+				nbtList.Add(newTag);
+			}
+			nbtCompound.Add(nbtList);
+			return nbtCompound;
 		}
 
+		// Token: 0x06000108 RID: 264 RVA: 0x00006AF4 File Offset: 0x00004CF4
 		public IDictionary<int, SaveProfile> LoadProfiles()
 		{
 			IDictionary<int, SaveProfile> dictionary = new Dictionary<int, SaveProfile>();
@@ -146,6 +169,7 @@ namespace Mother4.Data
 			return dictionary;
 		}
 
+		// Token: 0x06000109 RID: 265 RVA: 0x00006BA8 File Offset: 0x00004DA8
 		public void LoadFile(int saveIndex)
 		{
 			NbtCompound rootTag = this.file.RootTag;
@@ -181,15 +205,13 @@ namespace Mother4.Data
 			}
 		}
 
+		// Token: 0x0600010A RID: 266 RVA: 0x00006CCC File Offset: 0x00004ECC
 		public void SaveFile()
-		{//
-		//	StreamWriter streamWriter = new StreamWriter("save.log");
-		//	streamWriter.WriteLine("start");
+		{
 			DateTime now = DateTime.Now;
 			NbtCompound rootTag = this.file.RootTag;
 			NbtList nbtList = rootTag.Get<NbtList>("sav");
 			NbtCompound nbtCompound = null;
-			//streamWriter.WriteLine("compound");
 			if (nbtList != null)
 			{
 				using (IEnumerator<NbtTag> enumerator = nbtList.GetEnumerator())
@@ -222,37 +244,40 @@ namespace Mother4.Data
 				nbtCompound = new NbtCompound();
 				flag = true;
 			}
-		//	streamWriter.WriteLine("profile");
-
 			nbtCompound.Add(this.SaveProfileToNBT(this.currentProfile));
 			nbtCompound.Add(FlagManager.Instance.ToNBT());
 			nbtCompound.Add(ValueManager.Instance.ToNBT());
 			nbtCompound.Add(CharacterNames.ToNBT());
-			//streamWriter.WriteLine("flag");
 			if (flag)
 			{
 				nbtList.Add(nbtCompound);
 			}
-			//streamWriter.WriteLine("save");
 			this.file.SaveToFile("sav.dat", NbtCompression.GZip);
-			//streamWriter.Close();
-			//Console.WriteLine("Saved profile in {0} seconds", Math.Round((double)(DateTime.Now.Millisecond - now.Millisecond) / 1000.0, 2));
+			Console.WriteLine("Saved profile in {0} seconds", Math.Round((double)(DateTime.Now.Millisecond - now.Millisecond) / 1000.0, 2));
 		}
 
+		// Token: 0x040001EC RID: 492
 		public const string SAVE_FILE = "sav.dat";
 
+		// Token: 0x040001ED RID: 493
 		public const string PROFILE_TAG_NAME = "prf";
 
+		// Token: 0x040001EE RID: 494
 		public const string LIST_TAG_NAME = "sav";
 
-		private const int SAVE_FORMAT_VERSION = 1;
+		// Token: 0x040001EF RID: 495
+		private const int SAVE_FORMAT_VERSION = 2;
 
-		private const int LOWEST_COMPAT_SAVE_FORMAT_VERSION = 1;
+		// Token: 0x040001F0 RID: 496
+		private const int LOWEST_COMPAT_SAVE_FORMAT_VERSION = 2;
 
+		// Token: 0x040001F1 RID: 497
 		private static SaveFileManager instance;
 
+		// Token: 0x040001F2 RID: 498
 		private SaveProfile currentProfile;
 
+		// Token: 0x040001F3 RID: 499
 		private NbtFile file;
 	}
 }

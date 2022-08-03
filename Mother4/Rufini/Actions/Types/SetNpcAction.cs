@@ -7,8 +7,10 @@ using Mother4.Scripts.Actions;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x0200015B RID: 347
 	internal class SetNpcAction : RufiniAction
 	{
+		// Token: 0x06000776 RID: 1910 RVA: 0x00030BB4 File Offset: 0x0002EDB4
 		public SetNpcAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -26,6 +28,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x06000777 RID: 1911 RVA: 0x00030C50 File Offset: 0x0002EE50
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			string name = base.GetValue<string>("name");

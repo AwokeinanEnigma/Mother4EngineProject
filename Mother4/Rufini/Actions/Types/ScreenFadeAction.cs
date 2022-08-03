@@ -9,8 +9,10 @@ using SFML.Graphics;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000154 RID: 340
 	internal class ScreenFadeAction : RufiniAction
 	{
+		// Token: 0x06000765 RID: 1893 RVA: 0x00030440 File Offset: 0x0002E640
 		public ScreenFadeAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -33,6 +35,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x06000766 RID: 1894 RVA: 0x000304D8 File Offset: 0x0002E6D8
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			ActionReturnContext result = default(ActionReturnContext);
@@ -54,14 +57,17 @@ namespace Rufini.Actions.Types
 			return result;
 		}
 
+		// Token: 0x06000767 RID: 1895 RVA: 0x0003056F File Offset: 0x0002E76F
 		private void OnFadeComplete(ScreenDimmer sender)
 		{
 			this.dimmer.OnFadeComplete -= this.OnFadeComplete;
 			this.context.Executor.Continue();
 		}
 
+		// Token: 0x0400094C RID: 2380
 		private ExecutionContext context;
 
+		// Token: 0x0400094D RID: 2381
 		private ScreenDimmer dimmer;
 	}
 }

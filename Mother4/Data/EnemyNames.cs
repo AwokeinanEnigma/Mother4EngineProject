@@ -1,252 +1,68 @@
 ﻿using System;
-using System.Collections.Generic;
+using Mother4.Data.Enemies;
+using Mother4.Scripts.Actions.ParamTypes;
+using Rufini.Strings;
 
 namespace Mother4.Data
 {
+	// Token: 0x020000F0 RID: 240
 	internal class EnemyNames
 	{
+		// Token: 0x06000582 RID: 1410 RVA: 0x000216D4 File Offset: 0x0001F8D4
+		private static string GetStringOrDefault(EnemyData enemyData, string stringType, string defaultValue)
+		{
+			string qualifiedName;
+			string result;
+			if (enemyData.TryGetStringQualifiedName(stringType, out qualifiedName))
+			{
+				RufiniString rufiniString = StringFile.Instance.Get(qualifiedName);
+				result = ((rufiniString.Value != null) ? rufiniString.Value : defaultValue);
+			}
+			else
+			{
+				result = defaultValue;
+			}
+			return result;
+		}
+
+		// Token: 0x06000583 RID: 1411 RVA: 0x00021714 File Offset: 0x0001F914
 		public static string GetName(EnemyType enemy)
 		{
-			if (EnemyNames.names.ContainsKey(enemy))
-			{
-				return EnemyNames.names[enemy];
-			}
-			return "DUMMY";
+			EnemyData data = EnemyFile.Instance.GetData(enemy);
+			return EnemyNames.GetStringOrDefault(data, "name", "DUMMY");
 		}
 
+		// Token: 0x06000584 RID: 1412 RVA: 0x00021740 File Offset: 0x0001F940
 		public static string GetArticle(EnemyType enemy)
 		{
-			if (EnemyNames.articles.ContainsKey(enemy))
-			{
-				return EnemyNames.articles[enemy] + " ";
-			}
-			return "THE";
+			EnemyData data = EnemyFile.Instance.GetData(enemy);
+			return EnemyNames.GetStringOrDefault(data, "article", "THE");
 		}
 
+		// Token: 0x06000585 RID: 1413 RVA: 0x0002176C File Offset: 0x0001F96C
 		public static string GetSubjectivePronoun(EnemyType enemy)
 		{
-			if (EnemyNames.names.ContainsKey(enemy))
-			{
-				return EnemyNames.subjectivePronouns[enemy];
-			}
-			return "IT";
+			EnemyData data = EnemyFile.Instance.GetData(enemy);
+			return EnemyNames.GetStringOrDefault(data, "subjective", "IT");
 		}
 
+		// Token: 0x06000586 RID: 1414 RVA: 0x00021798 File Offset: 0x0001F998
 		public static string GetPosessivePronoun(EnemyType enemy)
 		{
-			if (EnemyNames.names.ContainsKey(enemy))
-			{
-				return EnemyNames.posessivePronouns[enemy];
-			}
-			return "ITS";
+			EnemyData data = EnemyFile.Instance.GetData(enemy);
+			return EnemyNames.GetStringOrDefault(data, "possessive", "ITS");
 		}
 
-		private static Dictionary<EnemyType, string> names = new Dictionary<EnemyType, string>
-		{
-			{
-				EnemyType.Dummy,
-				"Dopefish"
-			},
-			{
-				EnemyType.MagicSnail,
-				"Magic Snail"
-			},
-			{
-				EnemyType.Stickat,
-				"Stickat"
-			},
-			{
-				EnemyType.Mouse,
-				"Mouse"
-			},
-			{
-				EnemyType.HermitCan,
-				"Hermit Can"
-			},
-			{
-				EnemyType.Flamingo,
-				"Flamingo"
-			},
-			{
-				EnemyType.AtomicPowerRobo,
-				"Atomic Power Robo"
-			},
-			{
-				EnemyType.CarbonPup,
-				"Carbon Pup"
-			},
-			{
-				EnemyType.MeltyRobot,
-				"Melty Robot"
-			},
-			{
-				EnemyType.ModernMind,
-				"Modern Mind"
-			},
-            {
-                EnemyType.NotSoDeer,
-                "Not-So-Deer"
-            },
-            {
-                EnemyType.MysteriousTank,
-                "Mysterious Tank"
-            },
-		};
+		// Token: 0x04000754 RID: 1876
+		private const string STRING_NAME = "name";
 
-		private static Dictionary<EnemyType, string> articles = new Dictionary<EnemyType, string>
-		{
-			{
-				EnemyType.Dummy,
-				"the"
-			},
-			{
-				EnemyType.MagicSnail,
-				"the"
-			},
-			{
-				EnemyType.Stickat,
-				"the"
-			},
-			{
-				EnemyType.Mouse,
-				"the"
-			},
-			{
-				EnemyType.HermitCan,
-				"the"
-			},
-			{
-				EnemyType.Flamingo,
-				"Mr."
-			},
-			{
-				EnemyType.AtomicPowerRobo,
-				"the"
-			},
-			{
-				EnemyType.CarbonPup,
-				"the"
-			},
-			{
-				EnemyType.MeltyRobot,
-				"the"
-			},
-			{
-				EnemyType.ModernMind,
-				"the"
-			},
-            {
-                EnemyType.NotSoDeer,
-                "the"
-            },
-            {
-                EnemyType.MysteriousTank,
-                "the"
-            },
-		};
+		// Token: 0x04000755 RID: 1877
+		private const string STRING_ARTICLE = "article";
 
-		private static Dictionary<EnemyType, string> subjectivePronouns = new Dictionary<EnemyType, string>
-		{
-			{
-				EnemyType.Dummy,
-				"it"
-			},
-			{
-				EnemyType.MagicSnail,
-				"it"
-			},
-			{
-				EnemyType.Stickat,
-				"it"
-			},
-			{
-				EnemyType.Mouse,
-				"it"
-			},
-			{
-				EnemyType.HermitCan,
-				"it"
-			},
-			{
-				EnemyType.Flamingo,
-				"he"
-			},
-			{
-				EnemyType.AtomicPowerRobo,
-				"it"
-			},
-			{
-				EnemyType.CarbonPup,
-				"it"
-			},
-			{
-				EnemyType.MeltyRobot,
-				"it"
-			},
-			{
-				EnemyType.ModernMind,
-				"it"
-			},
-			{
-				EnemyType.NotSoDeer,
-				"it"
-			},
-            {
-                EnemyType.MysteriousTank,
-                "it"
-            }
-		};
+		// Token: 0x04000756 RID: 1878
+		private const string STRING_POSSESSIVE = "possessive";
 
-		private static Dictionary<EnemyType, string> posessivePronouns = new Dictionary<EnemyType, string>
-		{
-			{
-				EnemyType.Dummy,
-				"its"
-			},
-			{
-				EnemyType.MagicSnail,
-				"its"
-			},
-			{
-				EnemyType.Stickat,
-				"its"
-			},
-			{
-				EnemyType.Mouse,
-				"its"
-			},
-			{
-				EnemyType.HermitCan,
-				"its"
-			},
-			{
-				EnemyType.Flamingo,
-				"his"
-			},
-			{
-				EnemyType.AtomicPowerRobo,
-				"its"
-			},
-			{
-				EnemyType.CarbonPup,
-				"its"
-			},
-			{
-				EnemyType.MeltyRobot,
-				"its"
-			},
-			{
-				EnemyType.ModernMind,
-				"its"
-			},
-            {
-                EnemyType.NotSoDeer,
-                "its"
-            },
-            {
-            EnemyType.MysteriousTank,
-            "its"
-        }
-		};
+		// Token: 0x04000757 RID: 1879
+		private const string STRING_SUBJECTIVE = "subjective";
 	}
 }

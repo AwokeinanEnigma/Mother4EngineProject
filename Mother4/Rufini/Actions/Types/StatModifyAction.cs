@@ -8,8 +8,10 @@ using Mother4.Scripts.Actions.ParamTypes;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x0200014A RID: 330
 	internal class StatModifyAction : RufiniAction
 	{
+		// Token: 0x0600074C RID: 1868 RVA: 0x0002F5DC File Offset: 0x0002D7DC
 		public StatModifyAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -32,13 +34,14 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x0600074D RID: 1869 RVA: 0x0002F674 File Offset: 0x0002D874
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
-			CharacterType option = (CharacterType)base.GetValue<RufiniOption>("char").Option;
-			int option2 = base.GetValue<RufiniOption>("stat").Option;
+			CharacterType byOptionInt = CharacterType.GetByOptionInt(base.GetValue<RufiniOption>("char").Option);
+			int option = base.GetValue<RufiniOption>("stat").Option;
 			int value = base.GetValue<int>("val");
-			StatSet stats = CharacterStats.GetStats(option);
-			switch (option2)
+			StatSet stats = CharacterStats.GetStats(byOptionInt);
+			switch (option)
 			{
 			case 0:
 				stats.HP += value;
@@ -77,7 +80,7 @@ namespace Rufini.Actions.Types
 				stats.Level += value;
 				break;
 			}
-			CharacterStats.SetStats(option, stats);
+			CharacterStats.SetStats(byOptionInt, stats);
 			return default(ActionReturnContext);
 		}
 	}

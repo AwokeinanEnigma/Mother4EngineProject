@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -8,9 +8,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mother4</RootNamespace>
     <AssemblyName>Mother4</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Mother4.ico</ApplicationIcon>
@@ -26,7 +25,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -37,44 +35,33 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Carbine, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Carbine\bin\Debug\Carbine.dll</HintPath>
-    </Reference>
-    <Reference Include="FMOD">
-      <HintPath>..\..\Mother4\lib\FMOD.dll</HintPath>
+    <Reference Include="Carbine">
+      <HintPath>..\..\Oddity-Mother 4 stuff\Mother 4\Carbine.dll</HintPath>
     </Reference>
     <Reference Include="fNbt">
-      <HintPath>..\..\Mother4\lib\fNbt.dll</HintPath>
+      <HintPath>..\..\Oddity-Mother 4 stuff\Mother 4\fNbt.dll</HintPath>
     </Reference>
     <Reference Include="sfmlnet-graphics-2">
-      <HintPath>..\..\Mother4\lib\sfmlnet-graphics-2.dll</HintPath>
+      <HintPath>..\..\Oddity-Mother 4 stuff\Mother 4\sfmlnet-graphics-2.dll</HintPath>
     </Reference>
     <Reference Include="sfmlnet-system-2">
-      <HintPath>..\..\Mother4\lib\sfmlnet-system-2.dll</HintPath>
+      <HintPath>..\..\Oddity-Mother 4 stuff\Mother 4\sfmlnet-system-2.dll</HintPath>
     </Reference>
-    <Reference Include="sfmlnet-window-2">
-      <HintPath>..\..\Mother4\lib\sfmlnet-window-2.dll</HintPath>
-    </Reference>
-    <Reference Include="System">
-      <HintPath>D:\Steam\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\System.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Core">
-      <HintPath>D:\Steam\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\System.Core.dll</HintPath>
-    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actors\Animation\AnimationContext.cs" />
     <Compile Include="Actors\Animation\AnimationControl.cs" />
     <Compile Include="Actors\Animation\AnimationNames.cs" />
     <Compile Include="Actors\Animation\AnimationType.cs" />
-    <Compile Include="Actors\NPCs\Enemy.cs" />
+    <Compile Include="Actors\NPCs\EnemyNPC.cs" />
     <Compile Include="Actors\NPCs\Movement\AreaMover.cs" />
     <Compile Include="Actors\NPCs\Movement\FacePlayerMover.cs" />
     <Compile Include="Actors\NPCs\Movement\LookForTroubleMover.cs" />
@@ -95,8 +82,7 @@
     <Compile Include="Battle\Actions\BattleAction.cs" />
     <Compile Include="Battle\Actions\BattleEscapeAction.cs" />
     <Compile Include="Battle\Actions\BattleWinAction.cs" />
-    <Compile Include="Battle\Actions\DisablePSIAction.cs" />
-    <Compile Include="Battle\Actions\DisablePSI.cs" />
+    <Compile Include="Battle\Actions\BuffCancelAction.cs" />
     <Compile Include="Battle\Actions\DecisionAction.cs" />
     <Compile Include="Battle\Actions\EnemyBashAction.cs" />
     <Compile Include="Battle\Actions\EnemyDeathAction.cs" />
@@ -109,7 +95,8 @@
     <Compile Include="Battle\Actions\PlayerBashAction.cs" />
     <Compile Include="Battle\Actions\PlayerDecisionAction.cs" />
     <Compile Include="Battle\Actions\PlayerGuardAction.cs" />
-    <Compile Include="Battle\Actions\PlayerPsiAction.cs" />
+    <Compile Include="Battle\Actions\PsiAction.cs" />
+    <Compile Include="Battle\Actions\ShieldAction.cs" />
     <Compile Include="Battle\Actions\StatusEffectAction.cs" />
     <Compile Include="Battle\Actions\TalkStatusEffectAction.cs" />
     <Compile Include="Battle\Actions\TestingSmiteAction.cs" />
@@ -125,9 +112,6 @@
     <Compile Include="Battle\BattleFaction.cs" />
     <Compile Include="Battle\BattleInterfaceController.cs" />
     <Compile Include="Battle\BattleStatus.cs" />
-    <Compile Include="Psi\Class1.cs" />
-    <Compile Include="Psi\Class2.cs" />
-    <Compile Include="Psi\Class3.cs" />
     <Compile Include="Battle\CombatantController.cs" />
     <Compile Include="Battle\Combatants\Combatant.cs" />
     <Compile Include="Battle\Combatants\EnemyCombatant.cs" />
@@ -145,10 +129,12 @@
     <Compile Include="Battle\StatSet.cs" />
     <Compile Include="Battle\StatusEffect.cs" />
     <Compile Include="Battle\StatusEffectInstance.cs" />
+    <Compile Include="Battle\TargetingMode.cs" />
     <Compile Include="Battle\UI\BattleCard.cs" />
     <Compile Include="Battle\UI\BattleMeter.cs" />
+    <Compile Include="Battle\UI\BattlePsiBox.cs" />
     <Compile Include="Battle\UI\BattleSmash.cs" />
-    <Compile Include="Battle\UI\BattleTextbox.cs" />
+    <Compile Include="Battle\UI\BattleTextBox.cs" />
     <Compile Include="Battle\UI\Blinker.cs" />
     <Compile Include="Battle\UI\ButtonBar.cs" />
     <Compile Include="Battle\UI\CardBar.cs" />
@@ -156,6 +142,8 @@
     <Compile Include="Battle\UI\DamageNumber.cs" />
     <Compile Include="Battle\UI\Groovy.cs" />
     <Compile Include="Battle\UI\LevelUpJingler.cs" />
+    <Compile Include="Battle\UI\Modifiers\GraphicShielder.cs" />
+    <Compile Include="Battle\UI\Modifiers\GraphicTalker.cs" />
     <Compile Include="Battle\UI\Odometer.cs" />
     <Compile Include="Battle\UI\OdometerRoller.cs" />
     <Compile Include="Battle\UI\SelectionState.cs" />
@@ -166,9 +154,17 @@
     <Compile Include="Data\CharacterGraphics.cs" />
     <Compile Include="Data\CharacterNames.cs" />
     <Compile Include="Data\CharacterStats.cs" />
+    <Compile Include="Data\CharacterStatusEffects.cs" />
     <Compile Include="Data\CharacterType.cs" />
+    <Compile Include="Data\Character\CharacterData.cs" />
+    <Compile Include="Data\Character\CharacterFile.cs" />
     <Compile Include="Data\ComboLoader.cs" />
     <Compile Include="Data\Config\ConfigReader.cs" />
+    <Compile Include="Data\Enemies\ActionParamsFactory.cs" />
+    <Compile Include="Data\Enemies\EnemyData.cs" />
+    <Compile Include="Data\Enemies\EnemyFile.cs" />
+    <Compile Include="Data\Enemies\EnemyImmunities.cs" />
+    <Compile Include="Data\Enemies\EnemyOptions.cs" />
     <Compile Include="Data\EnemyBattleActions.cs" />
     <Compile Include="Data\EnemyBattleBackgrounds.cs" />
     <Compile Include="Data\EnemyDeathText.cs" />
@@ -184,20 +180,29 @@
     <Compile Include="Data\Paths.cs" />
     <Compile Include="Data\PsiAnimations.cs" />
     <Compile Include="Data\PsiLetters.cs" />
+    <Compile Include="Data\Psi\AssistPsiData.cs" />
+    <Compile Include="Data\Psi\DefensePsiData.cs" />
+    <Compile Include="Data\Psi\OffensePsiData.cs" />
+    <Compile Include="Data\Psi\OtherPsiData.cs" />
+    <Compile Include="Data\Psi\PsiData.cs" />
+    <Compile Include="Data\Psi\PsiFile.cs" />
+    <Compile Include="Data\Psi\PsiLevel.cs" />
+    <Compile Include="Data\Psi\PsiType.cs" />
     <Compile Include="Data\SaveFileManager.cs" />
     <Compile Include="Data\SaveProfile.cs" />
     <Compile Include="Data\Settings.cs" />
+    <Compile Include="Data\ShadowSize.cs" />
     <Compile Include="Data\StatusEffectActions.cs" />
     <Compile Include="Data\UIColors.cs" />
     <Compile Include="GUI\FlyoverText.cs" />
     <Compile Include="GUI\Fonts.cs" />
     <Compile Include="GUI\IrisOverlay.cs" />
+    <Compile Include="GUI\LetterboxingOverlay.cs" />
     <Compile Include="GUI\MenuPanel.cs" />
     <Compile Include="GUI\Modifiers\GraphicBlinker.cs" />
     <Compile Include="GUI\Modifiers\GraphicBouncer.cs" />
     <Compile Include="GUI\Modifiers\GraphicDeathFader.cs" />
     <Compile Include="GUI\Modifiers\GraphicFader.cs" />
-    <Compile Include="GUI\Modifiers\GraphicTalker.cs" />
     <Compile Include="GUI\Modifiers\GraphicTranslator.cs" />
     <Compile Include="GUI\Modifiers\IGraphicModifier.cs" />
     <Compile Include="GUI\Nametag.cs" />
@@ -209,12 +214,19 @@
     <Compile Include="GUI\OverworldMenu\MoneyMenu.cs" />
     <Compile Include="GUI\OverworldMenu\PsiMenu.cs" />
     <Compile Include="GUI\OverworldMenu\UsePsiMenu.cs" />
+    <Compile Include="GUI\OverworldTextBox.cs" />
     <Compile Include="GUI\ProfileMenu\ProfilePanel.cs" />
-    <Compile Include="GUI\QuestionBox.cs" />
+    <Compile Include="GUI\PsiList.cs" />
     <Compile Include="GUI\ScrollingList.cs" />
-    <Compile Include="GUI\SectionedPsiBox.cs" />
     <Compile Include="GUI\TextBox.cs" />
-    <Compile Include="GUI\TypewriterBox.cs" />
+    <Compile Include="GUI\Text\Printables\GraphicPrintable.cs" />
+    <Compile Include="GUI\Text\Printables\Printable.cs" />
+    <Compile Include="GUI\Text\Printables\QuestionPrintable.cs" />
+    <Compile Include="GUI\Text\Printables\TextPrintable.cs" />
+    <Compile Include="GUI\Text\PrintActions\PrintAction.cs" />
+    <Compile Include="GUI\Text\PrintActions\PrintActionType.cs" />
+    <Compile Include="GUI\Text\TextProcessor.cs" />
+    <Compile Include="GUI\Text\Typewriter.cs" />
     <Compile Include="Items\InvalidPropertyType.cs" />
     <Compile Include="Items\Inventory.cs" />
     <Compile Include="Items\InventoryManager.cs" />
@@ -222,6 +234,7 @@
     <Compile Include="Items\ItemPropertyNotFoundException.cs" />
     <Compile Include="Overworld\BattleSwirlOverlay.cs" />
     <Compile Include="Overworld\EnemySpawner.cs" />
+    <Compile Include="Overworld\FootstepPlayer.cs" />
     <Compile Include="Overworld\MapPopulator.cs" />
     <Compile Include="Overworld\ParallaxBackground.cs" />
     <Compile Include="Overworld\PartyTrain.cs" />
@@ -231,14 +244,6 @@
     <Compile Include="Overworld\TriggerArea.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Psi\AssistivePsi.cs" />
-    <Compile Include="Psi\Class4.cs" />
-    <Compile Include="Psi\DefensivePsi.cs" />
-    <Compile Include="Psi\IPsi.cs" />
-    <Compile Include="Psi\OffensePsi.cs" />
-    <Compile Include="Psi\OtherPsi.cs" />
-    <Compile Include="Psi\PsiManager.cs" />
-    <Compile Include="Psi\PsiType.cs" />
     <Compile Include="Rufini\Actions\Types\AddExpAction.cs" />
     <Compile Include="Rufini\Actions\Types\AddMoneyAction.cs" />
     <Compile Include="Rufini\Actions\Types\AddPartyMemberAction.cs" />
@@ -285,6 +290,7 @@
     <Compile Include="Rufini\Actions\Types\SetMoneyAction.cs" />
     <Compile Include="Rufini\Actions\Types\SetNametagAction.cs" />
     <Compile Include="Rufini\Actions\Types\SetNpcAction.cs" />
+    <Compile Include="Rufini\Actions\Types\SetStatusEffectAction.cs" />
     <Compile Include="Rufini\Actions\Types\StartBattleAction.cs" />
     <Compile Include="Rufini\Actions\Types\StatModifyAction.cs" />
     <Compile Include="Rufini\Actions\Types\StatSetAction.cs" />
@@ -296,6 +302,7 @@
     <Compile Include="Rufini\Actions\Types\WeatherAction.cs" />
     <Compile Include="Rufini\Strings\StringFile.cs" />
     <Compile Include="Scenes\BattleScene.cs" />
+    <Compile Include="Scenes\EnemyTestScene.cs" />
     <Compile Include="Scenes\MapTestSetupScene.cs" />
     <Compile Include="Scenes\MenuScene.cs" />
     <Compile Include="Scenes\NamingScene.cs" />
@@ -306,6 +313,7 @@
     <Compile Include="Scenes\SaveScene.cs" />
     <Compile Include="Scenes\StandardScene.cs" />
     <Compile Include="Scenes\SwirlTestScene.cs" />
+    <Compile Include="Scenes\TextTestScene.cs" />
     <Compile Include="Scenes\TitleScene.cs" />
     <Compile Include="Scenes\Transitions\BattleFadeTransition.cs" />
     <Compile Include="Scenes\Transitions\BattleSwirlTransition.cs" />
@@ -319,25 +327,27 @@
     <Compile Include="Scripts\Actions\Types\ActionCodes.cs" />
     <Compile Include="Scripts\Actions\Types\GoToMapAction.cs" />
     <Compile Include="Scripts\Actions\Types\IrisOverlayAction.cs" />
+    <Compile Include="Scripts\Actions\Types\NoopAction.cs" />
     <Compile Include="Scripts\Actions\Types\PlayerMoveAction.cs" />
     <Compile Include="Scripts\Actions\Types\PlayerPathMoveAction.cs" />
     <Compile Include="Scripts\Actions\Types\PlayerPositionAction.cs" />
     <Compile Include="Scripts\Actions\Types\PlayerShadowAction.cs" />
+    <Compile Include="Scripts\Actions\Types\ResetSubspriteNPCAction.cs" />
+    <Compile Include="Scripts\Actions\Types\ResetSubspritePlayerAction.cs" />
+    <Compile Include="Scripts\Actions\Types\SetControlAction.cs" />
+    <Compile Include="Scripts\Actions\Types\SetNPCAnimationLoopCountAction.cs" />
+    <Compile Include="Scripts\Actions\Types\SetPlayerAnimationLoopCountAction.cs" />
+    <Compile Include="Scripts\Actions\Types\SetPlayerDirectionAction.cs" />
     <Compile Include="Scripts\Actions\Types\SetTilesetPaletteAction.cs" />
     <Compile Include="Scripts\Actions\Types\TelepathyEndAction.cs" />
     <Compile Include="Scripts\Actions\Types\TelepathyStartAction.cs" />
+    <Compile Include="Scripts\Actions\Types\ToggleLetterboxingAction.cs" />
+    <Compile Include="Scripts\Actions\Types\ToggleTextboxAction.cs" />
     <Compile Include="Scripts\Actions\Types\ValueRandomAction.cs" />
     <Compile Include="Scripts\ExecutionContext.cs" />
     <Compile Include="Scripts\Script.cs" />
     <Compile Include="Scripts\ScriptExecutor.cs" />
     <Compile Include="Scripts\ScriptLoader.cs" />
-    <Compile Include="Scripts\Text\ITextCommand.cs" />
-    <Compile Include="Scripts\Text\TextBlock.cs" />
-    <Compile Include="Scripts\Text\TextLine.cs" />
-    <Compile Include="Scripts\Text\TextPause.cs" />
-    <Compile Include="Scripts\Text\TextProcessor.cs" />
-    <Compile Include="Scripts\Text\TextTrigger.cs" />
-    <Compile Include="Scripts\Text\TextWait.cs" />
     <Compile Include="Utility\Capitalizer.cs" />
     <Compile Include="Utility\EmbeddedResources.cs" />
     <Compile Include="Utility\ScreenDimmer.cs" />
@@ -350,9 +360,7 @@
     <EmbeddedResource Include="Resources\iris.frag" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="app.manifest" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

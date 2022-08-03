@@ -5,8 +5,10 @@ using SFML.System;
 
 namespace Mother4.Scripts.Actions.Types
 {
+	// Token: 0x0200014D RID: 333
 	internal class PlayerPositionAction : RufiniAction
 	{
+		// Token: 0x06000754 RID: 1876 RVA: 0x0002FD00 File Offset: 0x0002DF00
 		public PlayerPositionAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -29,6 +31,7 @@ namespace Mother4.Scripts.Actions.Types
 			};
 		}
 
+		// Token: 0x06000755 RID: 1877 RVA: 0x0002FD98 File Offset: 0x0002DF98
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			ActionReturnContext result = default(ActionReturnContext);

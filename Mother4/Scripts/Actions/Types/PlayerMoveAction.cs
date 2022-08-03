@@ -6,8 +6,10 @@ using SFML.System;
 
 namespace Mother4.Scripts.Actions.Types
 {
+	// Token: 0x0200014B RID: 331
 	internal class PlayerMoveAction : RufiniAction
 	{
+		// Token: 0x0600074E RID: 1870 RVA: 0x0002F7F8 File Offset: 0x0002D9F8
 		public PlayerMoveAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -45,6 +47,7 @@ namespace Mother4.Scripts.Actions.Types
 			};
 		}
 
+		// Token: 0x0600074F RID: 1871 RVA: 0x0002F914 File Offset: 0x0002DB14
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			ActionReturnContext result = default(ActionReturnContext);
@@ -94,6 +97,7 @@ namespace Mother4.Scripts.Actions.Types
 			return result;
 		}
 
+		// Token: 0x06000750 RID: 1872 RVA: 0x0002FA29 File Offset: 0x0002DC29
 		private void OnMoveComplete(PointMover sender)
 		{
 			sender.OnMoveComplete -= this.OnMoveComplete;
@@ -104,8 +108,10 @@ namespace Mother4.Scripts.Actions.Types
 			}
 		}
 
+		// Token: 0x04000944 RID: 2372
 		private ExecutionContext context;
 
+		// Token: 0x04000945 RID: 2373
 		private bool blocking;
 	}
 }

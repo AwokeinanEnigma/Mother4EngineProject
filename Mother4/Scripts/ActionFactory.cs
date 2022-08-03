@@ -12,33 +12,21 @@ using SFML.Graphics;
 
 namespace Mother4.Scripts
 {
+	// Token: 0x02000118 RID: 280
 	internal class ActionFactory
 	{
-		public static List<RufiniAction> GetDefaultActions()
-		{
-			List<RufiniAction> list = new List<RufiniAction>();
-			foreach (KeyValuePair<string, Type> keyValuePair in ActionFactory.actions)
-			{
-				if (typeof(RufiniAction).IsAssignableFrom(keyValuePair.Value))
-				{
-					RufiniAction item = (RufiniAction)Activator.CreateInstance(keyValuePair.Value);
-					list.Add(item);
-				}
-			}
-			return list;
-		}
-
+		// Token: 0x060006CB RID: 1739 RVA: 0x0002AF7C File Offset: 0x0002917C
 		public static RufiniAction FromCode(string code)
 		{
-			Type type = null;
-			ActionFactory.actions.TryGetValue(code, out type);
-			if (type != null)
+			Type type;
+			if (ActionFactory.actions.TryGetValue(code, out type))
 			{
 				return (RufiniAction)Activator.CreateInstance(type);
 			}
 			throw new ArgumentException(string.Format("\"{0}\" does not correspond to an action type.", code));
 		}
 
+		// Token: 0x060006CC RID: 1740 RVA: 0x0002AFBC File Offset: 0x000291BC
 		private static string GetType(NbtCompound tag)
 		{
 			string result = null;
@@ -62,6 +50,7 @@ namespace Mother4.Scripts
 			return result;
 		}
 
+		// Token: 0x060006CD RID: 1741 RVA: 0x0002B06C File Offset: 0x0002926C
 		public static RufiniAction FromNbt(NbtCompound tag)
 		{
 			string type = ActionFactory.GetType(tag);
@@ -69,88 +58,98 @@ namespace Mother4.Scripts
 			if (type != null)
 			{
 				Type type2 = null;
-				ActionFactory.actions.TryGetValue(type, out type2);
-				if (type2 != null)
+				if (ActionFactory.actions.TryGetValue(type, out type2))
 				{
 					rufiniAction = (RufiniAction)Activator.CreateInstance(type2);
 					NbtCompound nbtCompound = tag.Get<NbtCompound>("params");
-					if (nbtCompound != null)
+					if (nbtCompound == null)
 					{
-						using (IEnumerator<NbtTag> enumerator = nbtCompound.Tags.GetEnumerator())
+						return rufiniAction;
+					}
+					using (IEnumerator<NbtTag> enumerator = nbtCompound.Tags.GetEnumerator())
+					{
+						while (enumerator.MoveNext())
 						{
-							while (enumerator.MoveNext())
+							NbtTag paramTag = enumerator.Current;
+							ActionParam actionParam = rufiniAction.Params.Find((ActionParam x) => x.Name == paramTag.Name);
+							if (actionParam != null)
 							{
-								NbtTag paramTag = enumerator.Current;
-								ActionParam actionParam = rufiniAction.Params.Find((ActionParam x) => x.Name == paramTag.Name);
-								if (actionParam != null)
+								if (paramTag is NbtString)
 								{
-									if (paramTag is NbtString)
+									if (actionParam.Type == typeof(RufiniString))
 									{
-										if (actionParam.Type == typeof(RufiniString))
-										{
-											RufiniString value = StringFile.Instance.Get(paramTag.StringValue);
-											rufiniAction.SetValue<RufiniString>(paramTag.Name, value);
-										}
-										else if (actionParam.Type == typeof(string))
-										{
-											rufiniAction.SetValue<string>(paramTag.Name, paramTag.StringValue);
-										}
+										RufiniString value = StringFile.Instance.Get(paramTag.StringValue);
+										rufiniAction.SetValue<RufiniString>(paramTag.Name, value);
 									}
-									else if (paramTag is NbtInt)
+									else if (actionParam.Type == typeof(string))
 									{
-										if (actionParam.Type == typeof(RufiniOption))
-										{
-											rufiniAction.SetValue<RufiniOption>(paramTag.Name, new RufiniOption
-											{
-												Option = paramTag.IntValue
-											});
-										}
-										else if (actionParam.Type == typeof(int))
-										{
-											rufiniAction.SetValue<int>(paramTag.Name, paramTag.IntValue);
-										}
-										else if (actionParam.Type == typeof(Color))
-										{
-											Color value2 = ColorHelper.FromInt(paramTag.IntValue);
-											rufiniAction.SetValue<Color>(paramTag.Name, value2);
-										}
+										rufiniAction.SetValue<string>(paramTag.Name, paramTag.StringValue);
 									}
-									else if (paramTag is NbtIntArray)
+								}
+								else if (paramTag is NbtInt)
+								{
+									if (actionParam.Type == typeof(RufiniOption))
 									{
-										rufiniAction.SetValue<int[]>(paramTag.Name, ((NbtIntArray)paramTag).IntArrayValue);
-									}
-									else if (paramTag is NbtFloat)
-									{
-										rufiniAction.SetValue<float>(paramTag.Name, paramTag.FloatValue);
-									}
-									else if (paramTag is NbtByte)
-									{
-										if (actionParam.Type == typeof(byte))
+										rufiniAction.SetValue<RufiniOption>(paramTag.Name, new RufiniOption
 										{
-											rufiniAction.SetValue<byte>(paramTag.Name, paramTag.ByteValue);
-										}
-										else if (actionParam.Type == typeof(bool))
-										{
-											rufiniAction.SetValue<bool>(paramTag.Name, paramTag.ByteValue != 0);
-										}
+											Option = paramTag.IntValue
+										});
+									}
+									else if (actionParam.Type == typeof(int))
+									{
+										rufiniAction.SetValue<int>(paramTag.Name, paramTag.IntValue);
+									}
+									else if (actionParam.Type == typeof(Color))
+									{
+										Color value2 = ColorHelper.FromInt(paramTag.IntValue);
+										rufiniAction.SetValue<Color>(paramTag.Name, value2);
+									}
+								}
+								else if (paramTag is NbtIntArray)
+								{
+									rufiniAction.SetValue<int[]>(paramTag.Name, ((NbtIntArray)paramTag).IntArrayValue);
+								}
+								else if (paramTag is NbtFloat)
+								{
+									rufiniAction.SetValue<float>(paramTag.Name, paramTag.FloatValue);
+								}
+								else if (paramTag is NbtByte)
+								{
+									if (actionParam.Type == typeof(byte))
+									{
+										rufiniAction.SetValue<byte>(paramTag.Name, paramTag.ByteValue);
+									}
+									else if (actionParam.Type == typeof(bool))
+									{
+										rufiniAction.SetValue<bool>(paramTag.Name, paramTag.ByteValue != 0);
 									}
 								}
 							}
 						}
+						return rufiniAction;
 					}
 				}
+				rufiniAction = new NoopAction(type);
 			}
 			return rufiniAction;
 		}
 
+		// Token: 0x040008C0 RID: 2240
 		private const string TYPE_TAG = "_typ";
 
+		// Token: 0x040008C1 RID: 2241
 		private const string PARAMS_TAG = "params";
 
+		// Token: 0x040008C2 RID: 2242
 		private static StringBuilder tagNameBuf = new StringBuilder("\0\0\0\0", 4);
 
+		// Token: 0x040008C3 RID: 2243
 		private static Dictionary<string, Type> actions = new Dictionary<string, Type>
 		{
+			{
+				"NOOP",
+				typeof(NoopAction)
+			},
 			{
 				"PRLN",
 				typeof(PrintLnAction)
@@ -390,6 +389,42 @@ namespace Mother4.Scripts
 			{
 				"STSP",
 				typeof(SetTilesetPaletteAction)
+			},
+			{
+				"STEF",
+				typeof(SetStatusEffectAction)
+			},
+			{
+				"RSSP",
+				typeof(ResetSubspritePlayerAction)
+			},
+			{
+				"RSSN",
+				typeof(ResetSubspriteNPCAction)
+			},
+			{
+				"CTRL",
+				typeof(SetControlAction)
+			},
+			{
+				"PALC",
+				typeof(SetPlayerAnimationLoopCountAction)
+			},
+			{
+				"NALC",
+				typeof(SetNPCAnimationLoopCountAction)
+			},
+			{
+				"LTBX",
+				typeof(ToggleLetterboxingAction)
+			},
+			{
+				"PDIR",
+				typeof(SetPlayerDirectionAction)
+			},
+			{
+				"STBX",
+				typeof(ToggleTextboxAction)
 			}
 		};
 	}

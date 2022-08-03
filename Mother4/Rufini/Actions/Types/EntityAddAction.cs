@@ -10,8 +10,10 @@ using Mother4.Scripts.Actions.ParamTypes;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000136 RID: 310
 	internal class EntityAddAction : RufiniAction
 	{
+		// Token: 0x0600071E RID: 1822 RVA: 0x0002D7EC File Offset: 0x0002B9EC
 		public EntityAddAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -89,6 +91,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x0600071F RID: 1823 RVA: 0x0002DAA4 File Offset: 0x0002BCA4
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			string value = base.GetValue<string>("txt");
@@ -146,6 +149,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x06000720 RID: 1824 RVA: 0x0002DD06 File Offset: 0x0002BF06
 		private void OnTimerEnd(int timerIndex)
 		{
 			if (this.timerId == timerIndex)
@@ -155,8 +159,10 @@ namespace Rufini.Actions.Types
 			}
 		}
 
+		// Token: 0x04000934 RID: 2356
 		private ExecutionContext context;
 
+		// Token: 0x04000935 RID: 2357
 		private int timerId;
 	}
 }

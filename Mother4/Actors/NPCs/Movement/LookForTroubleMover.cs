@@ -6,8 +6,10 @@ using SFML.System;
 
 namespace Mother4.Actors.NPCs.Movement
 {
+	// Token: 0x02000006 RID: 6
 	internal class LookForTroubleMover : Mover
 	{
+		// Token: 0x06000007 RID: 7 RVA: 0x00002D37 File Offset: 0x00000F37
 		public LookForTroubleMover(float chaseTreshold, float speed)
 		{
 			this.chaseThreshold = chaseTreshold;
@@ -16,11 +18,13 @@ namespace Mother4.Actors.NPCs.Movement
 			this.oldDirection = -1;
 		}
 
+		// Token: 0x06000008 RID: 8 RVA: 0x00002D5A File Offset: 0x00000F5A
 		private void resetTimer()
 		{
 			this.timerEnd = Engine.Frame + 10L + (long)Engine.Random.Next(20);
 		}
 
+		// Token: 0x06000009 RID: 9 RVA: 0x00002D7C File Offset: 0x00000F7C
 		public override bool GetNextMove(ref Vector2f position, ref Vector2f velocity, ref int direction)
 		{
 			this.oldDirection = direction;
@@ -49,25 +53,36 @@ namespace Mother4.Actors.NPCs.Movement
 			return this.changed;
 		}
 
+		// Token: 0x04000096 RID: 150
 		private const int TIMER_MAX = 30;
 
+		// Token: 0x04000097 RID: 151
 		private const int TIMER_MIN = 10;
 
+		// Token: 0x04000098 RID: 152
 		private float chaseThreshold;
 
+		// Token: 0x04000099 RID: 153
 		private float speed;
 
+		// Token: 0x0400009A RID: 154
 		private long timerEnd;
 
+		// Token: 0x0400009B RID: 155
 		private LookForTroubleMover.Mode mode;
 
+		// Token: 0x0400009C RID: 156
 		private int oldDirection;
 
+		// Token: 0x0400009D RID: 157
 		private bool changed;
 
+		// Token: 0x02000007 RID: 7
 		private enum Mode
 		{
+			// Token: 0x0400009F RID: 159
 			Wait,
+			// Token: 0x040000A0 RID: 160
 			Chase
 		}
 	}

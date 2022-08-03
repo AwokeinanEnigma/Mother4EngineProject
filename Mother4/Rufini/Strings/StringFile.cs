@@ -6,8 +6,11 @@ using Mother4.Scripts.Actions.ParamTypes;
 
 namespace Rufini.Strings
 {
+	// Token: 0x02000170 RID: 368
 	internal class StringFile
 	{
+		// Token: 0x17000128 RID: 296
+		// (get) Token: 0x060007C0 RID: 1984 RVA: 0x000320BE File Offset: 0x000302BE
 		public static StringFile Instance
 		{
 			get
@@ -20,13 +23,14 @@ namespace Rufini.Strings
 			}
 		}
 
+		// Token: 0x060007C1 RID: 1985 RVA: 0x000320D6 File Offset: 0x000302D6
 		private StringFile()
 		{
 			this.filename = Path.Combine(Paths.TEXT, Settings.Locale, Settings.Locale + ".dat");
-			Console.WriteLine(filename);
 			this.Reload();
 		}
 
+		// Token: 0x060007C2 RID: 1986 RVA: 0x00032108 File Offset: 0x00030308
 		public void Reload()
 		{
 			if (File.Exists(this.filename))
@@ -39,6 +43,7 @@ namespace Rufini.Strings
 			this.file = new NbtFile(rootTag);
 		}
 
+		// Token: 0x060007C3 RID: 1987 RVA: 0x00032158 File Offset: 0x00030358
 		public RufiniString Get(string[] nameParts)
 		{
 			if (nameParts == null)
@@ -71,6 +76,7 @@ namespace Rufini.Strings
 			return new RufiniString(nameParts, value);
 		}
 
+		// Token: 0x060007C4 RID: 1988 RVA: 0x000321DC File Offset: 0x000303DC
 		public RufiniString Get(string qualifiedName)
 		{
 			if (qualifiedName == null)
@@ -83,10 +89,13 @@ namespace Rufini.Strings
 			}));
 		}
 
+		// Token: 0x0400097C RID: 2428
 		private static StringFile instance;
 
+		// Token: 0x0400097D RID: 2429
 		private NbtFile file;
 
+		// Token: 0x0400097E RID: 2430
 		private string filename;
 	}
 }

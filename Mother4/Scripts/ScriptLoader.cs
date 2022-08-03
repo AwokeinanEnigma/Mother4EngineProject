@@ -7,8 +7,10 @@ using Mother4.Scripts.Actions;
 
 namespace Mother4.Scripts
 {
+	// Token: 0x0200016F RID: 367
 	internal class ScriptLoader
 	{
+		// Token: 0x060007BD RID: 1981 RVA: 0x00031FA0 File Offset: 0x000301A0
 		public static Script? Load(string name)
 		{
 			NbtFile nbtFile = new NbtFile(ScriptLoader.SCRIPT_FILE);
@@ -46,6 +48,7 @@ namespace Mother4.Scripts
 			return result;
 		}
 
-		private static readonly string SCRIPT_FILE = Paths.RESOURCES + "script.dat";
+		// Token: 0x0400097B RID: 2427
+		private static readonly string SCRIPT_FILE = Paths.DATA + "script.dat";
 	}
 }

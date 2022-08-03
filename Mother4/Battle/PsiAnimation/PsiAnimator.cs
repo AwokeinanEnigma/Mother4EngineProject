@@ -8,8 +8,11 @@ using SFML.System;
 
 namespace Mother4.Battle.PsiAnimation
 {
+	// Token: 0x0200006A RID: 106
 	internal class PsiAnimator
 	{
+		// Token: 0x17000076 RID: 118
+		// (get) Token: 0x06000250 RID: 592 RVA: 0x0000E706 File Offset: 0x0000C906
 		public bool Complete
 		{
 			get
@@ -18,8 +21,12 @@ namespace Mother4.Battle.PsiAnimation
 			}
 		}
 
+		// Token: 0x14000006 RID: 6
+		// (add) Token: 0x06000251 RID: 593 RVA: 0x0000E710 File Offset: 0x0000C910
+		// (remove) Token: 0x06000252 RID: 594 RVA: 0x0000E748 File Offset: 0x0000C948
 		public event PsiAnimator.AnimationCompleteHandler OnAnimationComplete;
 
+		// Token: 0x06000253 RID: 595 RVA: 0x0000E780 File Offset: 0x0000C980
 		public PsiAnimator(RenderPipeline pipeline, List<IGraphicModifier> graphicModifiers, PsiElementList animation, Graphic senderGraphic, Graphic[] targetGraphics, CardBar cardBar, int[] targetCardIds)
 		{
 			this.pipeline = pipeline;
@@ -31,8 +38,10 @@ namespace Mother4.Battle.PsiAnimation
 			this.targetCardIds = targetCardIds;
 			this.screenShape = new RectangleShape(new Vector2f(320f, 180f));
 			this.screenShape.FillColor = new Color(0, 0, 0, 0);
+			this.fadeSpeed = 0.2f;
 		}
 
+		// Token: 0x06000254 RID: 596 RVA: 0x0000E804 File Offset: 0x0000CA04
 		private void DarkenScreen(Color darkenColor, int depth)
 		{
 			if (this.screenDarkenShape != null)
@@ -62,21 +71,23 @@ namespace Mother4.Battle.PsiAnimation
 					{
 						Graphic graphic = this.targetGraphics[i];
 						this.depthMemory.Add(graphic, graphic.Depth);
-						graphic.Depth = 32677;
+						graphic.Depth = 32687;
 					}
 				}
 			}
 			this.darkenedFlag = false;
 		}
 
+		// Token: 0x06000255 RID: 597 RVA: 0x0000E958 File Offset: 0x0000CB58
 		private void UpdateDarkenColor()
 		{
 			Color fillColor = this.screenDarkenShape.Shape.FillColor;
-			this.alphaMultiplier += 0.2f;
+			this.alphaMultiplier += this.fadeSpeed;
 			fillColor.A = (byte)((float)this.sourceAlpha + (float)(this.targetAlpha - this.sourceAlpha) * this.alphaMultiplier);
 			this.screenDarkenShape.Shape.FillColor = fillColor;
 		}
 
+		// Token: 0x06000256 RID: 598 RVA: 0x0000E9C0 File Offset: 0x0000CBC0
 		public void Update()
 		{
 			List<PsiElement> elementsAtTime = this.animation.GetElementsAtTime(this.step);
@@ -102,8 +113,10 @@ namespace Mother4.Battle.PsiAnimation
 					Color? screenDarkenColor = psiElement.ScreenDarkenColor;
 					if (screenDarkenColor != null)
 					{
+						float? screenDarkenSpeed = psiElement.ScreenDarkenSpeed;
+						this.fadeSpeed = ((screenDarkenSpeed != null) ? screenDarkenSpeed.GetValueOrDefault() : 0.2f);
 						Color? screenDarkenColor2 = psiElement.ScreenDarkenColor;
-						this.DarkenScreen(screenDarkenColor2.Value, psiElement.ScreenDarkenDepth ?? 32667);
+						this.DarkenScreen(screenDarkenColor2.Value, psiElement.ScreenDarkenDepth ?? 32677);
 						this.animatingCount++;
 					}
 					Color? targetFlashColor = psiElement.TargetFlashColor;
@@ -174,7 +187,8 @@ namespace Mother4.Battle.PsiAnimation
 			}
 		}
 
-		private void GraphicAnimationComplete(MultipartAnimation anim)
+		// Token: 0x06000257 RID: 599 RVA: 0x0000EDB4 File Offset: 0x0000CFB4
+		private void GraphicAnimationComplete(AnimatedRenderable anim)
 		{
 			anim.Visible = false;
 			this.pipeline.Remove(anim);
@@ -182,48 +196,74 @@ namespace Mother4.Battle.PsiAnimation
 			this.animatingCount--;
 		}
 
-		private const int DARKEN_SHAPE_DEPTH = 32667;
+		// Token: 0x04000363 RID: 867
+		private const int DARKEN_SHAPE_DEPTH = 32677;
 
-		private const int DARKEN_GRAPHIC_DEPTH = 32677;
+		// Token: 0x04000364 RID: 868
+		private const int DARKEN_GRAPHIC_DEPTH = 32687;
 
-		private const float FADE_SPEED = 0.2f;
+		// Token: 0x04000365 RID: 869
+		private const float DEFAULT_FADE_SPEED = 0.2f;
 
+		// Token: 0x04000366 RID: 870
 		private RenderPipeline pipeline;
 
+		// Token: 0x04000367 RID: 871
 		private PsiElementList animation;
 
+		// Token: 0x04000368 RID: 872
 		private Graphic senderGraphic;
 
+		// Token: 0x04000369 RID: 873
 		private Graphic[] targetGraphics;
 
+		// Token: 0x0400036A RID: 874
 		private CardBar cardBar;
 
+		// Token: 0x0400036B RID: 875
 		private Shape screenShape;
 
+		// Token: 0x0400036C RID: 876
 		private ShapeGraphic screenDarkenShape;
 
+		// Token: 0x0400036D RID: 877
 		private byte sourceAlpha;
 
+		// Token: 0x0400036E RID: 878
 		private byte targetAlpha;
 
+		// Token: 0x0400036F RID: 879
 		private float alphaMultiplier;
 
+		// Token: 0x04000370 RID: 880
 		private bool darkenedFlag;
 
+		// Token: 0x04000371 RID: 881
+		private float fadeSpeed;
+
+		// Token: 0x04000372 RID: 882
 		private Dictionary<Graphic, int> depthMemory;
 
+		// Token: 0x04000373 RID: 883
 		private List<IGraphicModifier> graphicModifiers;
 
+		// Token: 0x04000374 RID: 884
 		private int[] targetCardIds;
 
+		// Token: 0x04000375 RID: 885
 		private bool complete;
 
+		// Token: 0x04000376 RID: 886
 		private bool completedFlag;
 
+		// Token: 0x04000377 RID: 887
 		private int step;
 
+		// Token: 0x04000378 RID: 888
 		private int animatingCount;
 
+		// Token: 0x0200006B RID: 107
+		// (Invoke) Token: 0x06000259 RID: 601
 		public delegate void AnimationCompleteHandler(PsiAnimator anim);
 	}
 }

@@ -6,8 +6,10 @@ using Mother4.Actors.NPCs.Movement;
 
 namespace Mother4.Scripts.Actions.Types
 {
+	// Token: 0x0200014C RID: 332
 	internal class PlayerPathMoveAction : RufiniAction
 	{
+		// Token: 0x06000751 RID: 1873 RVA: 0x0002FA68 File Offset: 0x0002DC68
 		public PlayerPathMoveAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -40,6 +42,7 @@ namespace Mother4.Scripts.Actions.Types
 			};
 		}
 
+		// Token: 0x06000752 RID: 1874 RVA: 0x0002FB74 File Offset: 0x0002DD74
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			this.context = context;
@@ -72,6 +75,7 @@ namespace Mother4.Scripts.Actions.Types
 			return result;
 		}
 
+		// Token: 0x06000753 RID: 1875 RVA: 0x0002FCB4 File Offset: 0x0002DEB4
 		private void PathComplete()
 		{
 			this.mover.OnPathComplete -= this.PathComplete;
@@ -82,10 +86,13 @@ namespace Mother4.Scripts.Actions.Types
 			}
 		}
 
+		// Token: 0x04000946 RID: 2374
 		private ExecutionContext context;
 
+		// Token: 0x04000947 RID: 2375
 		private PathMover mover;
 
+		// Token: 0x04000948 RID: 2376
 		private bool blocking;
 	}
 }

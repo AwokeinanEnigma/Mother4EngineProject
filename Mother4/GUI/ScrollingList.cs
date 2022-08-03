@@ -329,7 +329,7 @@ namespace Mother4.GUI
 			}
 			if (this.useHighlightTextColor)
 			{
-				this.texts[this.selectedIndex - this.topIndex].Color = Color.Green;
+				this.texts[this.selectedIndex - this.topIndex].Color = Color.Black;
 			}
 		}
 
@@ -452,7 +452,7 @@ namespace Mother4.GUI
 		private bool showArrows;
 
 		// Token: 0x040002C8 RID: 712
-		private bool showSelectRect = false;
+		private bool showSelectRect = true;
 
 		// Token: 0x040002C9 RID: 713
 		private bool showCursor = true;

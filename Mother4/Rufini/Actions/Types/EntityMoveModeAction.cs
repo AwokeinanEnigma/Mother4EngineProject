@@ -9,8 +9,10 @@ using Mother4.Scripts.Actions;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x0200013C RID: 316
 	internal class EntityMoveModeAction : RufiniAction
 	{
+		// Token: 0x0600072F RID: 1839 RVA: 0x0002E854 File Offset: 0x0002CA54
 		public EntityMoveModeAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -33,6 +35,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x06000730 RID: 1840 RVA: 0x0002E940 File Offset: 0x0002CB40
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			ActionReturnContext result = default(ActionReturnContext);
