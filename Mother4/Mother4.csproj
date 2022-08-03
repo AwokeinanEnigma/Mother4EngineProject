@@ -125,6 +125,9 @@
     <Compile Include="Battle\BattleFaction.cs" />
     <Compile Include="Battle\BattleInterfaceController.cs" />
     <Compile Include="Battle\BattleStatus.cs" />
+    <Compile Include="Psi\Class1.cs" />
+    <Compile Include="Psi\Class2.cs" />
+    <Compile Include="Psi\Class3.cs" />
     <Compile Include="Battle\CombatantController.cs" />
     <Compile Include="Battle\Combatants\Combatant.cs" />
     <Compile Include="Battle\Combatants\EnemyCombatant.cs" />
@@ -229,6 +232,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Psi\AssistivePsi.cs" />
+    <Compile Include="Psi\Class4.cs" />
     <Compile Include="Psi\DefensivePsi.cs" />
     <Compile Include="Psi\IPsi.cs" />
     <Compile Include="Psi\OffensePsi.cs" />

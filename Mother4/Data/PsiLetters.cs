@@ -5,11 +5,11 @@ namespace Mother4.Data
 {
 	internal class PsiLetters
 	{
-		public static char Get(int level)
+		public static string Get(int level)
 		{
 			char result = '?';
 			PsiLetters.letters.TryGetValue(level, out result);
-			return result;
+			return result.ToString();
 		}
 		/*	private static readonly string[] PSI_LEVEL_STRINGS = new string[]
 {

@@ -1,86 +1,39 @@
 ﻿using System;
+using fNbt;
 
-namespace Mother4.Psi
+namespace Mother4.Data.Psi
 {
-	public struct OtherPsi : IPsi
-	{
-		public string Key
-		{
-			get
-			{
-				return this._key;
-			}
-			set
-			{
-				this._key = value;
-			}
-		}
+    // Token: 0x02000030 RID: 48
+    internal class OtherPsiData : PsiData
+    {
+        // Token: 0x17000049 RID: 73
+        // (get) Token: 0x060000E5 RID: 229 RVA: 0x000063C7 File Offset: 0x000045C7
+        public bool IsBattleAction
+        {
+            get
+            {
+                return this.isBattleAction;
+            }
+        }
 
-		public string Name
-		{
-			get
-			{
-				return this._name;
-			}
-			set
-			{
-				this._name = value;
-			}
-		}
+        // Token: 0x060000E6 RID: 230 RVA: 0x000063CF File Offset: 0x000045CF
+        public OtherPsiData(NbtCompound tag)
+        {
+            this.Load(tag);
+        }
 
-		public int Animation
-		{
-			get
-			{
-				return this._animIndex;
-			}
-			set
-			{
-				this._animIndex = value;
-			}
-		}
+        // Token: 0x060000E7 RID: 231 RVA: 0x000063E0 File Offset: 0x000045E0
+        protected override void Load(NbtCompound tag)
+        {
+            base.Load(tag);
+            NbtTag nbtTag;
+            this.isBattleAction = (tag.TryGet("battle", out nbtTag) && nbtTag.ByteValue > 0);
+        }
 
-		public int[] PP
-		{
-			get
-			{
-				return this._pp;
-			}
-			set
-			{
-				this._pp = value;
-			}
-		}
+        // Token: 0x040001D5 RID: 469
+        private const string BATTLE_TAG = "battle";
 
-		public int[] Levels
-		{
-			get
-			{
-				return this._levels;
-			}
-			set
-			{
-				this._levels = value;
-			}
-		}
-
-		public OtherPsi(OtherPsi ability)
-		{
-			this._key = ability._key;
-			this._name = ability._name;
-			this._animIndex = ability._animIndex;
-			this._pp = ability._pp;
-			this._levels = ability._levels;
-		}
-
-		private string _key;
-
-		private string _name;
-
-		private int _animIndex;
-
-		private int[] _pp;
-
-		private int[] _levels;
-	}
+        // Token: 0x040001D6 RID: 470
+        private bool isBattleAction;
+    }
 }
