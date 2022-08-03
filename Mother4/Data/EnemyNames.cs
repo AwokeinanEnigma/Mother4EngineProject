@@ -89,7 +89,7 @@ namespace Mother4.Data
             },
             {
                 EnemyType.MysteriousTank,
-                "Not-So-Deer"
+                "Mysterious Tank"
             },
 		};
 

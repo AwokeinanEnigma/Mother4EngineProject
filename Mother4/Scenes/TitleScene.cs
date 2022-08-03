@@ -123,7 +123,7 @@ namespace Mother4.Scenes
 					CharacterType.Meryl,
 					CharacterType.Leo
 	}); SceneManager.Instance.Transition = new BattleSwirlTransition(Overworld.BattleSwirlOverlay.Style.Blue);;
-					SceneManager.Instance.Push(new BattleScene(new EnemyType[1] { EnemyType.ModernMind }, true));
+					SceneManager.Instance.Push(new BattleScene(new EnemyType[1] { EnemyType.MysteriousTank }, true));
 					return;
 				default:
 				return;

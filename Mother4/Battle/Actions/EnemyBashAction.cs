@@ -13,104 +13,130 @@ namespace Mother4.Battle.Actions
 {
 	internal class EnemyBashAction : BattleAction
 	{
+		public bool useCustomText;
+		public string customText;
 		public EnemyBashAction(ActionParams aparams) : base(aparams)
 		{
 			this.combatant = (this.sender as EnemyCombatant);
 			this.power = (float)aparams.data[0];
 			this.messages = new Stack<string>();
 			this.statSets = new Stack<Tuple<Combatant, StatSet>>();
+			useCustomText = ((aparams.data.Length > 1) ? ((bool)aparams.data[1]) : false);
+			customText = ((aparams.data.Length > 2) ? ((string)aparams.data[2]) : "");
 			this.state = EnemyBashAction.State.Initialize;
 		}
 
+		//this code is so fucked i refuse to look at it
 		protected override void UpdateAction()
 		{
 			base.UpdateAction();
 			switch (this.state)
 			{
-			case EnemyBashAction.State.Initialize:
-			{
-				Console.WriteLine("BASHMÖDE ({0})", this.combatant.Enemy);
-				this.controller.InterfaceController.OnTextboxComplete += this.InteractionComplete;
-				this.controller.InterfaceController.FlashEnemy(this.sender as EnemyCombatant, Color.White, ColorBlendMode.Screen, 8, 2);
-				this.controller.InterfaceController.PreEnemyAttack.Play();
-				int i = 0;
-				while (i < this.targets.Length)
-				{
-					Combatant combatant = this.targets[i];
-					if (this.controller.CombatantController.IsIdValid(combatant.ID))
+				case EnemyBashAction.State.Initialize:
 					{
-						goto IL_FC;
+						Console.WriteLine("BASHMÖDE ({0})", this.combatant.Enemy);
+						this.controller.InterfaceController.OnTextboxComplete += this.InteractionComplete;
+						this.controller.InterfaceController.FlashEnemy(this.sender as EnemyCombatant, Color.White, ColorBlendMode.Screen, 8, 2);
+						this.controller.InterfaceController.PreEnemyAttack.Play();
+						int i = 0;
+						while (i < this.targets.Length)
+						{
+							Combatant combatant = this.targets[i];
+							if (this.controller.CombatantController.IsIdValid(combatant.ID))
+							{
+								goto IL_FC;
+							}
+							Combatant[] factionCombatants = this.controller.CombatantController.GetFactionCombatants(BattleFaction.PlayerTeam);
+							Combatant combatant2 = factionCombatants[Engine.Random.Next() % factionCombatants.Length];
+							if (Array.IndexOf<Combatant>(this.targets, combatant2) < 0)
+							{
+								this.targets[i] = combatant2;
+								combatant = combatant2;
+								goto IL_FC;
+							}
+						IL_239:
+							i++;
+							continue;
+						IL_FC:
+							StatSet item = default(StatSet);
+							item.HP = Math.Min(0, -(int)(this.power * (float)this.combatant.Stats.Offense - (float)combatant.Stats.Defense));
+							this.statSets.Push(new Tuple<Combatant, StatSet>(combatant, item));
+							Console.WriteLine(" Target's HP changed by {0}.", item.HP);
+							string text = "";
+							switch (combatant.Faction)
+							{
+								case BattleFaction.PlayerTeam:
+									{
+										PlayerCombatant playerCombatant = (PlayerCombatant)combatant;
+										text = CharacterNames.GetName(playerCombatant.Character);
+										break;
+									}
+								case BattleFaction.EnemyTeam:
+									{
+										EnemyCombatant enemyCombatant = (EnemyCombatant)combatant;
+										text = string.Format("{0}{1}", EnemyNames.GetArticle(enemyCombatant.Enemy), EnemyNames.GetName(enemyCombatant.Enemy));
+										break;
+									}
+								case BattleFaction.NeutralTeam:
+									text = "UNIMPLEMENTED";
+									break;
+							}
+
+							string item2 = "";
+
+							if (!useCustomText)
+							{
+
+
+								item2 = string.Format("{0}{1} bashed {2} for {3} hit points of damage!", new object[]
+								{
+							Capitalizer.Capitalize(EnemyNames.GetArticle(this.combatant.Enemy)),
+							EnemyNames.GetName(this.combatant.Enemy),
+							text,
+							-item.HP
+								});
+							}
+							else
+							{
+								item2 = string.Format("{0}{1} {2} {3} for {4} hit points of damage!", new object[]
+								{
+									Capitalizer.Capitalize(EnemyNames.GetArticle(this.combatant.Enemy)),
+									EnemyNames.GetName(this.combatant.Enemy),
+									customText,
+									text,
+									-item.HP
+								});
+
+							}
+							this.messages.Push(item2);
+
+							goto IL_239;
+						}
+						this.state = EnemyBashAction.State.PopMessage;
+						return;
 					}
-					Combatant[] factionCombatants = this.controller.CombatantController.GetFactionCombatants(BattleFaction.PlayerTeam);
-					Combatant combatant2 = factionCombatants[Engine.Random.Next() % factionCombatants.Length];
-					if (Array.IndexOf<Combatant>(this.targets, combatant2) < 0)
+				case EnemyBashAction.State.PopMessage:
 					{
-						this.targets[i] = combatant2;
-						combatant = combatant2;
-						goto IL_FC;
+						Tuple<Combatant, StatSet> tuple = this.statSets.Pop();
+						tuple.Item1.AlterStats(tuple.Item2);
+						string message = this.messages.Pop();
+						this.controller.InterfaceController.ShowMessage(message, false);
+						this.controller.InterfaceController.AddDamageNumber(tuple.Item1, tuple.Item2.HP);
+						if (tuple.Item1 is PlayerCombatant)
+						{
+							this.controller.InterfaceController.SetCardSpring(tuple.Item1.ID, BattleCard.SpringMode.Normal, new Vector2f(0f, 8f), new Vector2f(0f, 0.5f), new Vector2f(0f, 0.95f));
+						}
+						this.state = EnemyBashAction.State.WaitForUI;
+						return;
 					}
-					IL_239:
-					i++;
-					continue;
-					IL_FC:
-					StatSet item = default(StatSet);
-					item.HP = Math.Min(0, -(int)(this.power * (float)this.combatant.Stats.Offense - (float)combatant.Stats.Defense));
-					this.statSets.Push(new Tuple<Combatant, StatSet>(combatant, item));
-					Console.WriteLine(" Target's HP changed by {0}.", item.HP);
-					string text = "";
-					switch (combatant.Faction)
-					{
-					case BattleFaction.PlayerTeam:
-					{
-						PlayerCombatant playerCombatant = (PlayerCombatant)combatant;
-						text = CharacterNames.GetName(playerCombatant.Character);
-						break;
-					}
-					case BattleFaction.EnemyTeam:
-					{
-						EnemyCombatant enemyCombatant = (EnemyCombatant)combatant;
-						text = string.Format("{0}{1}", EnemyNames.GetArticle(enemyCombatant.Enemy), EnemyNames.GetName(enemyCombatant.Enemy));
-						break;
-					}
-					case BattleFaction.NeutralTeam:
-						text = "UNIMPLEMENTED";
-						break;
-					}
-					string item2 = string.Format("{0}{1} bashed {2} for {3} hit points of damage!", new object[]
-					{
-						Capitalizer.Capitalize(EnemyNames.GetArticle(this.combatant.Enemy)),
-						EnemyNames.GetName(this.combatant.Enemy),
-						text,
-						-item.HP
-					});
-					this.messages.Push(item2);
-					goto IL_239;
-				}
-				this.state = EnemyBashAction.State.PopMessage;
-				return;
-			}
-			case EnemyBashAction.State.PopMessage:
-			{
-				Tuple<Combatant, StatSet> tuple = this.statSets.Pop();
-				tuple.Item1.AlterStats(tuple.Item2);
-				string message = this.messages.Pop();
-				this.controller.InterfaceController.ShowMessage(message, false);
-				this.controller.InterfaceController.AddDamageNumber(tuple.Item1, tuple.Item2.HP);
-				if (tuple.Item1 is PlayerCombatant)
-				{
-					this.controller.InterfaceController.SetCardSpring(tuple.Item1.ID, BattleCard.SpringMode.Normal, new Vector2f(0f, 8f), new Vector2f(0f, 0.5f), new Vector2f(0f, 0.95f));
-				}
-				this.state = EnemyBashAction.State.WaitForUI;
-				return;
-			}
-			case EnemyBashAction.State.WaitForUI:
-				break;
-			case EnemyBashAction.State.Finish:
-				this.controller.InterfaceController.OnTextboxComplete -= this.InteractionComplete;
-				this.complete = true;
-				break;
-			default:
-				return;
+				case EnemyBashAction.State.WaitForUI:
+					break;
+				case EnemyBashAction.State.Finish:
+					this.controller.InterfaceController.OnTextboxComplete -= this.InteractionComplete;
+					this.complete = true;
+					break;
+				default:
+					return;
 			}
 		}
 
