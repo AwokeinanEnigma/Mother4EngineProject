@@ -83,10 +83,14 @@ namespace Mother4.Data
 				EnemyType.ModernMind,
 				"Modern Mind"
 			},
-			{
-				EnemyType.NotSoDeer,
-				"Not-So-Deer"
-			}
+            {
+                EnemyType.NotSoDeer,
+                "Not-So-Deer"
+            },
+            {
+                EnemyType.MysteriousTank,
+                "Not-So-Deer"
+            },
 		};
 
 		private static Dictionary<EnemyType, string> articles = new Dictionary<EnemyType, string>
@@ -131,10 +135,14 @@ namespace Mother4.Data
 				EnemyType.ModernMind,
 				"the"
 			},
-			{
-				EnemyType.NotSoDeer,
-				"the"
-			}
+            {
+                EnemyType.NotSoDeer,
+                "the"
+            },
+            {
+                EnemyType.MysteriousTank,
+                "the"
+            },
 		};
 
 		private static Dictionary<EnemyType, string> subjectivePronouns = new Dictionary<EnemyType, string>
@@ -182,7 +190,11 @@ namespace Mother4.Data
 			{
 				EnemyType.NotSoDeer,
 				"it"
-			}
+			},
+            {
+                EnemyType.MysteriousTank,
+                "it"
+            }
 		};
 
 		private static Dictionary<EnemyType, string> posessivePronouns = new Dictionary<EnemyType, string>
@@ -227,10 +239,14 @@ namespace Mother4.Data
 				EnemyType.ModernMind,
 				"its"
 			},
-			{
-				EnemyType.NotSoDeer,
-				"its"
-			}
+            {
+                EnemyType.NotSoDeer,
+                "its"
+            },
+            {
+            EnemyType.MysteriousTank,
+            "its"
+        }
 		};
 	}
 }

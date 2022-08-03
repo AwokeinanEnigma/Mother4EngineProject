@@ -56,10 +56,14 @@ namespace Mother4.Data
 				EnemyType.MeltyRobot,
 				"meltyrobot.dat"
 			},
-			{
-				EnemyType.NotSoDeer,
-				"notsodeer.dat"
-			}
+            {
+                EnemyType.NotSoDeer,
+                "notsodeer.dat"
+            },
+            {
+            EnemyType.MysteriousTank,
+			"FATFUCKINGTANK.dat"
+		}
 		};
 	}
 }

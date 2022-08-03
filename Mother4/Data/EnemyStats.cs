@@ -67,21 +67,36 @@ namespace Mother4.Data
 					Speed = 2
 				}
 			},
-			{
-				EnemyType.ModernMind,
-				new StatSet
-				{
-					Level = 20,
-					HP = 500,
-					PP = 0,
-					Offense = 5,
-					Defense = 2,
-					Guts = 1,
-					IQ = 1,
-					Luck = 2,
-					Speed = 20
-				}
-			},
+            {
+                EnemyType.ModernMind,
+                new StatSet
+                {
+                    Level = 20,
+                    HP = 500,
+                    PP = 0,
+                    Offense = 5,
+                    Defense = 2,
+                    Guts = 1,
+                    IQ = 1,
+                    Luck = 2,
+                    Speed = 20
+                }
+            },
+            {
+                EnemyType.MysteriousTank,
+                new StatSet
+                {
+                    Level = 25,
+                    HP = 750,
+                    PP = 0,
+                    Offense = 7,
+                    Defense = 4,
+                    Guts = 1,
+                    IQ = 1,
+                    Luck = 2,
+                    Speed = 10
+                }
+            },
 			{
 				EnemyType.MeltyRobot,
 				new StatSet

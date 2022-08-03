@@ -56,10 +56,14 @@ namespace Mother4.Data
 				EnemyType.ModernMind,
 				"burst into light!"
 			},
-			{
-				EnemyType.NotSoDeer,
-				"went back to normal."
-			}
+            {
+                EnemyType.NotSoDeer,
+                "went back to normal."
+            },
+            {
+                EnemyType.MysteriousTank,
+                "exploded!"
+            }
 		};
 	}
 }

@@ -56,9 +56,13 @@ namespace Mother4.Data
 				EnemyType.ModernMind,
 				"blue.xml"
 			},
-			{
-				EnemyType.NotSoDeer,
-				"Deer.xml"
+            {
+                EnemyType.NotSoDeer,
+                "Deer.xml"
+			},
+            {
+				EnemyType.MysteriousTank,
+				"FATFUCKINGTANK.xml"
 			}
 		};
 	}

@@ -214,6 +214,45 @@ namespace Mother4.Data
 						}
 					}
 				}
+			},
+			{
+			EnemyType.MysteriousTank,
+			new List<ActionParams>
+			{
+				new ActionParams
+				{
+				},
+				new ActionParams
+				{
+					actionType = typeof(EnemyProjectileAction),
+					data = new object[]
+					{
+						"a comet",
+						40,
+						true,
+						"fired!"
+					}
+				},
+				new ActionParams
+				{
+					actionType = typeof(EnemyTurnWasteAction),
+					data = new object[]
+					{
+						"Something inside the tank is moving!",
+						true
+					}
+				},
+				new ActionParams
+				{
+					actionType = typeof(EnemyBashAction),
+					data = new object[]
+					{
+						25f,
+						true,
+						"rolled over"
+					}
+				}
+			}
 			}
 		};
 	}
