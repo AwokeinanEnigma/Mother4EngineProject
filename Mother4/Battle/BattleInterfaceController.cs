@@ -1124,6 +1124,11 @@ namespace Mother4.Battle
 			this.cardBar.SetHP(playerCombatant.PartyIndex, hp);
 			this.cardBar.SetPP(playerCombatant.PartyIndex, pp);
 			this.cardBar.SetMeter(playerCombatant.PartyIndex, meter);
+
+            if (playerCombatant.Stats.HP <= 0)
+            {
+                playerCombatant.AddStatusEffect(StatusEffect.Unconscious, 500);
+            }
 		}
 
 		public void Update()

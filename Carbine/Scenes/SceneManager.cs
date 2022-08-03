@@ -158,28 +158,39 @@ namespace Carbine.Scenes
 
 		private void UpdateTransition()
 		{
-			if (!this.newSceneShown && this.transition.ShowNewScene)
-			{
-				if (this.previousScene != null)
-				{
-					if (this.popped)
-					{
-						this.previousScene.Unfocus();
-						this.previousScene.Unload();
-						this.previousScene.Dispose();
-						this.popped = false;
-					}
-					else
-					{
-						this.previousScene.Unfocus();
-					}
-				}
-				Scene scene = this.scenes.Peek();
-				scene.Focus();
-				this.previousScene = null;
-				this.newSceneShown = true;
-			}
-			if (!this.transition.IsComplete)
+            if (!this.newSceneShown && this.transition.ShowNewScene)
+            {
+                if (this.previousScene != null)
+                {
+                    if (this.popped)
+                    {
+                        this.previousScene.Unfocus();
+                        this.previousScene.Unload();
+                        this.previousScene.Dispose();
+                        this.popped = false;
+                    }
+                    else
+                    {
+                        this.previousScene.Unfocus();
+                    }
+                }
+
+                Scene scene = this.scenes.Peek();
+                try
+                {
+
+
+                    scene.Focus();
+                    this.previousScene = null;
+                    this.newSceneShown = true;
+                }
+                catch (Exception e)
+                {
+					Console.WriteLine("STOP FUCKING FOCUSING NULL SCENES YOU RETARD");
+                }
+            }
+
+            if (!this.transition.IsComplete)
 			{
 				this.transition.Update();
 				if (!this.transition.Blocking && this.previousScene != null)

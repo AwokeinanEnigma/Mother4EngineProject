@@ -513,17 +513,31 @@ namespace Mother4.GUI
 		{
 			if (this.currentSelectionLevel == 0)
 			{
-				this.selectorBox.Position = new Vector2f(this.psiTypes[this.currentTopLevelSelection].Position.X - 1f, this.psiTypes[this.currentTopLevelSelection].Position.Y + 3f);
-				this.psiTypes[this.currentTopLevelSelection].Color = Color.Black;
-				this.cursor.Visible = false;
+                this.selectorBox.Position = new Vector2f(this.psiTypes[this.currentTopLevelSelection].Position.X - 1f, this.psiTypes[this.currentTopLevelSelection].Position.Y + 3f);
+                this.psiTypes[this.currentTopLevelSelection].Color = Color.Black;
+                this.cursor.Visible = false;
 				return;
 			}
 			if (this.currentSelectionLevel == 1)
 			{
 				this.cursor.Visible = true;
-				
-				this.cursor.Position = new Vector2f(this.activeAlphaList[this.currentSelection].Position.X - 3f, this.activeAlphaList[this.currentSelection].Position.Y + 8f);
-				return;
+
+                try
+                {
+
+
+                    this.cursor.Position = new Vector2f(this.activeAlphaList[this.currentSelection].Position.X - 3f,
+                        this.activeAlphaList[this.currentSelection].Position.Y + 8f);
+				}
+                catch (Exception e)
+                {
+                    this.selectorBox.Position = new Vector2f(this.psiTypes[this.currentTopLevelSelection].Position.X - 1f, this.psiTypes[this.currentTopLevelSelection].Position.Y + 3f);
+                    this.psiTypes[this.currentTopLevelSelection].Color = Color.Black;
+                    this.cursor.Visible = false;
+                    currentSelectionLevel = 0;
+                }
+
+                return;
 			}
 			if (this.currentSelectionLevel == 2)
 			{
