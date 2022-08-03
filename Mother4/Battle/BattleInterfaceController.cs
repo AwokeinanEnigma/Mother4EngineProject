@@ -316,7 +316,12 @@ namespace Mother4.Battle
 		private void OnPlayerStatChange(Combatant sender, StatSet change)
 		{
 			PlayerCombatant playerCombatant = (PlayerCombatant)sender;
-			this.UpdatePlayerCard(playerCombatant.ID, playerCombatant.Stats.HP, playerCombatant.Stats.PP, playerCombatant.Stats.Meter);
+            if (change.HP <= 0)
+            {
+                sender.AddStatusEffect(StatusEffect.Unconscious, 500);
+            }
+
+            this.UpdatePlayerCard(playerCombatant.ID, playerCombatant.Stats.HP, playerCombatant.Stats.PP, playerCombatant.Stats.Meter);
 		}
 
 		private void OnPlayerStatusEffectChange(Combatant sender, StatusEffect statusEffect, bool added)
