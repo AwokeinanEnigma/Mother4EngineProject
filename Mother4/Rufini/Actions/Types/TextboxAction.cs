@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using Mother4.Actors.NPCs;
+﻿using Mother4.Actors.NPCs;
 using Mother4.GUI.Text;
 using Mother4.GUI.Text.PrintActions;
 using Mother4.Scripts;
 using Mother4.Scripts.Actions;
 using Rufini.Strings;
+using System.Collections.Generic;
 
 namespace Rufini.Actions.Types
 {
-	// Token: 0x02000161 RID: 353
-	internal class TextboxAction : RufiniAction
+    // Token: 0x02000161 RID: 353
+    internal class TextboxAction : RufiniAction
 	{
 		// Token: 0x06000783 RID: 1923 RVA: 0x0003129C File Offset: 0x0002F49C
 		public TextboxAction()
