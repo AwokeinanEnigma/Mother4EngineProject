@@ -8,13 +8,17 @@ using Mother4.Utility;
 namespace Mother4.Battle.Actions
 {
 	internal class EnemyProjectileAction : BattleAction
-	{
+    {
+        private bool useCustomText;
+        private string customText ;
 		public EnemyProjectileAction(ActionParams aparams) : base(aparams)
 		{
 			this.enemySender = (this.sender as EnemyCombatant);
 			this.playerTarget = ((this.targets.Length > 0) ? (this.targets[0] as PlayerCombatant) : null);
 			this.projectileName = ((aparams.data.Length > 0) ? ((string)aparams.data[0]) : "");
-			this.targetDamage = ((aparams.data.Length > 1) ? ((int)aparams.data[1]) : 0);
+            this.targetDamage = ((aparams.data.Length > 1) ? ((int)aparams.data[1]) : 0);
+            useCustomText = ((aparams.data.Length > 2) ? ((bool)aparams.data[2]) : false);
+            customText = ((aparams.data.Length > 3) ? ((string)aparams.data[3]) : "");
 			this.isReflected = BattleCalculator.CalculateReflection(this.sender, this.targets[0]);
 			this.state = EnemyProjectileAction.State.Initialize;
 			this.previousState = this.state;
@@ -38,9 +42,23 @@ namespace Mother4.Battle.Actions
 		{
 			base.UpdateAction();
 			if (this.state == EnemyProjectileAction.State.Initialize)
-			{
-				string message = string.Format("{0}{1} flung {2}!", Capitalizer.Capitalize(EnemyNames.GetArticle(this.enemySender.Enemy)), EnemyNames.GetName(this.enemySender.Enemy), this.projectileName);
-				this.controller.InterfaceController.OnTextboxComplete += this.OnTextboxComplete;
+            {
+                string message = "";
+
+				if (!useCustomText)
+                {
+                    message = string.Format("{0}{1} flung {2}!",
+                        Capitalizer.Capitalize(EnemyNames.GetArticle(this.enemySender.Enemy)),
+                        EnemyNames.GetName(this.enemySender.Enemy), this.projectileName);
+				}
+                else
+				{
+					message = string.Format("{0}{1} {2}",
+                        Capitalizer.Capitalize(EnemyNames.GetArticle(this.enemySender.Enemy)),
+                        EnemyNames.GetName(this.enemySender.Enemy), this.customText);
+				}
+
+                this.controller.InterfaceController.OnTextboxComplete += this.OnTextboxComplete;
 				this.controller.InterfaceController.ShowMessage(message, false);
 				this.controller.InterfaceController.PreEnemyAttack.Play();
 				this.ChangeState(EnemyProjectileAction.State.WaitForUI);

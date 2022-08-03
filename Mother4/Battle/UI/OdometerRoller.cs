@@ -1,6 +1,7 @@
 ﻿using System;
 using Carbine.Graphics;
 using Mother4.Data;
+using Mother4.Utility;
 using SFML.System;
 
 namespace Mother4.Battle.UI
@@ -113,7 +114,7 @@ namespace Mother4.Battle.UI
 				if (this.frame == this.targetStepFrame)
 				{
 					this.rolling = false;
-				}
+                }
 			}
 		}
 

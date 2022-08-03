@@ -19,10 +19,11 @@ namespace Mother4.Battle.UI
 			this.characterJingles = new Dictionary<CharacterType, CarbineSound>();
 			foreach (CharacterType characterType in characters)
 			{
+
 				string filename = string.Format("{0}jingle{1}.{2}", Paths.AUDIO, CharacterNames.GetName(characterType), "wav");
 				CarbineSound carbineSound = AudioManager.Instance.Use(filename, AudioType.Stream);
 				carbineSound.LoopCount = -1;
-				this.characterJingles.Add(characterType, carbineSound);
+                this.characterJingles.Add(characterType, carbineSound);
 			}
 			this.state = LevelUpJingler.State.Stopped;
 		}

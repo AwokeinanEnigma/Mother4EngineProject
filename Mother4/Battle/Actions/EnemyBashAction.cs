@@ -12,16 +12,21 @@ using SFML.System;
 namespace Mother4.Battle.Actions
 {
 	internal class EnemyBashAction : BattleAction
-	{
+    {
+        public bool useCustomText;
+        public string customText;
 		public EnemyBashAction(ActionParams aparams) : base(aparams)
 		{
 			this.combatant = (this.sender as EnemyCombatant);
 			this.power = (float)aparams.data[0];
 			this.messages = new Stack<string>();
 			this.statSets = new Stack<Tuple<Combatant, StatSet>>();
+            useCustomText = ((aparams.data.Length >1) ? ((bool)aparams.data[1]) : false);
+            customText = ((aparams.data.Length > 2) ? ((string)aparams.data[2]) : "");
 			this.state = EnemyBashAction.State.Initialize;
 		}
 
+		//this code is so fucked i refuse to look at it
 		protected override void UpdateAction()
 		{
 			base.UpdateAction();
@@ -76,15 +81,36 @@ namespace Mother4.Battle.Actions
 						text = "UNIMPLEMENTED";
 						break;
 					}
-					string item2 = string.Format("{0}{1} bashed {2} for {3} hit points of damage!", new object[]
-					{
-						Capitalizer.Capitalize(EnemyNames.GetArticle(this.combatant.Enemy)),
-						EnemyNames.GetName(this.combatant.Enemy),
-						text,
-						-item.HP
-					});
-					this.messages.Push(item2);
-					goto IL_239;
+
+                    string item2 = "";
+
+					if (!useCustomText)
+                    {
+
+
+                        item2 = string.Format("{0}{1} bashed {2} for {3} hit points of damage!", new object[]
+                        {
+                            Capitalizer.Capitalize(EnemyNames.GetArticle(this.combatant.Enemy)),
+                            EnemyNames.GetName(this.combatant.Enemy),
+                            text,
+                            -item.HP
+                        });
+							}
+                    else
+                    {
+								item2 = string.Format("{0}{1} {2} {3} for {4} hit points of damage!", new object[]
+                                {
+                                    Capitalizer.Capitalize(EnemyNames.GetArticle(this.combatant.Enemy)),
+                                    EnemyNames.GetName(this.combatant.Enemy),
+                                    customText,
+                                    text,
+                                    -item.HP
+                                });
+
+							}
+                    this.messages.Push(item2);
+
+							goto IL_239;
 				}
 				this.state = EnemyBashAction.State.PopMessage;
 				return;

@@ -38,7 +38,7 @@ namespace Rufini.Actions.Types
 				}
 			};
 		}
-
+		
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			ActionReturnContext result = default(ActionReturnContext);

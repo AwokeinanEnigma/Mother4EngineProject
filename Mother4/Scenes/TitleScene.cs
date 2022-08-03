@@ -98,7 +98,7 @@ namespace Mother4.Scenes
 			case Button.F1:
 			{
 				SceneManager.Instance.Transition = new IrisTransition(1f);
-				PartyManager.Instance.Clear();
+                PartyManager.Instance.Clear();
 						PartyManager.Instance.AddAll(new CharacterType[]
 						{
 					CharacterType.Travis,
@@ -116,6 +116,7 @@ namespace Mother4.Scenes
 				return;
 				case Button.Eight:
 					Engine.ScreenScale = 5;
+                    PartyManager.Instance.Clear();
 					PartyManager.Instance.AddAll(new CharacterType[]
 	{
 					CharacterType.Travis,
@@ -123,7 +124,7 @@ namespace Mother4.Scenes
 					CharacterType.Meryl,
 					CharacterType.Leo
 	}); SceneManager.Instance.Transition = new BattleSwirlTransition(Overworld.BattleSwirlOverlay.Style.Blue);;
-					SceneManager.Instance.Push(new BattleScene(new EnemyType[1] { EnemyType.ModernMind }, true));
+					SceneManager.Instance.Push(new BattleScene(new EnemyType[1] { EnemyType.FatFuckingTank }, true));
 					return;
 				default:
 				return;

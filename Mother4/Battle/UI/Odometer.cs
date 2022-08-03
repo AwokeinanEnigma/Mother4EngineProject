@@ -43,12 +43,13 @@ namespace Mother4.Battle.UI
 				if (i > 0)
 				{
 					this.rollers[i - 1].OnRollover += this.rollers[i].StepRoll;
-				}
+                }
 			}
 			this.holdPlaces = Digits.CountDigits(maxValue) - ((maxValue == 0) ? 1 : 0);
 			this.places = places;
 			this.position = position;
 			this.Update();
+            
 		}
 
 		~Odometer()
@@ -75,11 +76,11 @@ namespace Mother4.Battle.UI
 					}
 				}
 				else if (this.hidden[i])
-				{
-					this.hidden[i] = false;
-					this.rollers[i].Show();
-				}
-			}
+                {
+                    this.hidden[i] = false;
+                    this.rollers[i].Show();
+                }
+            }
 			this.posDirty = false;
 		}
 

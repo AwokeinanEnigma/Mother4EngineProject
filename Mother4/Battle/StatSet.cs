@@ -19,7 +19,7 @@ namespace Mother4.Battle
 			this.Meter = set.Meter;
 			this.Experience = set.Experience;
 			this.Level = set.Level;
-		}
+        }
 
 		public static StatSet operator +(StatSet set1, StatSet set2)
 		{
@@ -65,5 +65,5 @@ namespace Mother4.Battle
 		public int Luck;
 
 		public float Meter;
-	}
+    }
 }

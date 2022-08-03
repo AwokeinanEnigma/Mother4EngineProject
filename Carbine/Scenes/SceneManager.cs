@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Carbine.Graphics;
 using Carbine.Input;
 using Carbine.Scenes.Transitions;
@@ -69,8 +70,9 @@ namespace Carbine.Scenes
 		}
 
 		public void Push(Scene newScene)
-		{
-			this.Push(newScene, false);
+		{ 
+		//	Console.WriteLine($"Pushing new scene from {member} on line {i}");
+            this.Push(newScene, false);
 		}
 
 		public void Push(Scene newScene, bool swap)
@@ -175,10 +177,20 @@ namespace Carbine.Scenes
 					}
 				}
 				Scene scene = this.scenes.Peek();
-				scene.Focus();
-				this.previousScene = null;
-				this.newSceneShown = true;
-			}
+                if (scene != null)
+				{
+					scene.Focus();
+                    this.previousScene = null;
+                    this.newSceneShown = true;
+				}
+                else
+                {
+                    SceneManager.Instance.AbortTransition();
+                    SceneManager.Instance.Clear();
+                    SceneManager.Instance.Transition = new InstantTransition();
+                    SceneManager.Instance.Push(new ErrorScene(new Exception("IDK WTF HAPPENED")));
+                }
+            }
 			if (!this.transition.IsComplete)
 			{
 				this.transition.Update();

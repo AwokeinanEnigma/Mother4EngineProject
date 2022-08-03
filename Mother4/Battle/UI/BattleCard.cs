@@ -56,7 +56,7 @@ namespace Mother4.Battle.UI
 
 		public void SetHP(int newHP)
 		{
-			this.odoHP.SetValue(newHP);
+						this.odoHP.SetValue(newHP);
 		}
 
 		public void SetPP(int newPP)

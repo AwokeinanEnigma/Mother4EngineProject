@@ -58,9 +58,13 @@ namespace Mother4.Data
 				EnemyType.ModernMind,
 				"Battle Against an Ultra-Dimensional Foe"
 			},
-			{
-				EnemyType.NotSoDeer,
-				"Battle Against an Intense Opponent"
+            {
+                EnemyType.NotSoDeer,
+                "Battle Against an Intense Opponent"
+            },
+            {
+                EnemyType.FatFuckingTank,
+				"Bacon_Flavored"
 			}
 		};
 	}

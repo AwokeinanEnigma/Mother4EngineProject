@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Carbine.Audio;
+using Mother4.Actors;
 using Mother4.Battle.Actions;
 using Mother4.Battle.Combatants;
 using Mother4.Battle.Combos;
@@ -284,6 +285,7 @@ namespace Mother4.Battle
 		{
 			this.actions.Add(action);
 		}
+
 
 		public void AddActions(BattleAction[] actions)
 		{

@@ -14,6 +14,7 @@ namespace Mother4.Data
 		CarbonPup,
 		MeltyRobot,
 		ModernMind,
-		NotSoDeer
+		NotSoDeer,
+		FatFuckingTank
 	}
 }

@@ -98,34 +98,53 @@ namespace Mother4.Battle.Actions
 			}
 			if (this.state == PlayerPsiAction.State.DamageNumbers)
 			{
-				foreach (Combatant combatant in this.targets)
-				{
-					//todo:
-					//lifeup breaks the game because its effect is null
-					int num = BattleCalculator.CalculatePsiDamage(this.psi.Effect[this.psiLevel][0], this.psi.Effect[this.psiLevel][1], this.sender, combatant);
-					DamageNumber damageNumber = this.controller.InterfaceController.AddDamageNumber(combatant, num);
-					damageNumber.OnComplete += this.OnDamageNumberComplete;
-					StatSet statChange = new StatSet
-					{
-						HP = -num
-					};
-					combatant.AlterStats(statChange);
-					this.controller.InterfaceController.BlinkEnemy(combatant as EnemyCombatant, 3, 2);
-				}
-				StatSet statChange2 = new StatSet
-				{
-					PP = -this.psi.PP[this.psiLevel],
-					Meter = 0.026666667f
-				};
-				this.sender.AlterStats(statChange2);
-				this.state = PlayerPsiAction.State.WaitForUI;
-				return;
+                foreach (Combatant combatant in this.targets)
+                {
+                    //todo:
+                    //lifeup breaks the game because its effect is null
+
+                    if (psi.Effect != null)
+                    {
+                        int num = BattleCalculator.CalculatePsiDamage(
+                            this.psi.Effect[this.psiLevel][0],
+                            this.psi.Effect[this.psiLevel][1],
+                            this.sender,
+                            combatant);
+                        DamageNumber damageNumber = this.controller.InterfaceController.AddDamageNumber(combatant, num);
+                        damageNumber.OnComplete += this.OnDamageNumberComplete;
+                        StatSet statChange = new StatSet
+                        {
+                            HP = -num
+                        };
+                        combatant.AlterStats(statChange);
+                        this.controller.InterfaceController.BlinkEnemy(combatant as EnemyCombatant, 3, 2);
+
+                        StatSet statChange2 = new StatSet
+                        {
+                            PP = -this.psi.PP[this.psiLevel],
+                            Meter = 0.026666667f
+                        };
+                        this.sender.AlterStats(statChange2);
+                        this.state = PlayerPsiAction.State.WaitForUI;
+					}
+                    else
+                    {
+						Console.WriteLine($"The PSI attack '{psi.Name}' has a null effect!!");
+                        this.complete = true;
+                        
+                    }
+
+
+                }
+
+
+                return;
 			}
-			if (this.state == PlayerPsiAction.State.Finish)
-			{
-				this.controller.InterfaceController.PopCard(this.combatant.ID, 0);
-				this.complete = true;
-			}
+            if (this.state == PlayerPsiAction.State.Finish)
+            {
+                this.controller.InterfaceController.PopCard(this.combatant.ID, 0);
+                this.complete = true;
+            }
 		}
 
 		private void OnDamageNumberComplete(DamageNumber sender)

@@ -100,7 +100,8 @@ namespace Mother4.GUI
 
 		internal AssistivePsi SelectAssistPsi()
 		{
-			return this.assistPsiItems.Find((AssistivePsi s) => s.Name == this.activePsiList[this.currentSelection].Text);
+			
+            return this.assistPsiItems.Find((AssistivePsi s) => s.Name == this.activePsiList[this.currentSelection].Text);
 		}
 
 		internal DefensivePsi SelectDefensePsi()

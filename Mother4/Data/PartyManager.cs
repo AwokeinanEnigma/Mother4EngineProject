@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Mother4.Data
 {
@@ -69,8 +70,7 @@ namespace Mother4.Data
 				this.Add(character);
 			}
 		}
-
-		public void Insert(int index, CharacterType character)
+        public void Insert(int index, CharacterType character)
 		{
 			this.party.Insert(index, character);
 			if (this.OnPartyChange != null)

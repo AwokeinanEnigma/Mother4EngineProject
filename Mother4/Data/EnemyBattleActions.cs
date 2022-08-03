@@ -160,45 +160,45 @@ namespace Mother4.Data
 				}
 			},
 			{
-				EnemyType.ModernMind,
-				new List<ActionParams>
-				{
-					new ActionParams
-					{
-						actionType = typeof(DisablePSIAction),
-						data = new object[]
-						{
-							"a comet",
-							5
-						}
-					},
-					new ActionParams
-					{
-						actionType = typeof(EnemyProjectileAction),
-						data = new object[]
-						{
-							"a comet",
-							5
-						}
-					},
-					new ActionParams
-					{
-						actionType = typeof(EnemyTurnWasteAction),
-						data = new object[]
-						{
-							"The Modern Mind is having trouble thinking!",
-							true
-						}
-					},
-					new ActionParams
-					{
-						actionType = typeof(EnemyBashAction),
-						data = new object[]
-						{
-							3f
-						}
-					}
-				}
+                EnemyType.ModernMind,
+                new List<ActionParams>
+                {
+                    new ActionParams
+                    {
+                        actionType = typeof(DisablePSIAction),
+                        data = new object[]
+                        {
+                            "a comet",
+                            5
+                        }
+                    },
+                    new ActionParams
+                    {
+                        actionType = typeof(EnemyProjectileAction),
+                        data = new object[]
+                        {
+                            "a comet",
+                            5
+                        }
+                    },
+                    new ActionParams
+                    {
+                        actionType = typeof(EnemyTurnWasteAction),
+                        data = new object[]
+                        {
+                            "The Modern Mind is having trouble thinking!",
+                            true
+                        }
+                    },
+                    new ActionParams
+                    {
+                        actionType = typeof(EnemyBashAction),
+                        data = new object[]
+                        {
+                            3f
+                        }
+                    }
+                }
 			},
 			{
 				EnemyType.NotSoDeer,
@@ -214,7 +214,46 @@ namespace Mother4.Data
 						}
 					}
 				}
+            },
+            {
+            EnemyType.FatFuckingTank,
+            new List<ActionParams>
+            {
+                new ActionParams
+                {
+                },
+                new ActionParams
+                {
+                    actionType = typeof(EnemyProjectileAction),
+                    data = new object[]
+                    {
+                        "a comet",
+                        40,
+                        true,
+                        "fired!"
+                    }
+				},
+                new ActionParams
+                {
+                    actionType = typeof(EnemyTurnWasteAction),
+                    data = new object[]
+                    {
+                        "Something inside the tank is moving!",
+                        true
+                    }
+                },
+                new ActionParams
+                {
+                    actionType = typeof(EnemyBashAction),
+                    data = new object[]
+                    {
+                        25f,
+                        true,
+                        "rolled over"
+                    } 
+				}
+            }
 			}
-		};
+        };
 	}
 }
