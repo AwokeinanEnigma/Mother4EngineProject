@@ -65,9 +65,9 @@ namespace Mother4.Scenes
 			this.pipeline.Add(this.titleImage);
 			this.pipeline.Add(this.versionText);
 			this.mod = new GraphicTranslator(this.titleImage, new Vector2f(160f, 36f), 30);
-			this.sfxCursorY = AudioManager.Instance.Use(Paths.AUDIO + "cursory.wav", AudioType.Sound);
-			this.sfxConfirm = AudioManager.Instance.Use(Paths.AUDIO + "confirm.wav", AudioType.Sound);
-			this.sfxCancel = AudioManager.Instance.Use(Paths.AUDIO + "cancel.wav", AudioType.Sound);
+			this.sfxCursorY = AudioManager.Instance.Use(Paths.SFXMENU + "cursory.wav", AudioType.Sound);
+			this.sfxConfirm = AudioManager.Instance.Use(Paths.SFXMENU + "confirm.wav", AudioType.Sound);
+			this.sfxCancel = AudioManager.Instance.Use(Paths.SFXMENU + "cancel.wav", AudioType.Sound);
 		}
 
 		private void AxisPressed(InputManager sender, Vector2f axis)
@@ -173,7 +173,7 @@ namespace Mother4.Scenes
 			base.Focus();
 			ViewManager.Instance.Center = new Vector2f(160f, 90f);
 			Engine.ClearColor = Color.Black;
-			AudioManager.Instance.SetBGM(Paths.AUDIO + "test.mp3");
+			AudioManager.Instance.SetBGM(Paths.BGMOVERWORLD + "test.mp3");
 			AudioManager.Instance.BGM.Play();
 			InputManager.Instance.AxisPressed += this.AxisPressed;
 			InputManager.Instance.ButtonPressed += this.ButtonPressed;

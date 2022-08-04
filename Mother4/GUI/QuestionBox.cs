@@ -21,8 +21,8 @@ namespace Mother4.GUI
 			this.arrowXpos = new float[2];
 			this.arrowYpos = new float[2];
 			InputManager.Instance.AxisPressed += this.AxisPressed;
-			this.moveSound = AudioManager.Instance.Use(Paths.AUDIO + "cursorx.wav", AudioType.Sound);
-			this.selectSound = AudioManager.Instance.Use(Paths.AUDIO + "confirm.wav", AudioType.Sound);
+			this.moveSound = AudioManager.Instance.Use(Paths.SFXMENU + "cursorx.wav", AudioType.Sound);
+			this.selectSound = AudioManager.Instance.Use(Paths.SFXMENU + "confirm.wav", AudioType.Sound);
 		}
 
 		protected override void TypewriterComplete()

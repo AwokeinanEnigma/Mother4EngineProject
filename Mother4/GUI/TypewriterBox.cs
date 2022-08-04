@@ -75,7 +75,7 @@ namespace Mother4.GUI
 			this.currentText = this.texts[this.currentTextIndex];
 			this.textPos = 0;
 			this.textLen = this.currentText.Text.Length;
-			this.textBeep = AudioManager.Instance.Use(Paths.AUDIO + "text1.wav", AudioType.Sound);
+			this.textBeep = AudioManager.Instance.Use(Paths.SFXTEXT + "text1.wav", AudioType.Sound);
 			this.useBeeps = true;
 		}
 

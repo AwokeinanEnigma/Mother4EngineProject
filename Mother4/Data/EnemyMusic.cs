@@ -9,7 +9,7 @@ namespace Mother4.Data
 		{
 			if (EnemyMusic.musics.ContainsKey(enemy))
 			{
-				return Paths.AUDIO + EnemyMusic.musics[enemy] + ".wav";
+				return Paths.BGMBATTLE + EnemyMusic.musics[enemy] + ".wav";
 			}
 			return "";
 		}

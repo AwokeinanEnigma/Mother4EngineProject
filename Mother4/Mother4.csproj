@@ -222,6 +222,7 @@
     <Compile Include="Items\Item.cs" />
     <Compile Include="Items\ItemPropertyNotFoundException.cs" />
     <Compile Include="Overworld\BattleSwirlOverlay.cs" />
+    <Compile Include="Overworld\FootstepPlayer.cs" />
     <Compile Include="Overworld\EnemySpawner.cs" />
     <Compile Include="Overworld\MapPopulator.cs" />
     <Compile Include="Overworld\ParallaxBackground.cs" />

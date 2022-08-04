@@ -128,13 +128,15 @@ namespace Mother4.Battle
 			this.bottomLetterboxTargetY = (float)(180L + (letterboxing ? -35L : 0L));
 			this.buttonBar = new ButtonBar(pipeline);
 			actorManager.Add(this.buttonBar);
-			Combatant[] factionCombatants = combatantController.GetFactionCombatants(BattleFaction.PlayerTeam);
+			
+            Combatant[] factionCombatants = combatantController.GetFactionCombatants(BattleFaction.PlayerTeam);
 			CharacterType[] array = new CharacterType[factionCombatants.Length];
 			for (int i = 0; i < factionCombatants.Length; i++)
 			{
 				array[i] = ((PlayerCombatant)factionCombatants[i]).Character;
 			}
-			this.cardBar = new CardBar(pipeline, array);
+		
+            this.cardBar = new CardBar(pipeline, array);
 			actorManager.Add(this.cardBar);
             this.psiMenu = new SectionedPsiBox(this.pipeline, 1, 14f);          
             //this.pipeline.Add(this.psiMenu);
@@ -190,19 +192,24 @@ namespace Mother4.Battle
 			this.selectionState = default(SelectionState);
 			this.selectedTargetId = -1;
 			this.comboCircle = new ComboAnimator(pipeline, 0);
-			this.moveBeepX = AudioManager.Instance.Use(Paths.AUDIO + "cursorx.wav", AudioType.Sound);
-			this.moveBeepY = AudioManager.Instance.Use(Paths.AUDIO + "cursory.wav", AudioType.Sound);
-			this.selectBeep = AudioManager.Instance.Use(Paths.AUDIO + "confirm.wav", AudioType.Sound);
-			this.cancelBeep = AudioManager.Instance.Use(Paths.AUDIO + "cancel.wav", AudioType.Sound);
-			this.prePlayerAttack = AudioManager.Instance.Use(Paths.AUDIO + "prePlayerAttack.wav", AudioType.Sound);
-			this.preEnemyAttack = AudioManager.Instance.Use(Paths.AUDIO + "preEnemyAttack.wav", AudioType.Sound);
-			this.prePsiSound = AudioManager.Instance.Use(Paths.AUDIO + "prePsi.wav", AudioType.Sound);
-			this.talkSound = AudioManager.Instance.Use(Paths.AUDIO + "floydTalk.wav", AudioType.Sound);
-			this.enemyDeathSound = AudioManager.Instance.Use(Paths.AUDIO + "enemyDeath.wav", AudioType.Sound);
-			this.smashSound = AudioManager.Instance.Use(Paths.AUDIO + "smaaash.wav", AudioType.Sound);
-			this.comboHitA = AudioManager.Instance.Use(Paths.AUDIO + "hitA.wav", AudioType.Sound);
-			this.comboHitB = AudioManager.Instance.Use(Paths.AUDIO + "hitB.wav", AudioType.Sound);
-			this.comboSuccess = AudioManager.Instance.Use(Paths.AUDIO + "Combo16.wav", AudioType.Sound);
+
+			this.moveBeepX = AudioManager.Instance.Use(Paths.SFXMENU + "cursorx.wav", AudioType.Sound);
+			this.moveBeepY = AudioManager.Instance.Use(Paths.SFXMENU + "cursory.wav", AudioType.Sound);
+			this.selectBeep = AudioManager.Instance.Use(Paths.SFXMENU + "confirm.wav", AudioType.Sound);
+			this.cancelBeep = AudioManager.Instance.Use(Paths.SFXMENU + "cancel.wav", AudioType.Sound);
+
+			this.prePlayerAttack = AudioManager.Instance.Use(Paths.SFXBATTLE + "prePlayerAttack.wav", AudioType.Sound);
+			this.preEnemyAttack = AudioManager.Instance.Use(Paths.SFXBATTLE + "preEnemyAttack.wav", AudioType.Sound);
+
+			this.prePsiSound = AudioManager.Instance.Use(Paths.SFXBATTLEPSI + "prePsi.wav", AudioType.Sound);
+			
+            this.talkSound = AudioManager.Instance.Use(Paths.SFXBATTLE + "floydTalk.wav", AudioType.Sound);
+			this.enemyDeathSound = AudioManager.Instance.Use(Paths.SFXBATTLE + "enemyDeath.wav", AudioType.Sound);
+			this.smashSound = AudioManager.Instance.Use(Paths.SFXBATTLE + "smaaash.wav", AudioType.Sound);
+			this.comboHitA = AudioManager.Instance.Use(Paths.SFXBATTLE + "hitA.wav", AudioType.Sound);
+			this.comboHitB = AudioManager.Instance.Use(Paths.SFXBATTLE + "hitB.wav", AudioType.Sound);
+			this.comboSuccess = AudioManager.Instance.Use(Paths.SFXBATTLE + "Combo16.wav", AudioType.Sound);
+
 			this.comboSoundMap = new Dictionary<CharacterType, List<CarbineSound>>();
 			for (int k = 0; k < array.Length; k++)
 			{
@@ -219,17 +226,19 @@ namespace Mother4.Battle
 				for (int l = 0; l < 3; l++)
 				{
 					string str = CharacterComboSounds.Get(array[k], 0, l, 120);
-					CarbineSound item = AudioManager.Instance.Use(Paths.AUDIO + str, AudioType.Sound);
+					CarbineSound item = AudioManager.Instance.Use(Paths.SFXBATTLECOMBO + str, AudioType.Sound);
 					list.Add(item);
 				}
 			}
 			this.winSounds = new Dictionary<int, CarbineSound>();
-			this.winSounds.Add(0, AudioManager.Instance.Use(Paths.AUDIO + "win1.wav", AudioType.Stream));
-			this.winSounds.Add(1, AudioManager.Instance.Use(Paths.AUDIO + "win2.wav", AudioType.Stream));
-			this.winSounds.Add(2, AudioManager.Instance.Use(Paths.AUDIO + "win3.wav", AudioType.Stream));
-			this.winSounds.Add(3, AudioManager.Instance.Use(Paths.AUDIO + "win4.wav", AudioType.Stream));
-			this.groovySound = AudioManager.Instance.Use(Paths.AUDIO + "Groovy.wav", AudioType.Sound);
-			this.reflectSound = AudioManager.Instance.Use(Paths.AUDIO + "homerun.wav", AudioType.Sound);
+
+			this.winSounds.Add(0, AudioManager.Instance.Use(Paths.SFXBATTLE + "win1.wav", AudioType.Stream));
+			this.winSounds.Add(1, AudioManager.Instance.Use(Paths.SFXBATTLE + "win2.wav", AudioType.Stream));
+			this.winSounds.Add(2, AudioManager.Instance.Use(Paths.SFXBATTLE + "win3.wav", AudioType.Stream));
+			this.winSounds.Add(3, AudioManager.Instance.Use(Paths.SFXBATTLE + "win4.wav", AudioType.Stream));
+
+			this.groovySound = AudioManager.Instance.Use(Paths.SFXBATTLE + "Groovy.wav", AudioType.Sound);
+			this.reflectSound = AudioManager.Instance.Use(Paths.SFXBATTLE + "homerun.wav", AudioType.Sound);
 			this.jingler = new LevelUpJingler(array, true);
 			this.graphicModifiers = new List<IGraphicModifier>();
 			this.damageNumbers = new List<DamageNumber>();
