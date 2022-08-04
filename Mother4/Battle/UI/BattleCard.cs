@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using Carbine;
 using Carbine.Graphics;
 using Carbine.GUI;
+using Carbine.Utility;
 using Mother4.Data;
 using Mother4.GUI;
 using Mother4.Psi;
@@ -11,6 +14,99 @@ namespace Mother4.Battle.UI
 {
 	internal class BattleCard : IDisposable
 	{
+        private struct GlowSettings
+        {
+            // Token: 0x060004EE RID: 1262 RVA: 0x0001F593 File Offset: 0x0001D793
+            public GlowSettings(Color color, ColorBlendMode mode)
+            {
+                this.Color = color;
+                this.BlendMode = mode;
+            }
+
+            // Token: 0x040006CD RID: 1741
+            public Color Color;
+
+            // Token: 0x040006CE RID: 1742
+            public ColorBlendMode BlendMode;
+        }
+		public BattleCard.GlowType Glow
+        {
+            get
+            {
+                return this.glowType;
+            }
+            set
+            {
+                this.SetGlow(value);
+            }
+		}
+
+        // Token: 0x04000695 RID: 1685
+        private const float GLOW_SPEED = 0.05f;
+
+        // Token: 0x04000696 RID: 1686
+        private const float GLOW_INTENSITY = 0.75f;
+
+		private static readonly Dictionary<BattleCard.GlowType, BattleCard.GlowSettings> GLOW_COLORS = new Dictionary<BattleCard.GlowType, BattleCard.GlowSettings>
+        {
+            {
+                BattleCard.GlowType.None,
+                new BattleCard.GlowSettings(Color.White, ColorBlendMode.Multiply)
+            },
+            {
+                BattleCard.GlowType.Shield,
+                new BattleCard.GlowSettings(new Color(206, 226, 234), ColorBlendMode.Add)
+            },
+            {
+                BattleCard.GlowType.Counter,
+                new BattleCard.GlowSettings(new Color(byte.MaxValue, 249, 119), ColorBlendMode.Add)
+            },
+            {
+                BattleCard.GlowType.PsiSheild,
+                new BattleCard.GlowSettings(new Color(120, 232, 252), ColorBlendMode.Add)
+            },
+            {
+                BattleCard.GlowType.PsiCounter,
+                new BattleCard.GlowSettings(new Color(219, 121, 251), ColorBlendMode.Add)
+            },
+            {
+                BattleCard.GlowType.Eraser,
+                new BattleCard.GlowSettings(new Color(247, 136, 136), ColorBlendMode.Add)
+            }
+        };
+		public void SetGlow(BattleCard.GlowType type)
+        {
+            this.glowType = type;
+            BattleCard.GlowSettings glowSettings = BattleCard.GLOW_COLORS[this.glowType];
+            this.glowColor = ColorHelper.Blend(glowSettings.Color, Color.Black, 0.75f);
+            this.glowSpeed = 0.05f + (float)(Engine.Random.Next(20) - 10) / 1000f;
+            this.glowDelta = 0f;
+            this.card.ColorBlendMode = glowSettings.BlendMode;
+        }
+        private BattleCard.GlowType glowType;
+        // Token: 0x040006BC RID: 1724
+        private Color glowColor;
+
+        // Token: 0x040006BD RID: 1725
+        private float glowSpeed;
+
+        // Token: 0x040006BE RID: 1726
+        private float glowDelta; 
+        public enum GlowType
+        {
+            // Token: 0x040006C4 RID: 1732
+            None,
+            // Token: 0x040006C5 RID: 1733
+            Shield,
+            // Token: 0x040006C6 RID: 1734
+            Counter,
+            // Token: 0x040006C7 RID: 1735
+            PsiSheild,
+            // Token: 0x040006C8 RID: 1736
+            PsiCounter,
+            // Token: 0x040006C9 RID: 1737
+            Eraser
+        }
 		public Vector2f Position
 		{
 			get
@@ -27,8 +123,16 @@ namespace Mother4.Battle.UI
 			}
 		}
 
-
-        public void Death()
+        private void UpdateGlow()
+        {
+            if (this.glowType != BattleCard.GlowType.None)
+            {
+                this.glowDelta += this.glowSpeed;
+                float amount = (float)Math.Sin((double)this.glowDelta) / 2f + 0.5f;
+                this.card.Color = ColorHelper.Blend(Color.Black, this.glowColor, amount);
+            }
+        }
+		public void Death()
 		{
             this.card.Visible = false;
             deadCard.Visible = true;
@@ -212,7 +316,8 @@ namespace Mother4.Battle.UI
 
         public void Update()
 		{
-			this.UpdateSpring();
+            this.UpdateGlow(); 
+            this.UpdateSpring();
 			this.UpdatePosition();
 			this.MoveGraphics(this.position + this.offset);
 			this.odoHP.Update();

@@ -193,6 +193,7 @@
     <Compile Include="GUI\Fonts.cs" />
     <Compile Include="GUI\IrisOverlay.cs" />
     <Compile Include="GUI\MenuPanel.cs" />
+    <Compile Include="GUI\Modifiers\GraphicShielder.cs" />
     <Compile Include="GUI\Modifiers\GraphicBlinker.cs" />
     <Compile Include="GUI\Modifiers\GraphicBouncer.cs" />
     <Compile Include="GUI\Modifiers\GraphicDeathFader.cs" />
