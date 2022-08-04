@@ -55,6 +55,7 @@ namespace Mother4.Scenes
 				return this.GetIrisOverlay();
 			}
 		}
+        private ICollidable[] collisionResults;
 
 		public OverworldScene(string mapName, Vector2f initialPosition, int initialDirection, bool initialRunning, bool extendParty, bool enableLoadScripts)
 		{
@@ -64,6 +65,7 @@ namespace Mother4.Scenes
 			this.initialRunning = initialRunning;
 			this.enableLoadScripts = enableLoadScripts;
 			this.extendParty = extendParty;
+            this.collisionResults = new ICollidable[8];
 			this.initialized = false;
 		}
 
@@ -75,6 +77,7 @@ namespace Mother4.Scenes
 			this.initialRunning = false;
 			this.enableLoadScripts = enableLoadScripts;
 			this.extendParty = false;
+            this.collisionResults = new ICollidable[8];
 			this.initialized = false;
 		}
 
@@ -113,71 +116,105 @@ namespace Mother4.Scenes
 				this.executor.PushScript(value);
 			}
 		}
-
+        private bool HandleNpcCheck(NPC npc, bool isTelepathy)
+        {
+            bool result = false;
+            Map.NPCtext npctext = new Map.NPCtext
+            {
+                ID = "",
+                Flag = -1
+            };
+            int num = int.MinValue;
+            List<Map.NPCtext> list = (!isTelepathy) ? npc.Text : npc.TeleText;
+            foreach (Map.NPCtext npctext2 in list)
+            {
+                if (FlagManager.Instance[npctext2.Flag] && npctext2.Flag > num)
+                {
+                    num = npctext2.Flag;
+                    npctext = npctext2;
+                }
+            }
+            if (npctext.Flag > -1)
+            {
+                double num2 = Math.Atan2((double)(npc.Position.Y - this.player.Position.Y), (double)(-(double)(npc.Position.X - this.player.Position.X)));
+                int num3 = (int)Math.Round(num2 / 0.7853981633974483);
+                if (num3 < 0)
+                {
+                    num3 += 8;
+                }
+                npc.Direction = num3;
+                Script? script = ScriptLoader.Load(npctext.ID);
+                if (script != null)
+                {
+                    result = true;
+                    Script value = script.Value;
+                    if (isTelepathy)
+                    {
+                        RufiniAction[] array = new RufiniAction[value.Actions.Length + 2];
+                        Array.Copy(value.Actions, 0, array, 1, value.Actions.Length);
+                        array[0] = new TelepathyStartAction();
+                        array[array.Length - 1] = new TelepathyEndAction();
+                        value.Actions = array;
+                    }
+                    this.executor.SetCheckedNPC(npc);
+                    this.executor.PushScript(value);
+                }
+            }
+            return result;
+        }
 		private void HandleCheckAction(bool isTelepathy)
 		{
-			bool flag = false;
-			Vector2f position = this.player.Position + this.player.CheckVector;
-			PlaceFreeContext placeFreeContext = this.collisionManager.PlaceFree(this.player, position);
-			Console.WriteLine("checking at {0},{1}", position.X, position.Y);
-			while (!(placeFreeContext.CollidingObject is NPC))
-			{
-				if (flag || !(placeFreeContext.CollidingObject is SolidStatic))
-				{
-					this.SetExecutorScript("Default", isTelepathy);
-					return;
-				}
-				Vector2f position2 = this.player.Position + this.player.CheckVector * 2f;
-				placeFreeContext = this.collisionManager.PlaceFree(this.player, position2);
-				Console.WriteLine("checking again at {0},{1}", position2.X, position2.Y);
-				flag = true;
-			}
-			NPC npc = (NPC)placeFreeContext.CollidingObject;
-			Map.NPCtext npctext = new Map.NPCtext
-			{
-				ID = "",
-				Flag = -1
-			};
-			int num = int.MinValue;
-			List<Map.NPCtext> list = (!isTelepathy) ? npc.Text : npc.TeleText;
-			foreach (Map.NPCtext npctext2 in list)
-			{
-				if (FlagManager.Instance[npctext2.Flag] && npctext2.Flag > num)
-				{
-					num = npctext2.Flag;
-					npctext = npctext2;
-				}
-			}
-			if (npctext.Flag <= -1)
-			{
-				this.SetExecutorScript("Default", isTelepathy);
-				return;
-			}
-			double num2 = Math.Atan2((double)(npc.Position.Y - this.player.Position.Y), (double)(-(double)(npc.Position.X - this.player.Position.X)));
-			int num3 = (int)Math.Round(num2 / 0.7853981633974483);
-			if (num3 < 0)
-			{
-				num3 += 8;
-			}
-			npc.Direction = num3;
-			Script? script = ScriptLoader.Load(npctext.ID);
-			if (script != null)
-			{
-				Script value = script.Value;
-				if (isTelepathy)
-				{
-					RufiniAction[] array = new RufiniAction[value.Actions.Length + 2];
-					Array.Copy(value.Actions, 0, array, 1, value.Actions.Length);
-					array[0] = new TelepathyStartAction();
-					array[array.Length - 1] = new TelepathyEndAction();
-					value.Actions = array;
-				}
-				this.executor.SetCheckedNPC(npc);
-				this.executor.PushScript(value);
-				return;
-			}
-			this.SetExecutorScript("Default", isTelepathy);
-		}
+            bool flag = false;
+            bool flag2 = false;
+            Vector2f position = this.player.Position + this.player.CheckVector;
+            Console.WriteLine("Checking at {0},{1}", position.X, position.Y);
+            if (!this.collisionManager.PlaceFree(this.player, position, this.collisionResults))
+            {
+                do
+                {
+                    Console.WriteLine("results loop start");
+                    for (int i = 0; i < this.collisionResults.Length; i++)
+                    {
+                        Console.Write("{0}: ", i);
+                        ICollidable collidable = this.collisionResults[i];
+                        if (collidable is NPC)
+                        {
+                            Console.WriteLine("Found NPC");
+                            flag2 = this.HandleNpcCheck((NPC)collidable, isTelepathy);
+                            flag = false;
+                            break;
+                        }
+                        if (!flag && collidable is SolidStatic)
+                        {
+                            Console.WriteLine("Found SolidStatic");
+                            flag = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Not an NPC or SolidStatic");
+                            flag = false;
+                            if (collidable == null)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    Console.WriteLine("results loop end");
+                    if (flag)
+                    {
+                        Vector2f position2 = this.player.Position + this.player.CheckVector * 2f;
+                        Console.WriteLine("Checking again at {0},{1}", position2.X, position2.Y);
+                        bool flag3 = this.collisionManager.PlaceFree(this.player, position2, this.collisionResults);
+                    }
+                }
+                while (flag);
+            }
+            if (!flag2)
+            {
+                Console.WriteLine("Tried checking, but there was no script");
+                this.SetExecutorScript("Default", isTelepathy);
+            }
+        }
 
 		private void ButtonPressed(InputManager sender, Button b)
 		{
@@ -467,11 +504,12 @@ namespace Mother4.Scenes
 			this.player.OnCollision += this.OnPlayerCollision;
 			this.actorManager.Add(this.player);
 			this.collisionManager.Add(this.player);
-			for (int i = 1; i < array.Length; i++)
-			{
-				PartyFollower follower = new PartyFollower(this.pipeline, this.partyTrain, array[i], this.player.Position, this.player.Direction, map.Head.Shadows);
-				this.partyTrain.Add(follower);
-			}
+            for (int i = 1; i < array.Length; i++)
+            {
+                PartyFollower partyFollower = new PartyFollower(this.pipeline, this.collisionManager, this.partyTrain, array[i], this.player.Position, this.player.Direction, map.Head.Shadows);
+                this.partyTrain.Add(partyFollower);
+                this.collisionManager.Add(partyFollower);
+            }
 			List<NPC> addActors = MapPopulator.GenerateNPCs(this.pipeline, this.collisionManager, map);
 			this.actorManager.AddAll<NPC>(addActors);
 			IList<ICollidable> collidables = MapPopulator.GeneratePortals(map);
@@ -570,7 +608,7 @@ namespace Mother4.Scenes
 			if (this.battleEnemies != null)
 			{
 				this.player.MovementLocked = false;
-				foreach (Enemy enemy in this.battleEnemies)
+				foreach (EnemyNPC enemy in this.battleEnemies)
 				{
 					this.actorManager.Remove(enemy);
 					this.collisionManager.Remove(enemy);
@@ -618,42 +656,48 @@ namespace Mother4.Scenes
 			this.GoToMap(door.Map, door.PositionTo.X, door.PositionTo.Y, direction, this.player.Running, false, transition);
 		}
 
-		private void OnPlayerCollision(Player sender, PlaceFreeContext data)
-		{
-			if (data.CollidingObject is Portal)
-			{
-				this.GoToMap((Portal)data.CollidingObject, new ColorFadeTransition(0.5f, Color.Black));
-				return;
-			}
-			if (data.CollidingObject is TriggerArea)
-			{
-				string script = ((TriggerArea)data.CollidingObject).Script;
-				Console.WriteLine("Trigger Area - " + script);
-				this.SetExecutorScript(script, false);
-				this.executor.Execute();
-				data.CollidingObject.Solid = false;
-				return;
-			}
-			if (data.CollidingObject is Enemy)
-			{
-				Enemy enemy = (Enemy)data.CollidingObject;
-				enemy.MovementLocked = true;
-				enemy.FreezeSpriteForever();
-				this.battleEnemies = new List<Enemy>();
-				this.battleEnemies.Add(enemy);
-				this.player.MovementLocked = true;
-				this.musicPosition = AudioManager.Instance.BGM.Position;
-				AudioManager.Instance.BGM.Stop();
-				this.battleStartSound.Play();
-				SceneManager.Instance.Transition = new BattleSwirlTransition(BattleSwirlOverlay.Style.Blue);
-				SceneManager.Instance.Push(new BattleScene(new EnemyType[]
-				{
-					enemy.Type
-				}, true));
-			}
-		}
+        private void OnPlayerCollision(Player sender, ICollidable[] collisionObjects)
+        {
+            foreach (ICollidable collidable in collisionObjects)
+            {
+                if (collidable is Portal)
+                {
+                    this.GoToMap((Portal) collidable, new ColorFadeTransition(0.5f, Color.Black));
+                    return;
+                }
 
-		public override void Unfocus()
+                if (collidable is TriggerArea)
+                {
+                    string script = ((TriggerArea) collidable).Script;
+                    Console.WriteLine("Trigger Area - " + script);
+                    this.SetExecutorScript(script, false);
+                    this.executor.Execute();
+                    collidable.Solid = false;
+                    return;
+                }
+
+                if (collidable is EnemyNPC)
+                {
+                    EnemyNPC enemy = (EnemyNPC)collidable;
+                    enemy.MovementLocked = true;
+                    enemy.FreezeSpriteForever();
+                    this.battleEnemies = new List<EnemyNPC>();
+                    this.battleEnemies.Add(enemy);
+                    this.player.MovementLocked = true;
+                    this.musicPosition = AudioManager.Instance.BGM.Position;
+                    AudioManager.Instance.BGM.Stop();
+                    this.battleStartSound.Play();
+                    SceneManager.Instance.Transition = new BattleSwirlTransition(BattleSwirlOverlay.Style.Blue);
+                    SceneManager.Instance.Push(new BattleScene(new EnemyType[]
+                    {
+                        enemy.Type
+                    }, true));
+                    return;
+                }
+            }
+        }
+
+        public override void Unfocus()
 		{
 			base.Unfocus();
 			ViewManager.Instance.FollowActor = null;
@@ -695,11 +739,11 @@ namespace Mother4.Scenes
 				EnemySpawner enemySpawner = this.spawners[i];
 				if (!enemySpawner.Bounds.Intersects(ViewManager.Instance.Viewrect))
 				{
-					List<Enemy> list = enemySpawner.GenerateEnemies(this.pipeline, this.collisionManager);
+					List<EnemyNPC> list = enemySpawner.GenerateEnemies(this.pipeline, this.collisionManager);
 					if (list != null)
 					{
-						this.actorManager.AddAll<Enemy>(list);
-						this.collisionManager.AddAll<Enemy>(list);
+						this.actorManager.AddAll<EnemyNPC>(list);
+						this.collisionManager.AddAll<EnemyNPC>(list);
 					}
 				}
 				else
@@ -790,7 +834,7 @@ namespace Mother4.Scenes
 
 		private IList<EnemySpawner> spawners;
 
-		private IList<Enemy> battleEnemies;
+		private IList<EnemyNPC> battleEnemies;
 
 		private IList<ParallaxBackground> parallaxes;
 

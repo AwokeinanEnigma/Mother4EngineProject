@@ -116,7 +116,7 @@ namespace Carbine.Graphics
 			this.finalScale.Y = (this.flipY ? (-this.scale.Y) : this.scale.Y);
 			this.sprite.Scale = this.finalScale;
 			base.Frames = spriteDefinition.Frames;
-			base.SpeedSet = spriteDefinition.Speeds;
+			base.Speeds = spriteDefinition.Speeds;
 			this.mode = spriteDefinition.Mode;
 			if (reset)
 			{

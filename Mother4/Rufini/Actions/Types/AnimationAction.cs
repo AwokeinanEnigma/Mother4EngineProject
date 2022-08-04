@@ -9,8 +9,10 @@ using SFML.System;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000122 RID: 290
 	internal class AnimationAction : RufiniAction
 	{
+		// Token: 0x060006EA RID: 1770 RVA: 0x0002C160 File Offset: 0x0002A360
 		public AnimationAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -48,6 +50,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x060006EB RID: 1771 RVA: 0x0002C27C File Offset: 0x0002A47C
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			ActionReturnContext result = default(ActionReturnContext);
@@ -68,7 +71,8 @@ namespace Rufini.Actions.Types
 			return result;
 		}
 
-		private void OnAnimationComplete(Graphic graphic)
+		// Token: 0x060006EC RID: 1772 RVA: 0x0002C358 File Offset: 0x0002A558
+		private void OnAnimationComplete(AnimatedRenderable graphic)
 		{
 			this.context.Pipeline.Remove(graphic);
 			this.graphic.OnAnimationComplete -= this.OnAnimationComplete;
@@ -80,6 +84,7 @@ namespace Rufini.Actions.Types
 			}
 		}
 
+		// Token: 0x060006ED RID: 1773 RVA: 0x0002C3CC File Offset: 0x0002A5CC
 		private void OnTimerEnd(int timerIndex)
 		{
 			if (this.timerId == timerIndex)
@@ -89,12 +94,16 @@ namespace Rufini.Actions.Types
 			}
 		}
 
+		// Token: 0x04000918 RID: 2328
 		private Graphic graphic;
 
+		// Token: 0x04000919 RID: 2329
 		private ExecutionContext context;
 
+		// Token: 0x0400091A RID: 2330
 		private bool blocking;
 
+		// Token: 0x0400091B RID: 2331
 		private int timerId;
 	}
 }

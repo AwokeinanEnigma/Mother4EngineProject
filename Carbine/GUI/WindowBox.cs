@@ -87,18 +87,18 @@ namespace Carbine.GUI
 			string resource;
 			switch (this.style)
 			{
-			case WindowBox.Style.Classic:
-				resource = "Resources/Graphics/window2.dat";
-				this.beamRepeat = false;
-				goto IL_4D;
-			case WindowBox.Style.Telepathy:
-				resource = "Resources/Graphics/window3.dat";
-				this.beamRepeat = true;
-				goto IL_4D;
+				case WindowBox.Style.Classic:
+					resource = "Resources/Graphics/window2.dat";
+					this.beamRepeat = false;
+					goto IL_4D;
+				case WindowBox.Style.Telepathy:
+					resource = "Resources/Graphics/window3.dat";
+					this.beamRepeat = true;
+					goto IL_4D;
 			}
 			resource = "Resources/Graphics/window1.dat";
 			this.beamRepeat = false;
-			IL_4D:
+		IL_4D:
 			this.frame = new IndexedColorGraphic(resource, "center", this.position, this.depth);
 			this.frame.CurrentPalette = this.palette;
 			this.shader = new Shader(EmbeddedResources.GetStream("Carbine.Resources.pal.vert"), EmbeddedResources.GetStream("Carbine.Resources.pal.frag"));

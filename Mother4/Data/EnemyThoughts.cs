@@ -52,10 +52,14 @@ namespace Mother4.Data
 				EnemyType.MeltyRobot,
 				"Back to the Future II"
 			},
-			{
-				EnemyType.ModernMind,
-				"the interconnectedness of all things"
-			}
+            {
+                EnemyType.ModernMind,
+                "the interconnectedness of all things"
+            },
+            {
+                EnemyType.RamblingMushroom,
+                "the state of the mushroom colony"
+            }
 		};
 	}
 }

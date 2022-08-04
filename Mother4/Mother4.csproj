@@ -74,6 +74,7 @@
     <Compile Include="Actors\Animation\AnimationControl.cs" />
     <Compile Include="Actors\Animation\AnimationNames.cs" />
     <Compile Include="Actors\Animation\AnimationType.cs" />
+    <Compile Include="Actors\Animation\AnimationContext.cs" />
     <Compile Include="Actors\NPCs\Enemy.cs" />
     <Compile Include="Actors\NPCs\Movement\AreaMover.cs" />
     <Compile Include="Actors\NPCs\Movement\FacePlayerMover.cs" />
@@ -164,6 +165,8 @@
     <Compile Include="Data\CharacterNames.cs" />
     <Compile Include="Data\CharacterStats.cs" />
     <Compile Include="Data\CharacterType.cs" />
+    <Compile Include="Data\CharacterStatusEffects.cs" />
+    <Compile Include="Data\ShadowSize.cs" />
     <Compile Include="Data\ComboLoader.cs" />
     <Compile Include="Data\Config\ConfigReader.cs" />
     <Compile Include="Data\EnemyBattleActions.cs" />

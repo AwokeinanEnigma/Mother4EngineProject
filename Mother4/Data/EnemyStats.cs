@@ -53,19 +53,19 @@ namespace Mother4.Data
 				}
 			},
 			{
-				EnemyType.Stickat,
-				new StatSet
-				{
-					Level = 1,
-					HP = 40,
-					PP = 0,
-					Offense = 5,
-					Defense = 2,
-					Guts = 1,
-					IQ = 1,
-					Luck = 2,
-					Speed = 2
-				}
+                EnemyType.Stickat,
+                new StatSet
+                {
+                    Level = 1,
+                    HP = 40,
+                    PP = 0,
+                    Offense = 5,
+                    Defense = 2,
+                    Guts = 1,
+                    IQ = 1,
+                    Luck = 2,
+                    Speed = 2
+                }
 			},
             {
                 EnemyType.ModernMind,
@@ -126,7 +126,22 @@ namespace Mother4.Data
 					Luck = 2,
 					Speed = 2
 				}
-			}
+			},
+            {
+                EnemyType.RamblingMushroom,
+                new StatSet
+                {
+                    Level = 1,
+                    HP = 75,
+                    PP = 0,
+                    Offense = 5,
+                    Defense = 2,
+                    Guts = 1,
+                    IQ = 1,
+                    Luck = 2,
+                    Speed = 2
+                }
+            }
 		};
 	}
 }

@@ -61,9 +61,13 @@ namespace Mother4.Data
                 "Deer.xml"
 			},
             {
-				EnemyType.MysteriousTank,
-				"FATFUCKINGTANK.xml"
-			}
+                EnemyType.MysteriousTank,
+                "FATFUCKINGTANK.xml"
+            },
+            {
+                EnemyType.RamblingMushroom,
+				"Diamondine.xml"
+			},
 		};
 	}
 }

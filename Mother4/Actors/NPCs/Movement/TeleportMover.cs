@@ -66,7 +66,7 @@ namespace Mother4.Actors.NPCs.Movement
 						int num3 = (int)this.area.Top + Engine.Random.Next((int)this.area.Height);
 						vector2f = new Vector2f((float)num2, (float)num3);
 					}
-					while (!this.collisionManager.PlaceFree(this.collidable, vector2f).PlaceFree);
+					while (!this.collisionManager.PlaceFree(this.collidable, vector2f));
 					position = vector2f;
 					direction = 6;
 				}

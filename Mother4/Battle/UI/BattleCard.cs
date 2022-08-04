@@ -3,6 +3,7 @@ using Carbine.Graphics;
 using Carbine.GUI;
 using Mother4.Data;
 using Mother4.GUI;
+using Mother4.Psi;
 using SFML.Graphics;
 using SFML.System;
 
@@ -26,10 +27,19 @@ namespace Mother4.Battle.UI
 			}
 		}
 
-		public BattleCard(RenderPipeline pipeline, Vector2f position, int depth, string name, int hp, int maxHp, int pp, int maxPp, float meterFill)
+
+        public void Death()
+		{
+            this.card.Visible = false;
+            deadCard.Visible = true;
+
+        }
+
+        public BattleCard(RenderPipeline pipeline, Vector2f position, int depth, string name, int hp, int maxHp, int pp, int maxPp, float meterFill, CharacterType type)
 		{
 			this.position = position;
-			this.card = new IndexedColorGraphic(BattleCard.BATTLEUI_DAT, "card", position, depth);
+            this.card = new IndexedColorGraphic(BattleCard.BATTLEUI_DAT, "card", position, depth);
+            this.deadCard = new IndexedColorGraphic(BattleCard.BATTLEUI_DAT, "carddead", position, depth);
 			this.card.CurrentPalette = Settings.WindowFlavor;
 			this.hpLabel = new IndexedColorGraphic(BattleCard.BATTLEUI_DAT, "hp", position + BattleCard.HPLABEL_POSITION, depth + 2);
 			this.hpLabel.CurrentPalette = Settings.WindowFlavor;
@@ -39,13 +49,27 @@ namespace Mother4.Battle.UI
 			this.nameTag.Color = Color.Black;
 			this.nametagX = (int)((float)(this.card.TextureRect.Width / 2) - this.nameTag.Size.X / 2f);
 			this.nameTag.Position = position + new Vector2f((float)this.nametagX, 6f) + BattleCard.NAME_POSITION;
-			pipeline.Add(this.card);
+
+
+            pipeline.Add(this.card);
+            pipeline.Add(this.deadCard);
 			pipeline.Add(this.hpLabel);
 			pipeline.Add(this.ppLabel);
 			pipeline.Add(this.nameTag);
+
+
+			deadCard.Visible = false;
 			this.meter = new BattleMeter(pipeline, position + BattleCard.METER_OFFSET, meterFill, depth + 1);
 			this.odoHP = new Odometer(pipeline, position + BattleCard.HPODO_POSITION, depth + 2, 3, hp, maxHp);
-			this.odoPP = new Odometer(pipeline, position + BattleCard.PPODO_POSITION, depth + 2, 3, pp, maxPp);
+            if (PsiManager.Instance.CharacterHasPsi(type) == false)
+            {
+                ppLabel.Visible = false;
+            }
+            else
+            {
+                this.odoPP = new Odometer(pipeline, position + BattleCard.PPODO_POSITION, depth + 2, 3, pp, maxPp);
+
+            }
 			this.springMode = BattleCard.SpringMode.Normal;
 		}
 
@@ -59,12 +83,15 @@ namespace Mother4.Battle.UI
 			this.odoHP.SetValue(newHP);
 		}
 
-		public void SetPP(int newPP)
-		{
-			this.odoPP.SetValue(newPP);
-		}
+        public void SetPP(int newPP)
+        {
+            if (odoPP != null)
+            {
+                this.odoPP.SetValue(newPP);
+            }
+        }
 
-		public void SetMeter(float newFill)
+        public void SetMeter(float newFill)
 		{
 			this.meter.SetFill(newFill);
 		}
@@ -166,27 +193,35 @@ namespace Mother4.Battle.UI
 			}
 		}
 
-		private void MoveGraphics(Vector2f gPosition)
-		{
-			gPosition.X = (float)((int)gPosition.X);
-			gPosition.Y = (float)((int)gPosition.Y);
-			this.card.Position = gPosition;
-			this.hpLabel.Position = gPosition + BattleCard.HPLABEL_POSITION;
-			this.ppLabel.Position = gPosition + BattleCard.PPLABEL_POSITION;
-			this.nameTag.Position = gPosition + new Vector2f((float)this.nametagX, 6f) + BattleCard.NAME_POSITION;
-			this.meter.Position = gPosition + BattleCard.METER_OFFSET;
-			this.odoHP.Position = gPosition + BattleCard.HPODO_POSITION;
-			this.odoPP.Position = gPosition + BattleCard.PPODO_POSITION;
-		}
+        private void MoveGraphics(Vector2f gPosition)
+        {
+            gPosition.X = (float) ((int) gPosition.X);
+            gPosition.Y = (float) ((int) gPosition.Y);
+            this.card.Position = gPosition;
+            deadCard.Position = gPosition;
+            this.hpLabel.Position = gPosition + BattleCard.HPLABEL_POSITION;
+            this.ppLabel.Position = gPosition + BattleCard.PPLABEL_POSITION;
+            this.nameTag.Position = gPosition + new Vector2f((float) this.nametagX, 6f) + BattleCard.NAME_POSITION;
+            this.meter.Position = gPosition + BattleCard.METER_OFFSET;
+            this.odoHP.Position = gPosition + BattleCard.HPODO_POSITION;
+            if (odoPP != null)
+            {
+                this.odoPP.Position = gPosition + BattleCard.PPODO_POSITION;
+            }
+        }
 
-		public void Update()
+        public void Update()
 		{
 			this.UpdateSpring();
 			this.UpdatePosition();
 			this.MoveGraphics(this.position + this.offset);
 			this.odoHP.Update();
-			this.odoPP.Update();
-			this.meter.Update();
+            if (odoPP != null)
+            {
+                this.odoPP.Update();
+            }
+
+            this.meter.Update();
 		}
 
 		public void Dispose()
@@ -205,7 +240,12 @@ namespace Mother4.Battle.UI
 					this.hpLabel.Dispose();
 					this.ppLabel.Dispose();
 					this.odoHP.Dispose();
-					this.odoPP.Dispose();
+                    if (odoPP != null)
+					{
+						this.odoPP.Dispose();
+
+					}
+
 					this.meter.Dispose();
 					this.nameTag.Dispose();
 				}
@@ -215,7 +255,7 @@ namespace Mother4.Battle.UI
 
 		private const float DAMP_HIGHPASS = 0.5f;
 
-		private static readonly string BATTLEUI_DAT = Paths.GRAPHICS + "battleui.dat";
+		private static readonly string BATTLEUI_DAT = Paths.GRAPHICS + "battleui2.dat";
 
 		private static readonly Vector2f HPLABEL_POSITION = new Vector2f(10f, 23f);
 
@@ -231,7 +271,8 @@ namespace Mother4.Battle.UI
 
 		private bool disposed;
 
-		private IndexedColorGraphic card;
+        private IndexedColorGraphic card;
+        private IndexedColorGraphic deadCard;
 
 		private IndexedColorGraphic hpLabel;
 

@@ -15,6 +15,7 @@ namespace Mother4.Data
 		MeltyRobot,
 		ModernMind,
         NotSoDeer,
-        MysteriousTank
+        MysteriousTank,
+        RamblingMushroom
 	}
 }

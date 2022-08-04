@@ -64,6 +64,7 @@ namespace Mother4.Battle.Actions
 					string message = string.Format("[t:0,{0}][p:{1}] ", num, num2);
 					this.controller.InterfaceController.ShowMessage(message, false);
 					this.controller.InterfaceController.PlayWinBGM(num);
+					this.controller.InterfaceController.RemoveTalkers();
 					this.controller.InterfaceController.SetLetterboxing(0f);
 					this.ChangeState(BattleWinAction.State.WaitForUI);
 					flag = true;

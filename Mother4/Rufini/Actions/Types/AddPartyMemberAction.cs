@@ -64,9 +64,9 @@ namespace Rufini.Actions.Types
 					position = context.Player.Position;
 					direction = context.Player.Direction;
 				}
-				PartyTrain partyTrain = ((OverworldScene)scene).PartyTrain;
-				PartyFollower follower = new PartyFollower(context.Pipeline, partyTrain, option, position, direction, true);
-				partyTrain.Add(follower);
+                PartyTrain partyTrain = ((OverworldScene)scene).PartyTrain;
+                PartyFollower partyFollower = new PartyFollower(context.Pipeline, context.CollisionManager, partyTrain, option, position, direction, true);
+                partyTrain.Add(partyFollower);
 			}
 			if (!value)
 			{

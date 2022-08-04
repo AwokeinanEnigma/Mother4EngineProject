@@ -30,10 +30,10 @@ namespace Mother4.Data
 				EnemyType.Stickat,
 				"Battle Against a Clueless Foe"
 			},
-			{
-				EnemyType.Mouse,
-				"Battle Against a Clueless Foe"
-			},
+            {
+                EnemyType.Mouse,
+                "Battle Against a Clueless Foe"
+            },
 			{
 				EnemyType.HermitCan,
 				"Battle Against an Intense Opponent"
@@ -65,7 +65,11 @@ namespace Mother4.Data
             {
                 EnemyType.MysteriousTank,
 				"Bacon_Flavored"
-			}
+			},
+            {
+                EnemyType.RamblingMushroom,
+                "Battle Against a Clueless Foe"
+            },
 		};
 	}
 }

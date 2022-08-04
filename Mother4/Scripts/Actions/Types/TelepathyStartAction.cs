@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Carbine.Flags;
+using Mother4.Actors;
 
 namespace Mother4.Scripts.Actions.Types
 {
@@ -27,7 +28,7 @@ namespace Mother4.Scripts.Actions.Types
 			};
 		}
 
-		private void player_OnTelepathyAnimationComplete()
+		private void player_OnTelepathyAnimationComplete(Player player)
 		{
 			this.context.Player.OnTelepathyAnimationComplete -= this.player_OnTelepathyAnimationComplete;
 			if (this.context.CheckedNPC != null)

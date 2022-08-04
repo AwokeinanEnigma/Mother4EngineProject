@@ -293,11 +293,31 @@ namespace Mother4.Psi
 
 		internal bool CharacterHasPsi(CharacterType playerCharacter)
 		{
-			bool flag = this.offensive[playerCharacter].Count > 0;
+            switch (playerCharacter)
+            {
+                case CharacterType.Travis:
+                    return true;
+                case CharacterType.Dog:
+                    return false;
+                case CharacterType.Leo:
+                    return true;
+                case CharacterType.Floyd:
+                    return false;
+                case CharacterType.Renee:
+                    return true;
+                case CharacterType.Zack:
+                    return false;
+                case CharacterType.Meryl:
+                    return true;
+					default:
+                        return false;
+            }
+
+            /*bool flag = this.offensive[playerCharacter].Count > 0;
 			bool flag2 = this.defensive[playerCharacter].Count > 0;
 			bool flag3 = this.assistive[playerCharacter].Count > 0;
-			bool flag4 = this.other[playerCharacter].Count > 0;
-			return flag || flag2 || flag3 || flag4;
+			bool flag4 = this.other[playerCharacter].Count > 0;*/
+			//return flag || flag2 || flag3 || flag4;
 		}
 
 		private static PsiManager instance;

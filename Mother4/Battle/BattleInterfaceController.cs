@@ -8,6 +8,7 @@ using Carbine.Input;
 using Mother4.Battle.Combatants;
 using Mother4.Battle.PsiAnimation;
 using Mother4.Battle.UI;
+using Mother4.Battle.UI.Modifiers;
 using Mother4.Data;
 using Mother4.GUI;
 using Mother4.GUI.Modifiers;
@@ -321,6 +322,9 @@ namespace Mother4.Battle
             this.UpdatePlayerCard(playerCombatant.ID, playerCombatant.Stats.HP, playerCombatant.Stats.PP, playerCombatant.Stats.Meter);
 		}
 
+        public int talkerID;
+        public PlayerCombatant talker;
+
 		private void OnPlayerStatusEffectChange(Combatant sender, StatusEffect statusEffect, bool added)
 		{
 			if (added)
@@ -329,6 +333,8 @@ namespace Mother4.Battle
 				{
 					return;
 				}
+				talker = sender as PlayerCombatant;
+                talkerID = sender.ID;
 				this.TalkifyPlayer(sender as PlayerCombatant);
 				this.SetCardSpring(sender.ID, BattleCard.SpringMode.BounceUp, new Vector2f(0f, 8f), new Vector2f(0f, 0.1f), new Vector2f(0f, 1f));
 				return;
@@ -427,8 +433,8 @@ namespace Mother4.Battle
 
 		public void StartComboCircle(EnemyCombatant enemy, PlayerCombatant player)
 		{
-			Graphic graphic = this.enemyGraphics[enemy.ID];
-			this.comboCircle.Setup(graphic, player);
+            Graphic graphic = this.enemyGraphics[enemy.ID];
+            this.comboCircle.Setup(graphic);
 		}
 
 		public void StopComboCircle(bool explode)
@@ -500,7 +506,7 @@ namespace Mother4.Battle
 			this.graphicModifiers.Add(new GraphicBouncer(this.enemyGraphics[combatant.ID], GraphicBouncer.SpringMode.BounceUp, new Vector2f(0f, 4f), new Vector2f(0f, 0.1f), new Vector2f(0f, 1f)));
 		}
 
-		private void RemoveTalker(Graphic graphic)
+		 public void RemoveTalker(Graphic graphic)
 		{
 			foreach (IGraphicModifier graphicModifier in this.graphicModifiers)
 			{
@@ -1121,14 +1127,18 @@ namespace Mother4.Battle
 		public void UpdatePlayerCard(int id, int hp, int pp, float meter)
 		{
 			PlayerCombatant playerCombatant = (PlayerCombatant)this.combatantController[id];
-			this.cardBar.SetHP(playerCombatant.PartyIndex, hp);
+            this.cardBar.SetHP(playerCombatant.PartyIndex, hp);
 			this.cardBar.SetPP(playerCombatant.PartyIndex, pp);
 			this.cardBar.SetMeter(playerCombatant.PartyIndex, meter);
 
             if (playerCombatant.Stats.HP <= 0)
             {
                 playerCombatant.AddStatusEffect(StatusEffect.Unconscious, 500);
-            }
+				this.cardBar.KillCard(playerCombatant.PartyIndex);
+                //KillCard
+
+
+			}
 		}
 
 		public void Update()

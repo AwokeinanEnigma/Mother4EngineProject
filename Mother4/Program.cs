@@ -25,12 +25,14 @@ namespace Mother4
 					Engine.Update();
 				}
 			}
-			catch (Exception value)
-			{
-				StreamWriter streamWriter = new StreamWriter("error.log");
-				streamWriter.WriteLine(value);
-				streamWriter.Close();
-			}
+            catch (Exception value)
+            {
+                StreamWriter streamWriter = new StreamWriter("error.log", true);
+                streamWriter.WriteLine("At {0}:", DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss:fff"));
+                streamWriter.WriteLine(value);
+                streamWriter.WriteLine();
+                streamWriter.Close();
+            }
 		}
 	}
 }

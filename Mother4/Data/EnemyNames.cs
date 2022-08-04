@@ -91,6 +91,10 @@ namespace Mother4.Data
                 EnemyType.MysteriousTank,
                 "Mysterious Tank"
             },
+            {
+                EnemyType.RamblingMushroom,
+                "Ramblin' Mushrooom"
+            },
 		};
 
 		private static Dictionary<EnemyType, string> articles = new Dictionary<EnemyType, string>
@@ -141,6 +145,10 @@ namespace Mother4.Data
             },
             {
                 EnemyType.MysteriousTank,
+                "the"
+            },
+            {
+                EnemyType.RamblingMushroom,
                 "the"
             },
 		};
@@ -194,6 +202,10 @@ namespace Mother4.Data
             {
                 EnemyType.MysteriousTank,
                 "it"
+            },
+            {
+                EnemyType.RamblingMushroom,
+                "it"
             }
 		};
 
@@ -244,9 +256,13 @@ namespace Mother4.Data
                 "its"
             },
             {
-            EnemyType.MysteriousTank,
-            "its"
-        }
+                EnemyType.MysteriousTank,
+                "its"
+            },
+            {
+                EnemyType.RamblingMushroom,
+                "its"
+            },
 		};
 	}
 }

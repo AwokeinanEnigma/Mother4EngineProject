@@ -48,7 +48,7 @@ namespace Mother4.Actors.NPCs.Movement
 							break;
 						}
 					}
-					while (!this.collisionManager.PlaceFree(this.collidable, this.toPosition).PlaceFree);
+					while (!this.collisionManager.PlaceFree(this.collidable, this.toPosition));
 				}
 				else
 				{

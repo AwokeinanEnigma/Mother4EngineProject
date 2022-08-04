@@ -9,8 +9,10 @@ using Mother4.Scripts.Actions.ParamTypes;
 
 namespace Rufini.Actions.Types
 {
+	// Token: 0x02000134 RID: 308
 	internal class EmoticonNPCAction : RufiniAction
 	{
+		// Token: 0x06000716 RID: 1814 RVA: 0x0002D404 File Offset: 0x0002B604
 		public EmoticonNPCAction()
 		{
 			this.paramList = new List<ActionParam>
@@ -33,6 +35,7 @@ namespace Rufini.Actions.Types
 			};
 		}
 
+		// Token: 0x06000717 RID: 1815 RVA: 0x0002D49C File Offset: 0x0002B69C
 		public override ActionReturnContext Execute(ExecutionContext context)
 		{
 			string value = base.GetValue<string>("name");
@@ -58,7 +61,8 @@ namespace Rufini.Actions.Types
 			};
 		}
 
-		private void OnAnimationComplete(Graphic graphic)
+		// Token: 0x06000718 RID: 1816 RVA: 0x0002D56D File Offset: 0x0002B76D
+		private void OnAnimationComplete(AnimatedRenderable graphic)
 		{
 			this.context.Pipeline.Remove(graphic);
 			graphic.Dispose();
@@ -68,6 +72,7 @@ namespace Rufini.Actions.Types
 			}
 		}
 
+		// Token: 0x0400092E RID: 2350
 		private static readonly Dictionary<int, string> EMOTE_TYPE_SUBSPRITE_MAP = new Dictionary<int, string>
 		{
 			{
@@ -100,8 +105,10 @@ namespace Rufini.Actions.Types
 			}
 		};
 
+		// Token: 0x0400092F RID: 2351
 		private ExecutionContext context;
 
+		// Token: 0x04000930 RID: 2352
 		private bool isBlocking;
 	}
 }

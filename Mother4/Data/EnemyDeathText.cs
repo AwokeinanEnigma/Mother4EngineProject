@@ -60,10 +60,14 @@ namespace Mother4.Data
                 EnemyType.NotSoDeer,
                 "went back to normal."
             },
-            {
+			{
                 EnemyType.MysteriousTank,
                 "exploded!"
-            }
+            },
+            {
+                EnemyType.RamblingMushroom,
+                "stopped moving."
+            },
 		};
 	}
 }

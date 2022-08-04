@@ -61,9 +61,14 @@ namespace Mother4.Data
                 "notsodeer.dat"
             },
             {
-            EnemyType.MysteriousTank,
-			"FATFUCKINGTANK.dat"
-		}
+                EnemyType.MysteriousTank,
+                "FATFUCKINGTANK.dat"
+			},
+            {
+            EnemyType.RamblingMushroom,
+            "mushroomfight.dat"
+
+            }
 		};
 	}
 }

@@ -41,9 +41,9 @@ namespace Mother4.Overworld
 			this.spawnedOnce = false;
 		}
 
-		public List<Enemy> GenerateEnemies(RenderPipeline pipeline, CollisionManager collision)
+		public List<EnemyNPC> GenerateEnemies(RenderPipeline pipeline, CollisionManager collision)
 		{
-			List<Enemy> list = null;
+			List<EnemyNPC> list = null;
 			if (this.spawnFlag && !this.spawnedOnce)
 			{
 				foreach (Map.Enemy enemy in this.chances)
@@ -51,10 +51,10 @@ namespace Mother4.Overworld
 					if (Engine.Random.Next(100) < enemy.Chance)
 					{
 						Vector2f position = new Vector2f(this.rectangle.Left + (float)Engine.Random.Next((int)this.rectangle.Width), this.rectangle.Top + (float)Engine.Random.Next((int)this.rectangle.Height));
-						Enemy item = new Enemy(pipeline, collision, (EnemyType)enemy.ID, position, this.rectangle);
+                        EnemyNPC item = new EnemyNPC(pipeline, collision, (EnemyType)enemy.ID, position, this.rectangle);
 						if (list == null)
 						{
-							list = new List<Enemy>();
+							list = new List<EnemyNPC>();
 						}
 						list.Add(item);
 						this.spawnedOnce = true;

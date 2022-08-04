@@ -31,7 +31,7 @@ namespace Mother4.Battle.UI
 			{
 				Vector2f position = ViewManager.Instance.FinalTopLeft + new Vector2f((float)(this.leftMargin + 63 * i), (float)this.idleY);
 				StatSet stats = CharacterStats.GetStats(party[i]);
-				this.cards[i] = new BattleCard(pipeline, position, 2000, CharacterNames.GetName(party[i]), stats.HP, stats.MaxHP, stats.PP, stats.MaxPP, stats.Meter);
+				this.cards[i] = new BattleCard(pipeline, position, 2000, CharacterNames.GetName(party[i]), stats.HP, stats.MaxHP, stats.PP, stats.MaxPP, stats.Meter, party[i]);
 				this.PopCard(i, 0);
 			}
 			this.selIndex = -1;
@@ -52,7 +52,12 @@ namespace Mother4.Battle.UI
 			this.cards[index].SetPP(newPP);
 		}
 
-		public void SetMeter(int index, float newFill)
+        public void KillCard(int index)
+        {
+            this.cards[index].Death();
+        }
+
+        public void SetMeter(int index, float newFill)
 		{
 			this.cards[index].SetMeter(newFill);
 		}
