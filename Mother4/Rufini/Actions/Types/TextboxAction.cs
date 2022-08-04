@@ -47,6 +47,7 @@ namespace Rufini.Actions.Types
 			this.context.TextBox.Reset(value2, context.Nametag, value3, value4);
 			this.context.TextBox.Show();
 			this.context.Player.MovementLocked = true;
+            this.context.Player.InputLocked = true;
 			if (this.context.ActiveNPC != null)
 			{
 				this.activeNpc = this.context.ActiveNPC;
@@ -71,6 +72,7 @@ namespace Rufini.Actions.Types
 			this.context.TextBox.Hide();
 			this.context.TextBox.OnTextboxComplete -= this.ContinueAfterTextbox;
 			this.context.Player.MovementLocked = false;
+            this.context.Player.InputLocked = false;
 			this.context.Executor.Continue();
 		}
 
