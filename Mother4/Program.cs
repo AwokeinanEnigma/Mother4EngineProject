@@ -4,6 +4,7 @@ using Carbine;
 using Carbine.Audio;
 using Carbine.Scenes;
 using Mother4.Data;
+using Mother4.Data.Enemies;
 using Mother4.Scenes;
 
 namespace Mother4
@@ -19,6 +20,7 @@ namespace Mother4
 				AudioManager.Instance.MusicVolume = Settings.MusicVolume;
 				AudioManager.Instance.EffectsVolume = Settings.EffectsVolume;
 				Scene newScene = new TitleScene();
+				EnemyFile.Load();
 				SceneManager.Instance.Push(newScene);
 				while (Engine.Running)
 				{

@@ -189,10 +189,15 @@
     <Compile Include="Data\Settings.cs" />
     <Compile Include="Data\StatusEffectActions.cs" />
     <Compile Include="Data\UIColors.cs" />
+    <Compile Include="Enemies\EnemyFile.cs" />
+    <Compile Include="Enemies\EnemyData.cs" />
+    <Compile Include="Enemies\EnemyImmunities.cs" />
+    <Compile Include="Enemies\EnemyOptions.cs" />
     <Compile Include="GUI\FlyoverText.cs" />
     <Compile Include="GUI\Fonts.cs" />
     <Compile Include="GUI\IrisOverlay.cs" />
     <Compile Include="GUI\MenuPanel.cs" />
+    <Compile Include="GUI\Modifiers\GraphicShielder.cs" />
     <Compile Include="GUI\Modifiers\GraphicBlinker.cs" />
     <Compile Include="GUI\Modifiers\GraphicBouncer.cs" />
     <Compile Include="GUI\Modifiers\GraphicDeathFader.cs" />
@@ -221,6 +226,7 @@
     <Compile Include="Items\Item.cs" />
     <Compile Include="Items\ItemPropertyNotFoundException.cs" />
     <Compile Include="Overworld\BattleSwirlOverlay.cs" />
+    <Compile Include="Overworld\FootstepPlayer.cs" />
     <Compile Include="Overworld\EnemySpawner.cs" />
     <Compile Include="Overworld\MapPopulator.cs" />
     <Compile Include="Overworld\ParallaxBackground.cs" />
@@ -295,6 +301,7 @@
     <Compile Include="Rufini\Actions\Types\WeatherAction.cs" />
     <Compile Include="Rufini\Strings\StringFile.cs" />
     <Compile Include="Scenes\BattleScene.cs" />
+    <Compile Include="Scenes\EnemyTestScene.cs" />
     <Compile Include="Scenes\MapTestSetupScene.cs" />
     <Compile Include="Scenes\MenuScene.cs" />
     <Compile Include="Scenes\NamingScene.cs" />
@@ -352,5 +359,6 @@
     <None Include="app.config" />
     <None Include="app.manifest" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -488,7 +488,8 @@ namespace Mother4.Scenes
 			int colorIndex = 1;
 			ViewManager.Instance.Reset();
 			this.screenDimmer = new ScreenDimmer(this.pipeline, Color.Transparent, 0, 2147450870);
-			this.textbox = new TextBox(this.pipeline, colorIndex);
+            this.footstepPlayer = new FootstepPlayer(); 
+            this.textbox = new TextBox(this.pipeline, colorIndex);
 			this.actorManager.Add(this.textbox);
 			this.questionbox = new QuestionBox(this.pipeline, colorIndex);
 			this.actorManager.Add(this.questionbox);
@@ -502,6 +503,7 @@ namespace Mother4.Scenes
 			this.partyTrain = new PartyTrain(this.initialPosition, this.initialDirection, map.Head.Ocean ? TerrainType.Ocean : TerrainType.None, this.extendParty);
 			this.player = new Player(this.pipeline, this.collisionManager, this.partyTrain, this.initialPosition, this.initialDirection, array[0], map.Head.Shadows, map.Head.Ocean, this.initialRunning);
 			this.player.OnCollision += this.OnPlayerCollision;
+			this.player.OnRunningChange += this.OnPlayerRunningChange;
 			this.actorManager.Add(this.player);
 			this.collisionManager.Add(this.player);
             for (int i = 1; i < array.Length; i++)
@@ -581,7 +583,7 @@ namespace Mother4.Scenes
 			{
 				Console.WriteLine((map.Music.Count > 0) ? "No BGM flags were enabled for any BGM for this map." : "This map has no BGMs set.");
 			}
-			this.battleStartSound = AudioManager.Instance.Use(Paths.AUDIO + "battleIntro.mp3", AudioType.Sound);
+			this.battleStartSound = AudioManager.Instance.Use(Paths.SFXBATTLE + "battleIntro.mp3", AudioType.Sound);
 			this.initialized = true;
 		}
 
@@ -621,7 +623,8 @@ namespace Mother4.Scenes
 			}
 			Engine.ClearColor = this.backColor;
 			InputManager.Instance.ButtonPressed += this.ButtonPressed;
-			if (!this.dontPauseMusic)
+            this.footstepPlayer.Resume(); 
+            if (!this.dontPauseMusic)
 			{
 				if (this.musicName != null)
 				{
@@ -655,8 +658,17 @@ namespace Mother4.Scenes
 			int direction = (door.DirectionTo < 0) ? this.player.Direction : door.DirectionTo;
 			this.GoToMap(door.Map, door.PositionTo.X, door.PositionTo.Y, direction, this.player.Running, false, transition);
 		}
+        private void OnPlayerRunningChange(Player sender)
+        {
+            if (sender.Running)
+            {
+                this.footstepPlayer.Start();
+                return;
+            }
+            this.footstepPlayer.Stop();
+        }
 
-        private void OnPlayerCollision(Player sender, ICollidable[] collisionObjects)
+		private void OnPlayerCollision(Player sender, ICollidable[] collisionObjects)
         {
             foreach (ICollidable collidable in collisionObjects)
             {
@@ -718,7 +730,8 @@ namespace Mother4.Scenes
 						((TileGroup)x).AnimationEnabled = false;
 					}
 				});
-				this.openingMenu = false;
+                this.footstepPlayer.Pause(); 
+                this.openingMenu = false;
 			}
 			InputManager.Instance.ButtonPressed -= this.ButtonPressed;
 			if (this.musicName != null && !this.dontPauseMusic)
@@ -790,21 +803,50 @@ namespace Mother4.Scenes
 			}
 		}
 
-		protected override void Dispose(bool disposing)
-		{
-			if (!this.disposed)
-			{
-				if (disposing)
-				{
-					foreach (TileGroup tileGroup in this.mapGroups)
-					{
-						this.pipeline.Remove(tileGroup);
-						tileGroup.Dispose();
-					}
-				}
-				base.Dispose(disposing);
-			}
-		}
+        protected override void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    foreach (TileGroup tileGroup in this.mapGroups)
+                    {
+                        this.pipeline.Remove(tileGroup);
+                        tileGroup.Dispose();
+                    }
+                    this.actorManager.Clear();
+                    foreach (TileGroup tileGroup2 in this.mapGroups)
+                    {
+                        tileGroup2.Dispose();
+                    }
+                    foreach (ParallaxBackground parallaxBackground in this.parallaxes)
+                    {
+                        parallaxBackground.Dispose();
+                    }
+                    this.screenDimmer.Dispose();
+                   // this.letterboxing.Dispose();
+                    this.textbox.Dispose();
+                    this.footstepPlayer.Dispose();
+                    this.pipeline.Clear();
+                    if (this.iris != null)
+                    {
+                        this.iris.Dispose();
+                    }
+                }
+                this.actorManager = null;
+                this.mapGroups = null;
+                this.parallaxes = null;
+                this.screenDimmer = null;
+                //this.letterboxing = null;
+                this.textbox = null;
+                this.pipeline = null;
+                this.collisionManager = null;
+                this.footstepPlayer = null;
+                this.player.OnCollision -= this.OnPlayerCollision;
+                this.player = null;
+            }
+            base.Dispose(disposing);
+        }
 
 		private const int DIMMER_DEPTH = 2147450870;
 
@@ -861,5 +903,7 @@ namespace Mother4.Scenes
 		private bool openingMenu;
 
 		private RainOverlay rainOverlay;
+
+        private FootstepPlayer footstepPlayer;
 	}
 }

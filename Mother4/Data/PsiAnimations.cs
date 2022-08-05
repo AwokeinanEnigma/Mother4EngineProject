@@ -21,7 +21,7 @@ namespace Mother4.Data
 				{
 					Timestamp = 0,
 					Animation = new MultipartAnimation(Paths.PSI_GRAPHICS + "freeze_a.sdat", default(Vector2f), 0.5f, 32767),
-					Sound = AudioManager.Instance.Use(Paths.AUDIO + "pkFreezeA.wav", AudioType.Sound),
+					Sound = AudioManager.Instance.Use(Paths.SFXBATTLEPSI + "pkFreezeA.wav", AudioType.Sound),
 					LockToTargetPosition = true,
 					PositionIndex = 0,
 					ScreenDarkenColor = new Color?(new Color(0, 0, 0, 128))
@@ -54,7 +54,7 @@ namespace Mother4.Data
 				Timestamp = 0,
 				Animation = new MultipartAnimation(Paths.PSI_GRAPHICS + "beam2.sdat", new Vector2f(160f, 90f), 0.3f, 32767),
 				ScreenDarkenColor = new Color?(new Color(0, 0, 0, 128)),
-				Sound = AudioManager.Instance.Use(Paths.AUDIO + "pkBeamA.wav", AudioType.Sound)
+				Sound = AudioManager.Instance.Use(Paths.SFXBATTLEPSI + "pkBeamA.wav", AudioType.Sound)
 			});
 			list.Add(new PsiElement
 			{
@@ -116,7 +116,7 @@ namespace Mother4.Data
 				{
 					Timestamp = 0,
 					Animation = new MultipartAnimation(Paths.PSI_GRAPHICS + "comet_reflect.sdat", position, 0.5f, 32767),
-					Sound = AudioManager.Instance.Use(Paths.AUDIO + "rocketReflect.wav", AudioType.Sound),
+					Sound = AudioManager.Instance.Use(Paths.SFXBATTLE + "rocketReflect.wav", AudioType.Sound),
 					CardSpringMode = BattleCard.SpringMode.BounceUp,
 					CardSpringAmplitude = new Vector2f(0f, 4f),
 					CardSpringSpeed = new Vector2f(0f, 0.2f),
@@ -134,7 +134,7 @@ namespace Mother4.Data
 				{
 					Timestamp = 0,
 					Animation = new MultipartAnimation(Paths.PSI_GRAPHICS + "comet.sdat", position, 0.5f, 32767),
-					Sound = AudioManager.Instance.Use(Paths.AUDIO + "rocket.wav", AudioType.Sound)
+					Sound = AudioManager.Instance.Use(Paths.SFXBATTLE + "rocket.wav", AudioType.Sound)
 				}
 			};
 		}
@@ -148,7 +148,7 @@ namespace Mother4.Data
 				Timestamp = startTimestamp,
 				ScreenDarkenColor = new Color?(Color.Cyan),
 				ScreenDarkenDepth = new int?(0),
-				Sound = AudioManager.Instance.Use(Paths.AUDIO + "explosion.wav", AudioType.Sound)
+				Sound = AudioManager.Instance.Use(Paths.SFXBATTLE + "explosion.wav", AudioType.Sound)
 			});
 			int num = 98;
 			int[] array = new int[]
@@ -201,7 +201,7 @@ namespace Mother4.Data
 				{
 					Timestamp = 0,
 					Animation = new MultipartAnimation(Paths.PSI_GRAPHICS + "fire_a.sdat", new Vector2f(160f, 90f), 0.4f, 32767),
-					Sound = AudioManager.Instance.Use(Paths.AUDIO + "pkFireA.wav", AudioType.Sound),
+					Sound = AudioManager.Instance.Use(Paths.SFXBATTLEPSI + "pkFireA.wav", AudioType.Sound),
 					ScreenDarkenColor = new Color?(new Color(0, 0, 0, 128))
 				},
 				new PsiElement

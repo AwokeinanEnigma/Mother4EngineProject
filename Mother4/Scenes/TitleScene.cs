@@ -65,9 +65,9 @@ namespace Mother4.Scenes
 			this.pipeline.Add(this.titleImage);
 			this.pipeline.Add(this.versionText);
 			this.mod = new GraphicTranslator(this.titleImage, new Vector2f(160f, 36f), 30);
-			this.sfxCursorY = AudioManager.Instance.Use(Paths.AUDIO + "cursory.wav", AudioType.Sound);
-			this.sfxConfirm = AudioManager.Instance.Use(Paths.AUDIO + "confirm.wav", AudioType.Sound);
-			this.sfxCancel = AudioManager.Instance.Use(Paths.AUDIO + "cancel.wav", AudioType.Sound);
+			this.sfxCursorY = AudioManager.Instance.Use(Paths.SFXMENU + "cursory.wav", AudioType.Sound);
+			this.sfxConfirm = AudioManager.Instance.Use(Paths.SFXMENU + "confirm.wav", AudioType.Sound);
+			this.sfxCancel = AudioManager.Instance.Use(Paths.SFXMENU + "cancel.wav", AudioType.Sound);
 		}
 
 		private void AxisPressed(InputManager sender, Vector2f axis)
@@ -114,17 +114,21 @@ namespace Mother4.Scenes
 				SceneManager.Instance.Transition = new ColorFadeTransition(0.5f, Color.Black);
 				SceneManager.Instance.Push(new SaveScene(SaveScene.Location.Belring, SaveFileManager.Instance.CurrentProfile));
 				return;
-				case Button.Eight:
-					Engine.ScreenScale = 5;
-					PartyManager.Instance.AddAll(new CharacterType[]
-	{
-					CharacterType.Travis,
-					CharacterType.Floyd,
-					CharacterType.Meryl,
-					CharacterType.Leo
-	}); SceneManager.Instance.Transition = new BattleSwirlTransition(Overworld.BattleSwirlOverlay.Style.Blue);;
-					SceneManager.Instance.Push(new BattleScene(new EnemyType[1] { EnemyType.RamblingMushroom }, true));
-					return;
+            case Button.Eight:
+                Engine.ScreenScale = 5;
+                PartyManager.Instance.AddAll(new CharacterType[]
+                {
+                    CharacterType.Travis,
+                    CharacterType.Floyd,
+                    CharacterType.Meryl,
+                    CharacterType.Leo
+                }); SceneManager.Instance.Transition = new BattleSwirlTransition(Overworld.BattleSwirlOverlay.Style.Blue); ;
+                SceneManager.Instance.Push(new BattleScene(new EnemyType[7] { EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, }, true));
+                return;
+            case Button.Five:
+                Engine.ScreenScale = 5;
+                SceneManager.Instance.Push(new EnemyTestScene()); 
+				return;
 				default:
 				return;
 			}
@@ -173,7 +177,7 @@ namespace Mother4.Scenes
 			base.Focus();
 			ViewManager.Instance.Center = new Vector2f(160f, 90f);
 			Engine.ClearColor = Color.Black;
-			AudioManager.Instance.SetBGM(Paths.AUDIO + "test.mp3");
+			AudioManager.Instance.SetBGM(Paths.BGMOVERWORLD + "test.mp3");
 			AudioManager.Instance.BGM.Play();
 			InputManager.Instance.AxisPressed += this.AxisPressed;
 			InputManager.Instance.ButtonPressed += this.ButtonPressed;

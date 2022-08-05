@@ -5,27 +5,28 @@ namespace Mother4.Data
 {
 	internal static class CharacterGraphics
 	{
-		public static string GetFile(CharacterType character)
+		public static string  GetFile(CharacterType character)
 		{
 			return CharacterGraphics.GetFile(character, true);
 		}
 
-		public static string GetFile(CharacterType character, bool fullPath)
-		{
-			if (!CharacterGraphics.graphics.ContainsKey(character))
-			{
-				return "";
-			}
-			if (!fullPath)
-			{
-				return CharacterGraphics.graphics[character];
-			}
-			return Paths.GRAPHICS + CharacterGraphics.graphics[character] + CharacterGraphics.EXTENSION;
-		}
+        public static string GetFile(CharacterType character, bool fullPath)
+        {
+            if (!CharacterGraphics.graphics.ContainsKey(character))
+            {
+                return "";
+            }
 
-		private static string EXTENSION = ".dat";
+            if (!fullPath)
+            {
+                return CharacterGraphics.graphics[character];
+            }
 
-		private static Dictionary<CharacterType, string> graphics = new Dictionary<CharacterType, string>
+            return Paths.GRAPHICSPARTYMEMBERS + CharacterGraphics.graphics[character] + ".dat";
+        }
+
+
+        private static Dictionary<CharacterType, string> graphics = new Dictionary<CharacterType, string>
 		{
 			{
 				CharacterType.Travis,

@@ -10,16 +10,16 @@ namespace Mother4.Battle.UI
 		public LevelUpJingler(CharacterType[] characters, bool useOutro)
 		{
 			this.useOutro = useOutro;
-			this.baseJingle = AudioManager.Instance.Use(Paths.AUDIO + "jingleBase.wav", AudioType.Stream);
+			this.baseJingle = AudioManager.Instance.Use(Paths.SFXBATTLEJINGLES + "jingleBase.wav", AudioType.Stream);
 			this.baseJingle.LoopCount = -1;
 			if (this.useOutro)
 			{
-				this.groupOutro = AudioManager.Instance.Use(Paths.AUDIO + "groupOutro.wav", AudioType.Sound);
+				this.groupOutro = AudioManager.Instance.Use(Paths.SFXBATTLE + "groupOutro.wav", AudioType.Sound);
 			}
 			this.characterJingles = new Dictionary<CharacterType, CarbineSound>();
 			foreach (CharacterType characterType in characters)
 			{
-				string filename = string.Format("{0}jingle{1}.{2}", Paths.AUDIO, CharacterNames.GetName(characterType), "wav");
+				string filename = string.Format("{0}jingle{1}.{2}", Paths.SFXBATTLEJINGLES, CharacterNames.GetName(characterType), "wav");
 				CarbineSound carbineSound = AudioManager.Instance.Use(filename, AudioType.Stream);
 				carbineSound.LoopCount = -1;
 				this.characterJingles.Add(characterType, carbineSound);

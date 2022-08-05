@@ -77,8 +77,8 @@ namespace Mother4.GUI.NamingMenu
 
 		private void SetupSounds()
 		{
-			this.sfxCursorX = AudioManager.Instance.Use(Paths.AUDIO + "cursorx.wav", AudioType.Sound);
-			this.sfxCursorY = AudioManager.Instance.Use(Paths.AUDIO + "cursory.wav", AudioType.Sound);
+			this.sfxCursorX = AudioManager.Instance.Use(Paths.SFXMENU + "cursorx.wav", AudioType.Sound);
+			this.sfxCursorY = AudioManager.Instance.Use(Paths.SFXMENU + "cursory.wav", AudioType.Sound);
 		}
 
 		private void CreateButtons()

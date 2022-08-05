@@ -20,7 +20,10 @@ namespace Mother4.Battle.UI
 				this.selIndex = Math.Max(-1, Math.Min(this.cards.Length - 1, value));
 			}
 		}
-
+        public void SetGlow(int index, BattleCard.GlowType type)
+        {
+            this.cards[index].Glow = type;
+        }
 		public CardBar(RenderPipeline pipeline, CharacterType[] party)
 		{
 			int num = party.Length;

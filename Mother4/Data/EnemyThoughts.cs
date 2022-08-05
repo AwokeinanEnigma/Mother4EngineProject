@@ -54,8 +54,8 @@ namespace Mother4.Data
 			},
             {
                 EnemyType.ModernMind,
-                "the interconnectedness of all things"
-            },
+				"the interconnectedness of all things"
+			},
             {
                 EnemyType.RamblingMushroom,
                 "the state of the mushroom colony"
