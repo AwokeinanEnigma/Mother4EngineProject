@@ -360,11 +360,11 @@ namespace Carbine.Maps
                 NbtList nbtList2 = nbtCompound.Get<NbtList>("enfreqs");
                 for (int tagIndex = 0; tagIndex < nbtList1.Count; ++tagIndex)
                 {
-                    NbtShort nbtShort = nbtList1.Get<NbtShort>(tagIndex);
+                    NbtString nbtShort = nbtList1.Get<NbtString>(tagIndex);
                     NbtByte nbtByte = nbtList2.Get<NbtByte>(tagIndex);
                     enemySpawn.Enemies.Add(new Map.Enemy()
                     {
-                        ID = (int)nbtShort.ShortValue,
+                        EnemyName = nbtShort.Value,
                         Chance = (int)nbtByte.ByteValue
                     });
                 }

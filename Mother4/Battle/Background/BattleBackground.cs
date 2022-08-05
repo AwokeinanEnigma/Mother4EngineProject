@@ -14,17 +14,22 @@ namespace Mother4.Battle.Background
 	{
 		public BattleBackground(string file)
 		{
-			LayerParams[] array;
+            Console.WriteLine("1");
+            LayerParams[] array;
+            Console.WriteLine("2");
 			using (Stream stream = File.OpenRead(file))
 			{
 				XmlSerializer xmlSerializer = new XmlSerializer(typeof(LayerParams[]));
 				array = (LayerParams[])xmlSerializer.Deserialize(stream);
 			}
+            Console.WriteLine("3");
 			for (int i = 0; i < array.Length; i++)
 			{
 				array[i].File = Paths.GRAPHICS + "BBG/" + Path.GetFileName(array[i].File);
 			}
+            Console.WriteLine("4");
 			this.Initialize(array);
+            Console.WriteLine("5");
 		}
 
 		public BattleBackground(LayerParams[] parameters)

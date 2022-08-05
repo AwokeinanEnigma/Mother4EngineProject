@@ -1,12 +1,13 @@
 ﻿using System;
 using Mother4.Battle.Actions;
 using Mother4.Data;
+using Mother4.Data.Enemies;
 
 namespace Mother4.Battle.Combatants
 {
 	internal class EnemyCombatant : Combatant
 	{
-		public EnemyType Enemy
+		public EnemyData Enemy
 		{
 			get
 			{
@@ -14,10 +15,10 @@ namespace Mother4.Battle.Combatants
 			}
 		}
 
-		public EnemyCombatant(EnemyType enemy) : base(BattleFaction.EnemyTeam)
+		public EnemyCombatant(EnemyData enemy) : base(BattleFaction.EnemyTeam)
 		{
 			this.enemy = enemy;
-			this.stats = EnemyStats.GetStats(enemy);
+			this.stats = enemy.GetStatSet();
 		}
 
 		public override DecisionAction GetDecisionAction(BattleController controller, int priority, bool isFromUndo)
@@ -28,9 +29,10 @@ namespace Mother4.Battle.Combatants
 				controller = controller,
 				sender = this,
 				priority = priority
-			});
+			},
+                enemy);
 		}
 
-		private EnemyType enemy;
+		private EnemyData enemy;
 	}
 }

@@ -281,7 +281,7 @@ namespace Carbine.Maps
 
 		public struct Enemy
 		{
-			public int ID;
+			public string EnemyName;
 
 			public int Chance;
 		}

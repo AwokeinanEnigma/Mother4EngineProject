@@ -6,6 +6,7 @@ using Carbine.Graphics;
 using Carbine.Maps;
 using Mother4.Actors.NPCs;
 using Mother4.Data;
+using Mother4.Data.Enemies;
 using SFML.Graphics;
 using SFML.System;
 
@@ -51,7 +52,7 @@ namespace Mother4.Overworld
 					if (Engine.Random.Next(100) < enemy.Chance)
 					{
 						Vector2f position = new Vector2f(this.rectangle.Left + (float)Engine.Random.Next((int)this.rectangle.Width), this.rectangle.Top + (float)Engine.Random.Next((int)this.rectangle.Height));
-                        EnemyNPC item = new EnemyNPC(pipeline, collision, (EnemyType)enemy.ID, position, this.rectangle);
+                        EnemyNPC item = new EnemyNPC(pipeline, collision, EnemyFile.Instance.GetEnemyData("EnemyName"), position, this.rectangle);
 						if (list == null)
 						{
 							list = new List<EnemyNPC>();

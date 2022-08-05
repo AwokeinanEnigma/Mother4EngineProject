@@ -9,6 +9,7 @@ using Carbine.Input;
 using Carbine.Scenes;
 using Carbine.Scenes.Transitions;
 using Mother4.Data;
+using Mother4.Data.Enemies;
 using Mother4.GUI;
 using Mother4.GUI.Modifiers;
 using Mother4.Scenes.Transitions;
@@ -123,7 +124,11 @@ namespace Mother4.Scenes
                     CharacterType.Meryl,
                     CharacterType.Leo
                 }); SceneManager.Instance.Transition = new BattleSwirlTransition(Overworld.BattleSwirlOverlay.Style.Blue); ;
-                SceneManager.Instance.Push(new BattleScene(new EnemyType[7] { EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, }, true));
+                SceneManager.Instance.Push(new BattleScene(
+                    new EnemyData[1]
+                    {
+                        EnemyFile.Instance.GetEnemyData("Buzz Buzz"),
+                    }, true));//, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, }, true));
                 return;
             case Button.Five:
                 Engine.ScreenScale = 5;

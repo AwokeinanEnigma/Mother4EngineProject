@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Mother4.Battle.Combatants;
 using Mother4.Data;
+using Mother4.Data.Enemies;
 
 namespace Mother4.Battle
 {
@@ -24,7 +25,7 @@ namespace Mother4.Battle
 			}
 		}
 
-		public CombatantController(CharacterType[] party, EnemyType[] enemies)
+		public CombatantController(CharacterType[] party, EnemyData[] enemies)
 		{
 			this.uidCounter = 0;
 			this.combatants = new Dictionary<int, Combatant>();

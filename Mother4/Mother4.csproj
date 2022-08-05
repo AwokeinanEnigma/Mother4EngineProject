@@ -134,6 +134,7 @@
     <Compile Include="Battle\Combos\ComboNode.cs" />
     <Compile Include="Battle\Combos\ComboSet.cs" />
     <Compile Include="Battle\Combos\ComboType.cs" />
+    <Compile Include="Battle\EnemyAI\BoilerplateAI.cs" />
     <Compile Include="Battle\EnemyAI\IEnemyAI.cs" />
     <Compile Include="Battle\EnemyAI\RandomAI.cs" />
     <Compile Include="Battle\EnemyAI\TravisMustDieAI.cs" />
@@ -170,15 +171,6 @@
     <Compile Include="Data\ComboLoader.cs" />
     <Compile Include="Data\Config\ConfigReader.cs" />
     <Compile Include="Data\EnemyBattleActions.cs" />
-    <Compile Include="Data\EnemyBattleBackgrounds.cs" />
-    <Compile Include="Data\EnemyDeathText.cs" />
-    <Compile Include="Data\EnemyGraphics.cs" />
-    <Compile Include="Data\EnemyMovers.cs" />
-    <Compile Include="Data\EnemyMusic.cs" />
-    <Compile Include="Data\EnemyNames.cs" />
-    <Compile Include="Data\EnemyStats.cs" />
-    <Compile Include="Data\EnemyThoughts.cs" />
-    <Compile Include="Data\EnemyType.cs" />
     <Compile Include="Data\LevelUpBuilder.cs" />
     <Compile Include="Data\PartyManager.cs" />
     <Compile Include="Data\Paths.cs" />

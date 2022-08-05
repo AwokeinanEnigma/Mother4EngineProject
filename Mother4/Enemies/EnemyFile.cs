@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Carbine.Maps;
 using Carbine.Utility;
 using fNbt;
 
@@ -72,7 +73,20 @@ namespace Mother4.Data.Enemies
 			}*/
 		}
 
-		public List<EnemyData> GetAllEnemyData()
+        public EnemyData GetEnemyData(string name)
+        {
+            int hash =  Hash.Get(name);
+            EnemyData attemptData = null;
+            if (enemyDataDict.TryGetValue(hash, out attemptData))
+            {
+                Console.WriteLine($"Properly returned enemy: {name}");
+                return attemptData;
+            }
+            Console.WriteLine($"Was unable to return enemy: {name}");
+            return attemptData;
+        }
+
+        public List<EnemyData> GetAllEnemyData()
 		{
 			return new List<EnemyData>(this.enemyDataDict.Values);
 		}

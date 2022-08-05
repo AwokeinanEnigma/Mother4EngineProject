@@ -74,7 +74,7 @@ namespace Mother4.Battle.Actions
 								case BattleFaction.EnemyTeam:
 									{
 										EnemyCombatant enemyCombatant = (EnemyCombatant)combatant;
-										text = string.Format("{0}{1}", EnemyNames.GetArticle(enemyCombatant.Enemy), EnemyNames.GetName(enemyCombatant.Enemy));
+										text = string.Format("{0}{1}", enemyCombatant.Enemy.GetStringQualifiedName(("name")), enemyCombatant.Enemy.GetStringQualifiedName(("name")));
 										break;
 									}
 								case BattleFaction.NeutralTeam:
@@ -88,20 +88,20 @@ namespace Mother4.Battle.Actions
 							{
 
 
-								item2 = string.Format("{0}{1} bashed {2} for {3} hit points of damage!", new object[]
-								{
-							Capitalizer.Capitalize(EnemyNames.GetArticle(this.combatant.Enemy)),
-							EnemyNames.GetName(this.combatant.Enemy),
-							text,
-							-item.HP
-								});
+                                item2 = string.Format("{0}{1} bashed {2} for {3} hit points of damage!", new object[]
+                                {
+                                    Capitalizer.Capitalize(this.combatant.Enemy.GetStringQualifiedName("article")),
+                                    this.combatant.Enemy.GetStringQualifiedName("name"),
+                                        text,
+                                        -item.HP
+                                });
 							}
 							else
 							{
 								item2 = string.Format("{0}{1} {2} {3} for {4} hit points of damage!", new object[]
 								{
-									Capitalizer.Capitalize(EnemyNames.GetArticle(this.combatant.Enemy)),
-									EnemyNames.GetName(this.combatant.Enemy),
+									Capitalizer.Capitalize(this.combatant.Enemy.GetStringQualifiedName("article")),
+                                    this.combatant.Enemy.GetStringQualifiedName("name"),
 									customText,
 									text,
 									-item.HP

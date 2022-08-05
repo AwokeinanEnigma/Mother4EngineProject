@@ -16,19 +16,23 @@ namespace Mother4.Battle.Actions
             this.combatant = (aparams.sender as PlayerCombatant);
             this.target = (aparams.targets[0] as EnemyCombatant);
 
-            string like = EnemyThoughts.GetLike(this.target.Enemy);
+            string article = this.target.Enemy.GetStringQualifiedName("article");
+            string name = this.target.Enemy.GetStringQualifiedName("name");
+            string like = this.target.Enemy.GetStringQualifiedName("thoughts");
+            string subjective = this.target.Enemy.GetStringQualifiedName("subjective");
+
             StringBuilder stringBuilder = new StringBuilder();
-            if (target.Enemy == EnemyType.MysteriousTank)
+            if (like == String.Empty)
             {
-                stringBuilder.AppendFormat("@{0} tried chatting up {1}{2}.", CharacterNames.GetName(this.combatant.Character), EnemyNames.GetArticle(this.target.Enemy), EnemyNames.GetName(this.target.Enemy));
-                stringBuilder.Append("@[p:10].[p:10].[p:30].But... The Mysterious Tank wouldn't respond!");
+                stringBuilder.AppendFormat("@{0} tried chatting up {1}{2}.", CharacterNames.GetName(this.combatant.Character), article, name);
+                stringBuilder.Append($"@[p:10].[p:10].[p:30].But... the {name} wouldn't respond!");
                 this.message = stringBuilder.ToString();
                 this.state = FloydTalkAction.State.Fail;
                 //this.controller.Data.AddReplace("topicOfDiscussion", like);
                 return;
             }
-            stringBuilder.AppendFormat("@{0} tried chatting up {1}{2}.", CharacterNames.GetName(this.combatant.Character), EnemyNames.GetArticle(this.target.Enemy), EnemyNames.GetName(this.target.Enemy));
-            stringBuilder.AppendFormat("@{0} had a lot to say about {1}.", Capitalizer.Capitalize(EnemyNames.GetSubjectivePronoun(this.target.Enemy)), like);
+            stringBuilder.AppendFormat("@{0} tried chatting up {1}{2}.", CharacterNames.GetName(this.combatant.Character), article, name);
+            stringBuilder.AppendFormat("@{0} had a lot to say about {1}.", Capitalizer.Capitalize(subjective), like);
             stringBuilder.Append("@[p:10].[p:10].[p:30].They really hit it off!");
             this.controller.Data.AddReplace("topicOfDiscussion", like);
             this.message = stringBuilder.ToString();

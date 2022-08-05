@@ -2,20 +2,29 @@
 using Mother4.Battle.Combatants;
 using Mother4.Battle.EnemyAI;
 using Mother4.Data;
+using Mother4.Data.Enemies;
 
 namespace Mother4.Battle.Actions
 {
 	internal class EnemyDecisionAction : DecisionAction
 	{
-		public EnemyDecisionAction(ActionParams aparams) : base(aparams)
+		public EnemyDecisionAction(ActionParams aparams, EnemyData data) : base(aparams)
 		{
 			this.enemyType = (this.sender as EnemyCombatant).Enemy;
-			if (this.enemyType == EnemyType.ModernMind)
-			{
-				this.aicontrol = new TravisMustDieAI(this.controller, this.sender);
-				return;
-			}
-			this.aicontrol = new RandomAI(this.controller, this.sender);
+            switch (enemyType.AIName)
+            {
+                case "TravisMustDie":
+                    aicontrol = new TravisMustDieAI(controller, sender, data);
+                    break;
+                case "BoilerPlateAI":
+                    aicontrol = new BoilerplateAI(controller, sender, data);
+                    break;
+                default:
+                    aicontrol = new BoilerplateAI(controller, sender, data);
+                    break;
+            }
+
+			//this.aicontrol = new RandomAI(this.controller, this.sender);
 		}
 
 		protected override void UpdateAction()
@@ -56,7 +65,7 @@ namespace Mother4.Battle.Actions
 			this.complete = true;
 		}
 
-		private EnemyType enemyType;
+		private EnemyData enemyType;
 
 		private IEnemyAI aicontrol;
 	}

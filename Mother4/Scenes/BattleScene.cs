@@ -9,6 +9,7 @@ using Mother4.Battle.Background;
 using Mother4.Battle.Combatants;
 using Mother4.Battle.Combos;
 using Mother4.Data;
+using Mother4.Data.Enemies;
 using SFML.Graphics;
 using SFML.System;
 
@@ -16,13 +17,13 @@ namespace Mother4.Scenes
 {
 	internal class BattleScene : StandardScene
 	{
-		public BattleScene(EnemyType[] enemies, bool letterboxing)
+		public BattleScene(EnemyData[] enemies, bool letterboxing)
 		{
 			this.enemies = enemies;
 			this.letterboxing = letterboxing;
 		}
 
-		public BattleScene(EnemyType[] enemies, bool letterboxing, int bgmOverride, int bbgOverride) : this(enemies, letterboxing)
+		public BattleScene(EnemyData[] enemies, bool letterboxing, int bgmOverride, int bbgOverride) : this(enemies, letterboxing)
 		{
 			this.bgmOverride = bgmOverride;
 			this.bbgOverride = bbgOverride;
@@ -44,21 +45,24 @@ namespace Mother4.Scenes
 			Combatant[] factionCombatants2 = this.combatantController.GetFactionCombatants(BattleFaction.PlayerTeam, true);
 			PlayerCombatant playerCombatant = factionCombatants2[0] as PlayerCombatant;
 			PlayerCombatant playerCombatant2 = factionCombatants2[(factionCombatants2.Length > 1) ? 1 : 0] as PlayerCombatant;
-			string music = EnemyMusic.GetMusic(enemyCombatant.Enemy);
+			string music = enemyCombatant.Enemy.MusicName;
 			Console.WriteLine($"MUSIC - { music } // ENEMY - {enemyCombatant.Enemy}");
 			ComboSet combos = ComboLoader.Load(music);
 			AudioManager.Instance.SetBGM(music);
 			this.comboControl = new ComboController(combos, party);
 			this.uiController = new BattleInterfaceController(this.pipeline, this.actorManager, this.combatantController, this.letterboxing);
-			this.controller = new BattleController(this.uiController, this.combatantController, this.comboControl);
-			this.background = new BattleBackground(EnemyBattleBackgrounds.GetFile(enemyCombatant.Enemy));
+            Console.WriteLine("init btc");
+            this.controller = new BattleController(this.uiController, this.combatantController, this.comboControl);
+            Console.WriteLine("init bc");
+			this.background = new BattleBackground(enemyCombatant.Enemy.BackgroundName);
+            Console.WriteLine("init bbg");
 			this.GenerateIntroMessage(factionCombatants2.Length, factionCombatants.Length, playerCombatant.Character, playerCombatant2.Character, enemyCombatant.Enemy);
 			this.GenerateDebugVerts();
 			this.debugBgmPos = (long)((ulong)AudioManager.Instance.BGM.Position);
 			this.debugLastBgmPos = this.debugBgmPos;
 		}
 
-		private void GenerateIntroMessage(int partyCount, int enemyCount, CharacterType partyLead, CharacterType partySecondary, EnemyType enemyLead)
+		private void GenerateIntroMessage(int partyCount, int enemyCount, CharacterType partyLead, CharacterType partySecondary, EnemyData enemyLead)
 		{
 			string arg;
 			if (partyCount == 1)
@@ -76,15 +80,15 @@ namespace Mother4.Scenes
 			string arg2;
 			if (enemyCount == 1)
 			{
-				arg2 = string.Format("{0}{1}", EnemyNames.GetArticle(enemyLead), EnemyNames.GetName(enemyLead));
+				arg2 = string.Format("{0}{1}", enemyLead.GetStringQualifiedName("article"), enemyLead.QualifiedName);
 			}
 			else if (enemyCount == 2)
 			{
-				arg2 = string.Format("{0}{1} and {2} cohort", EnemyNames.GetArticle(enemyLead), EnemyNames.GetName(enemyLead), EnemyNames.GetPosessivePronoun(enemyLead));
+				arg2 = string.Format("{0}{1} and {2} cohort", enemyLead.GetStringQualifiedName("article"), enemyLead.QualifiedName, enemyLead.GetStringQualifiedName("possessive"));
 			}
 			else
 			{
-				arg2 = string.Format("{0}{1} and {2} cohorts", EnemyNames.GetArticle(enemyLead), EnemyNames.GetName(enemyLead), EnemyNames.GetPosessivePronoun(enemyLead));
+				arg2 = string.Format("{0}{1} and {2} cohorts", enemyLead.GetStringQualifiedName("article"), enemyLead.QualifiedName, enemyLead.GetStringQualifiedName("possessive"));
 			}
 			string text = string.Format("{0} engaged {1}.", arg, arg2);
 			ActionParams aparams = default(ActionParams);
@@ -263,7 +267,7 @@ namespace Mother4.Scenes
 
 		private bool initialized;
 
-		private EnemyType[] enemies;
+		private EnemyData[] enemies;
 
 		private bool letterboxing;
 

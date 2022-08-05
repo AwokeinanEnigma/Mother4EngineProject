@@ -1,6 +1,7 @@
 ﻿using System;
 using Mother4.Battle.Combatants;
 using Mother4.Data;
+using Mother4.Data.Enemies;
 using Mother4.Utility;
 
 namespace Mother4.Battle.Actions
@@ -38,8 +39,10 @@ namespace Mother4.Battle.Actions
 				Console.WriteLine("Enemy got dead.");
 				this.controller.RemoveCombatant(this.combatant);
 				this.controller.InterfaceController.OnTextboxComplete += this.TextboxComplete;
-				EnemyType enemy = this.combatant.Enemy;
-				string message = string.Format("{0}{1} {2}", Capitalizer.Capitalize(EnemyNames.GetArticle(enemy)), EnemyNames.GetName(enemy), EnemyDeathText.Get(enemy));
+                EnemyData enemy = this.combatant.Enemy;
+
+
+						string message = string.Format("{0}{1} {2}", Capitalizer.Capitalize(enemy.GetStringQualifiedName("article")), enemy.GetStringQualifiedName("name"), enemy.GetStringQualifiedName("defeat"));
 				this.controller.InterfaceController.ShowMessage(message, false);
 				this.state = EnemyDeathAction.State.WaitForUI;
 				return;

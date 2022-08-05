@@ -8,14 +8,26 @@ using Mother4.Data.Enemies;
 
 namespace Mother4.Battle.EnemyAI
 {
-	internal class TravisMustDieAI : IEnemyAI
+	internal class BoilerplateAI : IEnemyAI
 	{
-		public TravisMustDieAI(BattleController controller, Combatant sender, EnemyData data)
+		public BoilerplateAI(BattleController controller, Combatant sender, EnemyData data)
 		{
 			this.controller = controller;
 			this.sender = sender;
-			//this.battleActionParams = EnemyBattleActions.GetBattleActionParams((sender as EnemyCombatant).Enemy);
-		}
+
+            this.battleActionParams = new List<ActionParams>
+            {
+                new ActionParams
+                {
+                    actionType = typeof(EnemyTurnWasteAction),
+                    data = new object[]
+                    {
+                        data.GetStringQualifiedName("wasteaction"),
+                        false
+                    }
+                }
+            };
+        }
 
 		public BattleAction GetAction(int priority, Combatant[] potentialTargets)
 		{

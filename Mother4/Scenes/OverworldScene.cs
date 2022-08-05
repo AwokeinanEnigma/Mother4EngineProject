@@ -17,6 +17,7 @@ using Mother4.Actors.NPCs;
 using Mother4.Battle;
 using Mother4.Battle.Background;
 using Mother4.Data;
+using Mother4.Data.Enemies;
 using Mother4.GUI;
 using Mother4.Items;
 using Mother4.Overworld;
@@ -222,10 +223,12 @@ namespace Mother4.Scenes
 			{
 				Console.WriteLine("View position: ({0},{1})", ViewManager.Instance.FinalCenter.X, ViewManager.Instance.FinalCenter.Y);
 			}
+			/*
 			if (!this.executor.Running)
 			{	
 				if (b == Button.One)
 				{
+					
 					SceneManager.Instance.Transition = new BattleSwirlTransition(BattleSwirlOverlay.Style.Blue);
 					CharacterStats.SetStats(CharacterType.Travis, new StatSet
 					{
@@ -351,6 +354,7 @@ namespace Mother4.Scenes
 						Level = 40,
 						Speed = 30
 					});
+					
 					SceneManager.Instance.Push(new BattleScene(new EnemyType[]
 					{
 						EnemyType.MeltyRobot,
@@ -403,6 +407,7 @@ namespace Mother4.Scenes
 						Level = 40,
 						Speed = 30
 					});
+					
 					SceneManager.Instance.Push(new BattleScene(new EnemyType[]
 					{
 						EnemyType.ModernMind
@@ -410,6 +415,7 @@ namespace Mother4.Scenes
 				}
 				else if (b == Button.Seven)
 				{
+					
 					SceneManager.Instance.Transition = new BattleSwirlTransition(BattleSwirlOverlay.Style.Blue);
 					EnemyType[] array = new EnemyType[Engine.Random.Next(12) + 1];
 					string[] names = Enum.GetNames(typeof(EnemyType));
@@ -481,7 +487,8 @@ namespace Mother4.Scenes
 					this.pipeline.Add(renderable);
 				}
 			}
-		}
+		*/
+			}
 
 		private void Initialize()
 		{
@@ -700,7 +707,7 @@ namespace Mother4.Scenes
                     AudioManager.Instance.BGM.Stop();
                     this.battleStartSound.Play();
                     SceneManager.Instance.Transition = new BattleSwirlTransition(BattleSwirlOverlay.Style.Blue);
-                    SceneManager.Instance.Push(new BattleScene(new EnemyType[]
+                    SceneManager.Instance.Push(new BattleScene(new EnemyData[]
                     {
                         enemy.Type
                     }, true));

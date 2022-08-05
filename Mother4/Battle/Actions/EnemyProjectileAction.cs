@@ -45,17 +45,22 @@ namespace Mother4.Battle.Actions
 			{
 				string message = "";
 
+                string article = this.enemySender.Enemy.GetStringQualifiedName("article");
+                string name = this.enemySender.Enemy.GetStringQualifiedName("name");
+            //    string like = this.enemySender.Enemy.GetStringQualifiedName("thoughts");
+            //    string subjective = this.enemySender.Enemy.GetStringQualifiedName("subjective");
+
 				if (!useCustomText)
 				{
 					message = string.Format("{0}{1} flung {2}!",
-						Capitalizer.Capitalize(EnemyNames.GetArticle(this.enemySender.Enemy)),
-						EnemyNames.GetName(this.enemySender.Enemy), this.projectileName);
+						Capitalizer.Capitalize(article),
+                        name, this.projectileName);
 				}
 				else
 				{
 					message = string.Format("{0}{1} {2}",
-						Capitalizer.Capitalize(EnemyNames.GetArticle(this.enemySender.Enemy)),
-						EnemyNames.GetName(this.enemySender.Enemy), this.customText);
+						Capitalizer.Capitalize(article),
+                        name, this.customText);
 				}
 
 				this.controller.InterfaceController.OnTextboxComplete += this.OnTextboxComplete;

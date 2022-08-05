@@ -168,7 +168,7 @@ namespace Mother4.Battle
 						{
 							EnemyCombatant enemyCombatant = (EnemyCombatant)combatant;
 							enemyCombatant.OnStatusEffectChange += this.OnEnemyStatusEffectChange;
-							IndexedColorGraphic indexedColorGraphic = new IndexedColorGraphic(EnemyGraphics.GetFilename(enemyCombatant.Enemy), "front", default(Vector2f), 0);
+							IndexedColorGraphic indexedColorGraphic = new IndexedColorGraphic(Paths.GRAPHICSENEMIES + $"{enemyCombatant.Enemy.SpriteName}.dat", "front", default(Vector2f), 0);
 							indexedColorGraphic.CurrentPalette = uint.MaxValue;
 							indexedColorGraphic.CurrentPalette = 0U;
 							this.enemyGraphics.Add(enemyCombatant.ID, indexedColorGraphic);
@@ -209,6 +209,7 @@ namespace Mother4.Battle
 			this.comboHitA = AudioManager.Instance.Use(Paths.SFXBATTLE + "hitA.wav", AudioType.Sound);
 			this.comboHitB = AudioManager.Instance.Use(Paths.SFXBATTLE + "hitB.wav", AudioType.Sound);
 			this.comboSuccess = AudioManager.Instance.Use(Paths.SFXBATTLE + "Combo16.wav", AudioType.Sound);
+            Console.WriteLine("combo");
 
 			this.comboSoundMap = new Dictionary<CharacterType, List<CarbineSound>>();
 			for (int k = 0; k < array.Length; k++)
@@ -245,7 +246,9 @@ namespace Mother4.Battle
 			this.psiAnimators = new List<PsiAnimator>();
 			InputManager.Instance.AxisPressed += this.AxisPressed;
 			InputManager.Instance.ButtonPressed += this.ButtonPressed;
-		}
+
+
+        }
 
 		~BattleInterfaceController()
 		{
@@ -1306,7 +1309,7 @@ namespace Mother4.Battle
 		{
 			EnemyCombatant enemyCombatant = (EnemyCombatant)this.combatantController[id];
 			this.enemyIDs.Add(id);
-			new IndexedColorGraphic(EnemyGraphics.GetFilename(enemyCombatant.Enemy), "front", default(Vector2f), 0);
+			new IndexedColorGraphic(Paths.GRAPHICSENEMIES + $"{enemyCombatant.Enemy.SpriteName}.dat", "front", default(Vector2f), 0);
 			this.AlignEnemyGraphics();
 		}
 

@@ -13,7 +13,7 @@ namespace Mother4.Battle.EnemyAI
 		{
 			this.controller = controller;
 			this.sender = sender;
-			this.battleActionParams = EnemyBattleActions.GetBattleActionParams((sender as EnemyCombatant).Enemy);
+			//this.battleActionParams = EnemyBattleActions.GetBattleActionParams((sender as EnemyCombatant).Enemy);
 		}
 
 		public BattleAction GetAction(int priority, Combatant[] potentialTargets)

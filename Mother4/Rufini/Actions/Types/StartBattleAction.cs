@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Carbine.Scenes;
 using Carbine.Scenes.Transitions;
 using Mother4.Data;
+using Mother4.Data.Enemies;
 using Mother4.Scenes;
 using Mother4.Scenes.Transitions;
 using Mother4.Scripts;
@@ -47,13 +48,13 @@ namespace Rufini.Actions.Types
 			bool letterboxing = value.Option != 3;
 			int value2 = base.GetValue<int>("bgm");
 			int value3 = base.GetValue<int>("bbg");
-			int[] value4 = base.GetValue<int[]>("enm");
+			string[] value4 = base.GetValue<string[]>("enm");
 			if (value4 != null && value4.Length > 0)
 			{
-				EnemyType[] array = new EnemyType[value4.Length];
+                EnemyData[] array = new EnemyData[value4.Length];
 				for (int i = 0; i < value4.Length; i++)
 				{
-					array[i] = (EnemyType)value4[i];
+					array[i] = EnemyFile.Instance.GetEnemyData(value4[i]);
 				}
 				BattleScene newScene = new BattleScene(array, letterboxing, value2, value3);
 				ITransition transition;

@@ -6,6 +6,7 @@ using Carbine.Utility;
 using Mother4.Actors.Animation;
 using Mother4.Actors.NPCs.Movement;
 using Mother4.Data;
+using Mother4.Data.Enemies;
 using Mother4.Overworld;
 using SFML.Graphics;
 using SFML.System;
@@ -17,7 +18,7 @@ namespace Mother4.Actors.NPCs
 	{
 		// Token: 0x17000074 RID: 116
 		// (get) Token: 0x06000207 RID: 519 RVA: 0x0000C675 File Offset: 0x0000A875
-		public EnemyType Type
+		public EnemyData Type
 		{
 			get
 			{
@@ -36,7 +37,7 @@ namespace Mother4.Actors.NPCs
 		}
 
 		// Token: 0x06000209 RID: 521 RVA: 0x0000C688 File Offset: 0x0000A888
-		public EnemyNPC(RenderPipeline pipeline, CollisionManager colman, EnemyType enemyType, Vector2f position, FloatRect spawnArea) : base(colman)
+		public EnemyNPC(RenderPipeline pipeline, CollisionManager colman, EnemyData enemyType, Vector2f position, FloatRect spawnArea) : base(colman)
 		{
 			this.pipeline = pipeline;
 			this.position = position;
@@ -183,7 +184,7 @@ namespace Mother4.Actors.NPCs
 		private bool changed;
 
 		// Token: 0x040002E8 RID: 744
-		private EnemyType enemyType;
+		private EnemyData enemyType;
 
 		// Token: 0x040002E9 RID: 745
 		private AnimationControl animator;
