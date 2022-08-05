@@ -114,17 +114,21 @@ namespace Mother4.Scenes
 				SceneManager.Instance.Transition = new ColorFadeTransition(0.5f, Color.Black);
 				SceneManager.Instance.Push(new SaveScene(SaveScene.Location.Belring, SaveFileManager.Instance.CurrentProfile));
 				return;
-				case Button.Eight:
-					Engine.ScreenScale = 5;
-					PartyManager.Instance.AddAll(new CharacterType[]
-	{
-					CharacterType.Travis,
-					CharacterType.Floyd,
-					CharacterType.Meryl,
-					CharacterType.Leo
-	}); SceneManager.Instance.Transition = new BattleSwirlTransition(Overworld.BattleSwirlOverlay.Style.Blue);;
-					SceneManager.Instance.Push(new BattleScene(new EnemyType[7] { EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, }, true));
-					return;
+            case Button.Eight:
+                Engine.ScreenScale = 5;
+                PartyManager.Instance.AddAll(new CharacterType[]
+                {
+                    CharacterType.Travis,
+                    CharacterType.Floyd,
+                    CharacterType.Meryl,
+                    CharacterType.Leo
+                }); SceneManager.Instance.Transition = new BattleSwirlTransition(Overworld.BattleSwirlOverlay.Style.Blue); ;
+                SceneManager.Instance.Push(new BattleScene(new EnemyType[7] { EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, }, true));
+                return;
+            case Button.Five:
+                Engine.ScreenScale = 5;
+                SceneManager.Instance.Push(new EnemyTestScene()); 
+				return;
 				default:
 				return;
 			}

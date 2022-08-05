@@ -13,6 +13,11 @@ namespace Mother4.Data
 
         public static readonly string AUDIO = Path.Combine(Paths.RESOURCES, "Audio", "") + Path.DirectorySeparatorChar;
 
+        public static readonly string DATA = Path.Combine(Paths.RESOURCES, "Data", "") + Path.DirectorySeparatorChar;
+
+        public static readonly string GRAPHICS = Path.Combine(Paths.RESOURCES, "Graphics", "") + Path.DirectorySeparatorChar;
+
+        public static readonly string DATAENEMIES = DATA + "Enemies" + Path.DirectorySeparatorChar;
 
         #region  Generic SFX
         /// <summary>
@@ -29,15 +34,14 @@ namespace Mother4.Data
         /// Corresponds to Resources/Audio/SFX/Menu/
         /// </summary>
         public static readonly string SFXTILES = SFX + "Tiles" + Path.DirectorySeparatorChar;
-		#endregion
+        #endregion
 
+        #region Battle SFX
 
-		#region Battle SFX
-
-		/// <summary>
-		/// Corresponds to Resources/Audio/SFX/Battle/
-		/// </summary>
-		public static readonly string SFXBATTLE = SFX + "Battle" + Path.DirectorySeparatorChar;
+        /// <summary>
+        /// Corresponds to Resources/Audio/SFX/Battle/
+        /// </summary>
+        public static readonly string SFXBATTLE = SFX + "Battle" + Path.DirectorySeparatorChar;
 
         /// <summary>
         /// Corresponds to Resources/Audio/SFX/Battle/Combos/
@@ -69,11 +73,22 @@ namespace Mother4.Data
 
         #endregion
 
+        #region Graphics
+
+        /// <summary>
+        /// Corresponds to Resources/Graphics/PartyMembers/
+        /// </summary>
+        public static readonly string GRAPHICSPARTYMEMBERS = GRAPHICS + "PartyMembers" + Path.DirectorySeparatorChar;
+
+        /// <summary>
+        /// Corresponds to Resources/Graphics/Enemies/
+        /// </summary>
+        public static readonly string GRAPHICSENEMIES = GRAPHICS + "Enemies" + Path.DirectorySeparatorChar;
+
+        #endregion
 
 
-		public static readonly string GRAPHICS = Path.Combine(Paths.RESOURCES, "Graphics", "") + Path.DirectorySeparatorChar;
-
-		public static readonly string PSI_GRAPHICS = Path.Combine(Paths.GRAPHICS, "PSI", "") + Path.DirectorySeparatorChar;
+        public static readonly string PSI_GRAPHICS = Path.Combine(Paths.GRAPHICS, "PSI", "") + Path.DirectorySeparatorChar;
 
 		public static readonly string MAPS = Path.Combine(Paths.RESOURCES, "Maps", "") + Path.DirectorySeparatorChar;
 
