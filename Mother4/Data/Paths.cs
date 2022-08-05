@@ -5,7 +5,7 @@ namespace Mother4.Data
 {
 	internal static class Paths
 	{
-		public static readonly string RESOURCES = "Resources" + Path.DirectorySeparatorChar;
+        public static readonly string RESOURCES = "Resources" + Path.DirectorySeparatorChar;
 
         public static readonly string SFX = Path.Combine(Paths.RESOURCES, "Audio", "SFX") + Path.DirectorySeparatorChar;
 
