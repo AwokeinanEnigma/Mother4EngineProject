@@ -571,11 +571,16 @@ namespace Mother4.Battle
 			{
 				if (graphicModifier is GraphicTalker && graphicModifier.Graphic == graphic)
 				{
-					(graphicModifier as GraphicTalker).Dispose();
+                    (graphicModifier as GraphicTalker).Dispose();
 				}
+
+                if (graphicModifier is GraphicBouncer && graphicModifier.Graphic == graphic)
+                {
+                    (graphicModifier as GraphicBouncer).Dispose();
+                }
 			}
 			this.graphicModifiers.RemoveAll((IGraphicModifier x) => x is GraphicTalker && x.Graphic == graphic);
-            this.graphicModifiers.RemoveAll((IGraphicModifier x) => x is GraphicBouncer && x.Graphic == graphic);
+           this.graphicModifiers.RemoveAll((IGraphicModifier x) => x is GraphicBouncer && x.Graphic == graphic);
 		}
 
 		public void RemoveTalkers()
@@ -586,7 +591,10 @@ namespace Mother4.Battle
                 {
                     (graphicModifier as GraphicTalker).Dispose();
                 }
-
+                if (graphicModifier is GraphicBouncer )
+                {
+                    (graphicModifier as GraphicBouncer).Dispose();
+                }
 			}
 			this.graphicModifiers.RemoveAll((IGraphicModifier x) => x is GraphicTalker);
             this.graphicModifiers.RemoveAll((IGraphicModifier x) => x is GraphicBouncer);

@@ -4,7 +4,7 @@ using SFML.System;
 
 namespace Mother4.GUI.Modifiers
 {
-	internal class GraphicBouncer : IGraphicModifier
+	internal class GraphicBouncer : IGraphicModifier, IDisposable
 	{
 		public bool Done
 		{
@@ -92,6 +92,25 @@ namespace Mother4.GUI.Modifiers
 				this.graphic.Position = this.position;
 			}
 		}
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool disposed;
+
+        protected void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    
+                }
+                this.disposed = true;
+            }
+        }
 
 		private const float DAMP_HIGHPASS = 0.5f;
 
