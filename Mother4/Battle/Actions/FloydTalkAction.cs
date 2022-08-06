@@ -16,8 +16,8 @@ namespace Mother4.Battle.Actions
             this.combatant = (aparams.sender as PlayerCombatant);
             this.target = (aparams.targets[0] as EnemyCombatant);
 
-            string article = this.target.Enemy.GetStringQualifiedName("article");
-            string name = this.target.Enemy.GetStringQualifiedName("name");
+            string article = this.target.Enemy.Article;
+            string name = this.target.Enemy.PlayerFriendlyName;
             string like = this.target.Enemy.GetStringQualifiedName("thoughts");
             string subjective = this.target.Enemy.GetStringQualifiedName("subjective");
 

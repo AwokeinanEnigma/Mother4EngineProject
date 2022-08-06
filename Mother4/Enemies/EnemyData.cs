@@ -43,8 +43,6 @@ namespace Mother4.Data.Enemies
 			}
 		}
 
-		// Token: 0x17000018 RID: 24
-		// (get) Token: 0x06000088 RID: 136 RVA: 0x0000531A File Offset: 0x0000351A
 		public string MusicName
 		{
 			get
@@ -53,8 +51,6 @@ namespace Mother4.Data.Enemies
 			}
 		}
 
-		// Token: 0x17000019 RID: 25
-		// (get) Token: 0x06000089 RID: 137 RVA: 0x00005322 File Offset: 0x00003522
 		public string SpriteName
 		{
 			get
@@ -403,10 +399,14 @@ namespace Mother4.Data.Enemies
 			}
 		}
 
-		// Token: 0x060000A5 RID: 165 RVA: 0x00005798 File Offset: 0x00003998
-		private void LoadStrings(NbtCompound stringsTag)
+        public string PlayerFriendlyName;
+        
+        private void LoadStrings(NbtCompound stringsTag)
         {
+			Article = stringsTag.Get("article").StringValue + " ";
             qualifiedName = stringsTag.Get("name").StringValue;
+            PlayerFriendlyName = qualifiedName + " ";
+
 			foreach (NbtTag nbtTag in stringsTag)
 			{
 				if (nbtTag is NbtString)
@@ -417,7 +417,6 @@ namespace Mother4.Data.Enemies
 			}
 		}
 
-		// Token: 0x060000A6 RID: 166 RVA: 0x000057F8 File Offset: 0x000039F8
         private object GetPropertyObject(NbtTag propertyTag)
         {
             object result = null;
@@ -454,6 +453,8 @@ namespace Mother4.Data.Enemies
 				Luck = this.luck
 			};
 		}
+
+        public string Article;
 
 		// Token: 0x04000173 RID: 371
 		private string qualifiedName;

@@ -5,6 +5,7 @@ using Mother4.Battle.Actions;
 using Mother4.Battle.Combatants;
 using Mother4.Data;
 using Mother4.Data.Enemies;
+using Mother4.Utility;
 
 namespace Mother4.Battle.EnemyAI
 {
@@ -22,7 +23,7 @@ namespace Mother4.Battle.EnemyAI
                     actionType = typeof(EnemyTurnWasteAction),
                     data = new object[]
                     {
-                        data.GetStringQualifiedName("wasteaction"),
+                        Capitalizer.Capitalize( data.Article) + data.PlayerFriendlyName + data.GetStringQualifiedName("wasteaction"),
                         false
                     }
                 }

@@ -41,8 +41,12 @@ namespace Mother4.Battle.Actions
 				this.controller.InterfaceController.OnTextboxComplete += this.TextboxComplete;
                 EnemyData enemy = this.combatant.Enemy;
 
+                if (combatant.HasStatusEffect(StatusEffect.Talking))
+                {
+                    controller.InterfaceController.RemoveTalkers();
+                }
 
-						string message = string.Format("{0}{1} {2}", Capitalizer.Capitalize(enemy.GetStringQualifiedName("article")), enemy.GetStringQualifiedName("name"), enemy.GetStringQualifiedName("defeat"));
+                string message = string.Format("{0}{1} {2}", Capitalizer.Capitalize(enemy.Article), enemy.PlayerFriendlyName, enemy.GetStringQualifiedName("defeat"));
 				this.controller.InterfaceController.ShowMessage(message, false);
 				this.state = EnemyDeathAction.State.WaitForUI;
 				return;

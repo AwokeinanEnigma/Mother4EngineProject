@@ -118,13 +118,26 @@ namespace Mother4.Battle.Combatants
 
 		public StatusEffectInstance[] GetStatusEffects()
 		{
-			ICollection<StatusEffectInstance> values = this.statusEffects.Values;
+            ICollection<StatusEffectInstance> values = this.statusEffects.Values;
 			StatusEffectInstance[] array = new StatusEffectInstance[values.Count];
 			values.CopyTo(array, 0);
 			return array;
 		}
 
-		public DecisionAction GetDecisionAction(BattleController controller)
+        public bool HasStatusEffect(StatusEffect effect)
+		{
+            foreach (StatusEffectInstance value in statusEffects.Values)
+            {
+                if (value.Type == effect)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public DecisionAction GetDecisionAction(BattleController controller)
 		{
 			return this.GetDecisionAction(controller, 0);
 		}

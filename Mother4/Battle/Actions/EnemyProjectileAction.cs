@@ -45,8 +45,8 @@ namespace Mother4.Battle.Actions
 			{
 				string message = "";
 
-                string article = this.enemySender.Enemy.GetStringQualifiedName("article");
-                string name = this.enemySender.Enemy.GetStringQualifiedName("name");
+                string article = this.enemySender.Enemy.Article;
+                string name = this.enemySender.Enemy.PlayerFriendlyName;
             //    string like = this.enemySender.Enemy.GetStringQualifiedName("thoughts");
             //    string subjective = this.enemySender.Enemy.GetStringQualifiedName("subjective");
 

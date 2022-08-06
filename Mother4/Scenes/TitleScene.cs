@@ -127,7 +127,7 @@ namespace Mother4.Scenes
                 SceneManager.Instance.Push(new BattleScene(
                     new EnemyData[1]
                     {
-                        EnemyFile.Instance.GetEnemyData("Buzz Buzz"),
+                        EnemyFile.Instance.GetEnemyData("Hermit Can"),
                     }, true));//, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, EnemyType.RamblingMushroom, }, true));
                 return;
             case Button.Five:

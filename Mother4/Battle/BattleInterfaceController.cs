@@ -493,7 +493,7 @@ namespace Mother4.Battle
 		public void StartComboCircle(EnemyCombatant enemy, PlayerCombatant player)
 		{
             Graphic graphic = this.enemyGraphics[enemy.ID];
-            this.comboCircle.Setup(graphic);
+            this.comboCircle.Setup(graphic, player);
 		}
 
 		public void StopComboCircle(bool explode)
@@ -575,21 +575,23 @@ namespace Mother4.Battle
 				}
 			}
 			this.graphicModifiers.RemoveAll((IGraphicModifier x) => x is GraphicTalker && x.Graphic == graphic);
-			this.graphicModifiers.RemoveAll((IGraphicModifier x) => x is GraphicBouncer && x.Graphic == graphic);
+            this.graphicModifiers.RemoveAll((IGraphicModifier x) => x is GraphicBouncer && x.Graphic == graphic);
 		}
 
 		public void RemoveTalkers()
 		{
 			foreach (IGraphicModifier graphicModifier in this.graphicModifiers)
 			{
-				if (graphicModifier is GraphicTalker)
-				{
-					(graphicModifier as GraphicTalker).Dispose();
-				}
+                if (graphicModifier is GraphicTalker)
+                {
+                    (graphicModifier as GraphicTalker).Dispose();
+                }
+
 			}
 			this.graphicModifiers.RemoveAll((IGraphicModifier x) => x is GraphicTalker);
+            this.graphicModifiers.RemoveAll((IGraphicModifier x) => x is GraphicBouncer);
 		}
-        public void AddShieldAnimation(Combatant combatant)
+		public void AddShieldAnimation(Combatant combatant)
         {
             Graphic graphic = null;
             if (combatant is PlayerCombatant)

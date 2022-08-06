@@ -74,7 +74,7 @@ namespace Mother4.Battle.Actions
 								case BattleFaction.EnemyTeam:
 									{
 										EnemyCombatant enemyCombatant = (EnemyCombatant)combatant;
-										text = string.Format("{0}{1}", enemyCombatant.Enemy.GetStringQualifiedName(("name")), enemyCombatant.Enemy.GetStringQualifiedName(("name")));
+										text = string.Format("{0}{1}", enemyCombatant.Enemy.PlayerFriendlyName, enemyCombatant.Enemy.PlayerFriendlyName);
 										break;
 									}
 								case BattleFaction.NeutralTeam:
@@ -90,8 +90,8 @@ namespace Mother4.Battle.Actions
 
                                 item2 = string.Format("{0}{1} bashed {2} for {3} hit points of damage!", new object[]
                                 {
-                                    Capitalizer.Capitalize(this.combatant.Enemy.GetStringQualifiedName("article")),
-                                    this.combatant.Enemy.GetStringQualifiedName("name"),
+                                    Capitalizer.Capitalize(this.combatant.Enemy.Article),
+                                    this.combatant.Enemy.PlayerFriendlyName,
                                         text,
                                         -item.HP
                                 });
@@ -100,8 +100,8 @@ namespace Mother4.Battle.Actions
 							{
 								item2 = string.Format("{0}{1} {2} {3} for {4} hit points of damage!", new object[]
 								{
-									Capitalizer.Capitalize(this.combatant.Enemy.GetStringQualifiedName("article")),
-                                    this.combatant.Enemy.GetStringQualifiedName("name"),
+									Capitalizer.Capitalize(this.combatant.Enemy.Article),
+                                    this.combatant.Enemy.PlayerFriendlyName,
 									customText,
 									text,
 									-item.HP

@@ -48,13 +48,14 @@ namespace Mother4.Scenes
 			string music = enemyCombatant.Enemy.MusicName;
 			Console.WriteLine($"MUSIC - { music } // ENEMY - {enemyCombatant.Enemy}");
 			ComboSet combos = ComboLoader.Load(music);
-			AudioManager.Instance.SetBGM(music);
+
+			AudioManager.Instance.SetBGM(Paths.BGMBATTLE +  $"{music}.wav");
 			this.comboControl = new ComboController(combos, party);
 			this.uiController = new BattleInterfaceController(this.pipeline, this.actorManager, this.combatantController, this.letterboxing);
             Console.WriteLine("init btc");
             this.controller = new BattleController(this.uiController, this.combatantController, this.comboControl);
             Console.WriteLine("init bc");
-			this.background = new BattleBackground(enemyCombatant.Enemy.BackgroundName);
+			this.background = new BattleBackground(Paths.GRAPHICS + $"BBG/xml/{enemyCombatant.Enemy.BackgroundName}.xml");
             Console.WriteLine("init bbg");
 			this.GenerateIntroMessage(factionCombatants2.Length, factionCombatants.Length, playerCombatant.Character, playerCombatant2.Character, enemyCombatant.Enemy);
 			this.GenerateDebugVerts();
@@ -80,15 +81,15 @@ namespace Mother4.Scenes
 			string arg2;
 			if (enemyCount == 1)
 			{
-				arg2 = string.Format("{0}{1}", enemyLead.GetStringQualifiedName("article"), enemyLead.QualifiedName);
+				arg2 = string.Format("{0}{1}", enemyLead.Article, enemyLead.QualifiedName);
 			}
 			else if (enemyCount == 2)
 			{
-				arg2 = string.Format("{0}{1} and {2} cohort", enemyLead.GetStringQualifiedName("article"), enemyLead.QualifiedName, enemyLead.GetStringQualifiedName("possessive"));
+				arg2 = string.Format("{0}{1} and {2} cohort", enemyLead.Article, enemyLead.QualifiedName, enemyLead.GetStringQualifiedName("possessive"));
 			}
 			else
 			{
-				arg2 = string.Format("{0}{1} and {2} cohorts", enemyLead.GetStringQualifiedName("article"), enemyLead.QualifiedName, enemyLead.GetStringQualifiedName("possessive"));
+				arg2 = string.Format("{0}{1} and {2} cohorts", enemyLead.Article, enemyLead.QualifiedName, enemyLead.GetStringQualifiedName("possessive"));
 			}
 			string text = string.Format("{0} engaged {1}.", arg, arg2);
 			ActionParams aparams = default(ActionParams);

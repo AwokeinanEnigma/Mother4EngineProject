@@ -16,7 +16,7 @@ namespace Mother4.Battle.Actions
 			}
 			else if (this.sender is EnemyCombatant)
 			{
-				this.senderName = (this.sender as EnemyCombatant).Enemy.GetStringQualifiedName("name");
+				this.senderName = (this.sender as EnemyCombatant).Enemy.PlayerFriendlyName;
 			}
 			else
 			{
@@ -28,7 +28,7 @@ namespace Mother4.Battle.Actions
 			}
 			else if (this.targets != null && this.targets[0] is EnemyCombatant)
 			{
-				this.targetName = (this.targets[0] as EnemyCombatant).Enemy.GetStringQualifiedName("name");
+				this.targetName = (this.targets[0] as EnemyCombatant).Enemy.PlayerFriendlyName;
 			}
 			else
 			{
@@ -36,7 +36,7 @@ namespace Mother4.Battle.Actions
 			}
 			if (this.sender is EnemyCombatant)
 			{
-				this.senderArticle = (this.sender as EnemyCombatant).Enemy.GetStringQualifiedName("article");
+				this.senderArticle = (this.sender as EnemyCombatant).Enemy.Article;
 			}
 			else
 			{
@@ -44,7 +44,7 @@ namespace Mother4.Battle.Actions
 			}
 			if (this.targets != null && this.targets[0] is EnemyCombatant)
 			{
-				this.targetArticle = (this.targets[0] as EnemyCombatant).Enemy.GetStringQualifiedName("article");
+				this.targetArticle = (this.targets[0] as EnemyCombatant).Enemy.Article;
 			}
 			else
 			{

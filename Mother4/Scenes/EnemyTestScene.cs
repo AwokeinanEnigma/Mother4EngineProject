@@ -27,7 +27,7 @@ namespace Mother4.Scenes
 			string[] array = new string[this.enemyData.Count];
 			for (int i = 0; i < array.Length; i++)
 			{
-				string stringQualifiedName = this.enemyData[i].GetStringQualifiedName("name");
+				string stringQualifiedName = this.enemyData[i].PlayerFriendlyName;
                 array[i] = stringQualifiedName;
             }
 			this.enemyList = new ScrollingList(new Vector2f(16f, 6f), 0, array, 12, (float)Fonts.Main.LineHeight, 128f, Paths.GRAPHICS + "cursor.dat");

@@ -26,7 +26,7 @@ namespace Mother4.Battle.Actions
 					EnemyCombatant cE = this.sender as EnemyCombatant;
 					PlayerCombatant pC = targets[0] as PlayerCombatant;
 
-					this.controller.InterfaceController.ShowMessage($"{  cE.Enemy.GetStringQualifiedName("name") } disabled { CharacterNames.GetName(pC.Character) }'s PSI!", true);
+					this.controller.InterfaceController.ShowMessage($"{  cE.Enemy.PlayerFriendlyName } disabled { CharacterNames.GetName(pC.Character) }'s PSI!", true);
 					this.controller.InterfaceController.FlashEnemy(this.sender as EnemyCombatant, Color.Black, 8, 2);
 					this.controller.InterfaceController.PreEnemyAttack.Play();
 					this.state = DisablePSIAction.State.WaitForUI;
