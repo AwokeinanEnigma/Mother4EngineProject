@@ -6,10 +6,11 @@ using SFML.System;
 
 namespace Carbine.Collision
 {
-	// Token: 0x02000014 RID: 20
+	/// <summary>
+	/// Manages all collision
+	/// </summary>
 	public class CollisionManager
 	{
-		// Token: 0x06000097 RID: 151 RVA: 0x00003796 File Offset: 0x00001996
 		public CollisionManager(int width, int height)
 		{
 			this.spatialHash = new SpatialHash(width, height);
@@ -17,13 +18,20 @@ namespace Carbine.Collision
 			this.resultList = new List<ICollidable>(4);
 		}
 
-		// Token: 0x06000098 RID: 152 RVA: 0x000037C7 File Offset: 0x000019C7
+		/// <summary>
+		/// Adds a collider
+		/// </summary>
+		/// <param name="collidable">Collider to add</param>
 		public void Add(ICollidable collidable)
 		{
 			this.spatialHash.Insert(collidable);
 		}
 
-		// Token: 0x06000099 RID: 153 RVA: 0x000037D8 File Offset: 0x000019D8
+		/// <summary>
+		/// Adds a list of colliders
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="collidables"></param>
 		public void AddAll<T>(ICollection<T> collidables) where T : ICollidable
 		{
 			foreach (T t in collidables)
@@ -33,31 +41,30 @@ namespace Carbine.Collision
 			}
 		}
 
-		// Token: 0x0600009A RID: 154 RVA: 0x00003828 File Offset: 0x00001A28
+		/// <summary>
+		/// Removes a collider
+		/// </summary>
+		/// <param name="collidable"></param>
 		public void Remove(ICollidable collidable)
 		{
 			this.spatialHash.Remove(collidable);
 		}
 
-		// Token: 0x0600009B RID: 155 RVA: 0x00003836 File Offset: 0x00001A36
 		public void Update(ICollidable collidable, Vector2f oldPosition, Vector2f newPosition)
 		{
 			this.spatialHash.Update(collidable, oldPosition, newPosition);
 		}
 
-		// Token: 0x0600009C RID: 156 RVA: 0x00003846 File Offset: 0x00001A46
 		public bool PlaceFree(ICollidable obj, Vector2f position)
 		{
 			return this.PlaceFree(obj, position, null);
 		}
 
-		// Token: 0x0600009D RID: 157 RVA: 0x00003851 File Offset: 0x00001A51
 		public bool PlaceFree(ICollidable obj, Vector2f position, ICollidable[] collisionResults)
 		{
 			return this.PlaceFree(obj, position, collisionResults, null);
 		}
 
-		// Token: 0x0600009E RID: 158 RVA: 0x00003860 File Offset: 0x00001A60
 		public bool PlaceFree(ICollidable obj, Vector2f position, ICollidable[] collisionResults, Type[] ignoreTypes)
 		{
 			if (collisionResults != null)
@@ -106,7 +113,6 @@ namespace Carbine.Collision
 			return !flag;
 		}
 
-		// Token: 0x0600009F RID: 159 RVA: 0x00003938 File Offset: 0x00001B38
 		public IEnumerable<ICollidable> ObjectsAtPosition(Vector2f position)
 		{
 			this.resultList.Clear();
@@ -122,7 +128,6 @@ namespace Carbine.Collision
 			return this.resultList;
 		}
 
-		// Token: 0x060000A0 RID: 160 RVA: 0x00003A50 File Offset: 0x00001C50
 		private bool PlaceFreeBroadPhase(ICollidable objA, Vector2f position, ICollidable objB)
 		{
 			if (objA == objB)
@@ -146,7 +151,6 @@ namespace Carbine.Collision
 			return floatRect.Intersects(floatRect2);
 		}
 
-		// Token: 0x060000A1 RID: 161 RVA: 0x00003B14 File Offset: 0x00001D14
 		private bool CheckPositionCollision(ICollidable objA, Vector2f position, ICollidable objB)
 		{
 			int count = objA.Mesh.Edges.Count;
@@ -177,7 +181,6 @@ namespace Carbine.Collision
 			return true;
 		}
 
-		// Token: 0x060000A2 RID: 162 RVA: 0x00003BE7 File Offset: 0x00001DE7
 		private float IntervalDistance(float minA, float maxA, float minB, float maxB)
 		{
 			if (minA < minB)
@@ -187,7 +190,6 @@ namespace Carbine.Collision
 			return minA - maxB;
 		}
 
-		// Token: 0x060000A3 RID: 163 RVA: 0x00003BF8 File Offset: 0x00001DF8
 		private void ProjectPolygon(Vector2f normal, Mesh mesh, Vector2f offset, ref float min, ref float max)
 		{
 			float num = VectorMath.DotProduct(normal, mesh.Vertices[0] + offset);
@@ -207,13 +209,11 @@ namespace Carbine.Collision
 			}
 		}
 
-		// Token: 0x060000A4 RID: 164 RVA: 0x00003C6B File Offset: 0x00001E6B
 		public void Clear()
 		{
 			this.spatialHash.Clear();
 		}
 
-		// Token: 0x060000A5 RID: 165 RVA: 0x00003C78 File Offset: 0x00001E78
 		public void Draw(RenderTarget target)
 		{
 			this.spatialHash.DebugDraw(target);

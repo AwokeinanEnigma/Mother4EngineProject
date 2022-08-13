@@ -56,7 +56,6 @@
     <Compile Include="Collision\AABB.cs" />
     <Compile Include="Collision\CollisionContext.cs" />
     <Compile Include="Collision\CollisionManager.cs" />
-    <Compile Include="Collision\CollisionManagerOld.cs" />
     <Compile Include="Collision\CollisionQuadtree.cs" />
     <Compile Include="Collision\ICollidable.cs" />
     <Compile Include="Collision\Mesh.cs" />

@@ -5,7 +5,9 @@ using SFML.System;
 
 namespace Carbine.Collision
 {
-	// Token: 0x0200001A RID: 26
+    /// <summary>
+	/// Handles ALL collisions using the spatial hashing mechanism
+    /// </summary>
 	internal class SpatialHash
 	{
 		// Token: 0x060000D1 RID: 209 RVA: 0x00004810 File Offset: 0x00002A10

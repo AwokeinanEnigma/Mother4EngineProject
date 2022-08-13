@@ -9,7 +9,7 @@ namespace Carbine.Input
 		X,
 		Y,
 		Start,
-		Select,
+        Select,
 		L,
 		R,
 		Escape,

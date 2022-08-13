@@ -279,7 +279,7 @@ namespace Carbine.Input
 		{
 			{
 				Keyboard.Key.Z,
-				Button.A
+                Button.A
 			},
 			{
 				Keyboard.Key.X,

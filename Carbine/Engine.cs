@@ -244,7 +244,7 @@ namespace Carbine
 			}
 			Engine.window = new RenderWindow(desktopMode, "Mother 4", style);
 			Engine.window.Closed += Engine.OnWindowClose;
-			Engine.window.MouseMoved += Engine.MouseMoved;
+            Engine.window.MouseMoved += Engine.MouseMoved;
 			Engine.window.MouseButtonPressed += Engine.MouseButtonPressed;
 			InputManager.Instance.AttachToWindow(Engine.window);
 			Engine.window.SetMouseCursorVisible(!goFullscreen);
